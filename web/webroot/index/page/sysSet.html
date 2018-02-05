@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<script type="text/javascript">
+			function sysSet_sysReset () {
+				alert(1);
+				var xmlhttp;
+				if (window.XMLHttpRequest)
+				  {// code for IE7+, Firefox, Chrome, Opera, Safari
+				  xmlhttp=new XMLHttpRequest();
+				  }
+				else
+				  {// code for IE6, IE5
+				  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+				  }
+				xmlhttp.onreadystatechange=function()
+				  {
+				  if (xmlhttp.readyState==4 && xmlhttp.status==200)
+				    {
+				    	//alert()
+				     	//document.getElementById("lanip").value=xmlhttp.responseText;
+				    }
+				  }	  
+				xmlhttp.open("POST","/goform/sysSet_sysReset",true);
+				xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+				xmlhttp.send("sysReset=");
+			}
+			function sysSet_moduleReset () {
+				alert(1);
+				var xmlhttp;
+				if (window.XMLHttpRequest)
+				  {// code for IE7+, Firefox, Chrome, Opera, Safari
+				  xmlhttp=new XMLHttpRequest();
+				  }
+				else
+				  {// code for IE6, IE5
+				  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+				  }
+				xmlhttp.onreadystatechange=function()
+				  {
+				  if (xmlhttp.readyState==4 && xmlhttp.status==200)
+				    {
+				     	//document.getElementById("lanip").value=xmlhttp.responseText;
+				    }
+				  }	  
+				xmlhttp.open("POST","/goform/sysSet_moduleReset",true);
+				xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+				xmlhttp.send("moduleReset=");
+			}
+		</script>
+	</head>
+	<body>
+		<h1>AP设置</h1>
+		<input type="button" name="sysReset" id="sysReset" value="系统重启" onclick="sysSet_sysReset()"/>
+		<br />
+		<input type="button" name="moduleRset" id="moduleRset" value="模组重启" onclick="sysSet_moduleReset()"/>
+	</body>
+</html>
