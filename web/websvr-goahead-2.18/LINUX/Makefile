@@ -13,7 +13,8 @@ AR=arm-linux-gnueabihf-ar
 all:	compile
 
 ARCH	= libwebs.a
-NAME	= a6g2c-webs
+#NAME	= a6g2c-webs
+NAME	= $(webEXE)
 
 # User Management switch
 UMSW	= -DUSER_MANAGEMENT_SUPPORT
