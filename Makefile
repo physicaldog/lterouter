@@ -6,7 +6,7 @@ web = $(PWD)/web
 webroot = $(web)/webroot
 webserver = $(web)/websvr-goahead-2.18/LINUX
 
-initEXE = lterout
+initEXE = lterouter
 export initEXE
 webEXE = router-web
 export webEXE

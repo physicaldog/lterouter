@@ -9,7 +9,8 @@ Dail(){
 
 echo "start to Dail"
 #Dail
-    udhcpc -i usb0
+kill `cat /opt/udhcpc.pid`
+udhcpc -b -i usb0 -p /opt/udhcpc.pid -R
 ret=`ifconfig usb0 | grep "inet addr"`
 if [ $? -eq 0 ]
 then

@@ -1,5 +1,12 @@
 #!/bin/bash
 
+#脚本实现功能：
+#1.初始化gpio
+#2.启动模组
+#
+#
+#
+
 GpioDir=/sys/class/gpio
 PowerOn=121
 Reset=123
@@ -13,8 +20,8 @@ DetectDev(){
     cd /dev/
     ret=`ifconfig -a | grep usb0`
 
-
-    if [ $? -eq 0 ] && [ -e  ttyUSB0 ] && [ -e  ttyUSB1 ]  && [ -e  ttyUSB2 ]  && [ -e  ttyUSB3 ]  && [ -e  ttyUSB4 ]
+	#检查usb0网卡及虚拟串口是否存在
+    if [ $? -eq 0 ] && [ -e  ttyem300 ]
     then
         echo 0
     else
@@ -22,6 +29,7 @@ DetectDev(){
     fi
 }
 
+#导出各gpio
 InitGpio(){
     cd $GpioDir
     if [ -e gpio$PowerOn ]
@@ -65,27 +73,35 @@ InitGpio(){
 TurnOn(){
     cd $GpioDir/gpio$PowerOn
     echo out > direction
-    echo 0 > value;sleep 2;echo 1 > value;sleep 5
+    echo 0 > value;sleep 2;echo 1 > value;sleep 10
 }
+
 TurnOff(){
     cd $GpioDir/gpio$PowerOn
     echo out > direction
-    echo 0 > value;sleep 4;echo 1 > value;sleep 5
+    echo 0 > value;sleep 4;echo 1 > value;sleep 10
 }
 
-
-Init(){
-    InitGpio
+Reboot(){
+	cd $GpioDir/gpio$Reset
+	echo out > direction
+	echo 0 > value;sleep 1;echo 1 > value;sleep 10 
+}
+#系统重启时硬件重启模组
+InitModule(){
     echo "start to Detect"
     ret=`DetectDev`
     if [ $ret -eq 0 ]
     then
-        echo "Dev and Usb Ok!"
+        echo "Dev Ok,reboot module!"
+		Reboot
     else
         echo Turn on Module!
         TurnOn
     fi
 }
 
-Init
-/opt/init/state-detection
+InitGpio
+InitModule
+/opt/init/lterouter &
+/opt/web/webroot/bin/router-web &

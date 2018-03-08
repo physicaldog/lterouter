@@ -12,9 +12,11 @@
 #include <time.h>
 #include <pthread.h>
 #include <signal.h>
+#include <syslog.h>
 
 int fd;
-int ecm_done;
+/*网络状态标志：1 有效；0 无效*/
 int net_sta;
-int ndis_sta;
+/*ecm拨号状态标志：1 已拨号；0 未拨号*/
+int ecm_done;
 

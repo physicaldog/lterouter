@@ -4,6 +4,7 @@
 #include	<unistd.h>
 #include	<sys/types.h>
 #include	<sys/wait.h>
+#include	<sys/reboot.h>
 
 #ifdef WEBS_SSL_SUPPORT
 #include	"../websSSL.h"
@@ -20,17 +21,6 @@ void	formDefineUserMgmt(void);
 
 #define ConfigFile "/opt/config/netconfig"
 #define tmpFile "/opt/config/netconfig.bak"
-
-int setlanip(char *ifname,char *ip, char *netmask)
-{
-    char buff[64] = {'\0'};
-    getConfig("lanip",buff);
-    set_ip("eth1",buff,"255.255.255.0");
-
-    return 0;
-
-}
-
 
 int setConfig(char *Config, char *content)
 {
@@ -77,7 +67,7 @@ void lanip_set(webs_t wp, char_t *path, char_t *query)
 
     setConfig("lanip:",lanip);
 
-    set_ip("eth1",lanip,"255.255.255.0");
+    set_ip("eth0",lanip,"255.255.255.0");
 
     websDone(wp,200);
 	return;
@@ -98,8 +88,11 @@ void apn_set(webs_t wp, char_t *path, char_t *query)
 
 void sysReset(webs_t wp, char_t *path, char_t *query)
 {
-    printf("sysReset\n");
+    printf("sysReset!\n");
     websDone(wp,200);
+	/*系统重启*/
+	sync();
+	reboot(RB_AUTOBOOT);
 	return;
 }
 
