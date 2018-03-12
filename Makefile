@@ -1,3 +1,9 @@
+#make
+#make install
+#make init
+#make web
+#make clean
+
 CC = arm-linux-gnueabihf-gcc
 
 config = $(PWD)/config
@@ -5,6 +11,7 @@ init = $(PWD)/init
 web = $(PWD)/web
 webroot = $(web)/webroot
 webserver = $(web)/websvr-goahead-2.18/LINUX
+opt=~/opt
 
 initEXE = lterouter
 export initEXE
@@ -28,18 +35,18 @@ init:
 web:
 	cd $(webserver) && $(MAKE) 
 	cp $(webserver)/$(webEXE) $(webroot)/bin/
-	scp -r $(webroot) $(readdr)/web/
+	scp -r $(webroot)/* $(readdr)/web/
 
 clean:
 	cd $(webserver) && $(MAKE) clean 
 	cd $(init) && $(MAKE) clean 
 
 install:
-	-mkdir ./opt ./opt/config ./opt/init ./opt/web
-	cp $(config)/* ./opt/config/
-	cp $(init)/*.sh $(init)/$(initEXE) ./opt/init/
+	-mkdir $(opt) $(opt)/config $(opt)/init $(opt)/web
+	cp $(config)/* $(opt)/config/
+	cp $(init)/*.sh $(init)/$(initEXE) $(opt)/init/
 	cp $(webserver)/$(webEXE) $(webroot)/bin/
-	cp -r $(webroot) ./opt/web/ 
-	scp -r ./opt/* $(readdr)
+	cp -r $(webroot)/* $(opt)/web/ 
+	scp -r $(opt)/* $(readdr)
 
 .PHONY:all clean config init web install 

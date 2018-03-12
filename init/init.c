@@ -104,6 +104,7 @@ int main(void)
 	openlog("lterouter", LOG_CONS | LOG_PID, LOG_LOCAL2);
 	syslog(LOG_DEBUG,"This is lterouter syslog!\n");
 	syslog(LOG_DEBUG,"*********************************************\n");
+	lanInit();
 	fd = openDev(SerPort);
 	if(0 >= fd){
 		syslog(LOG_DEBUG,"OPEN /dev/ttyUSB2 FAILED!\n");

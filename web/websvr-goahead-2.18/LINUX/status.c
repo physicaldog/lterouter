@@ -38,7 +38,7 @@ int getConfig(char *Config, char *buff)
     fe = fopen(ConfigFile,"r+");
     if (NULL == fe){
             printf("no netconfig file\n");
-            return -1;
+            return -1;//未找到配置文件
     }
 
     while (fgets(rbuff,sizeof(rbuff),fe)){

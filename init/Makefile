@@ -3,9 +3,9 @@ CFLAGS = -c
 LDFLAGS  = -lpthread
 
 EXE = lteRouter
-OBJ = init.o at.o getip.o
+OBJ = init.o at.o ipConfig.o
 SRC = init.c at.c 
-SRC += getip.c
+SRC += ipConfig.c
 
 EXE:$(OBJ)
 	$(CC) $(LDFLAGS) -o $(initEXE) $^
