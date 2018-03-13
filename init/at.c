@@ -74,31 +74,35 @@ void get_ndisstat(char *buff)
 			ecm_done = 0;
 			if((1 == net_sta)){
 				syslog(LOG_DEBUG,"开始拨号\n");
+				strcat(direct,"AT^NDISDUP=1,1,\"");//
 				//从配置文件中获取apn;                   
 				fe = fopen("/opt/config/netconfig","r");
 				if (NULL == fe){
 					syslog(LOG_DEBUG,"netconfig open failed!\n");
-					return;
+					//return;
 				}
-				while(fgets(rbuff,sizeof(rbuff),fe)){
-					if(strstr(rbuff,"apn:"))
-					{   
-						file = 1;
-						strcat(direct,"AT^NDISDUP=1,1,\"");
-						rbuff[strlen(rbuff)-1] = '\0';
-						strcat(direct,rbuff+strlen("apn:"));
-						strcat(direct,"\"\r\n");
-						syslog(LOG_DEBUG,"dir= %s\n",direct);
-						break;
+				else{
+					while(fgets(rbuff,sizeof(rbuff),fe)){
+						if(strstr(rbuff,"apn:"))
+						{   
+							file = 1;
+							break;
+						}
+						else
+							memset(rbuff,'\0',sizeof(rbuff));
 					}
-					else
-						memset(rbuff,'\0',sizeof(rbuff));
+					if(0 == file){
+						syslog(LOG_DEBUG,"未配置apn\n");
+						syslog(LOG_DEBUG,"\n");
+					}
+					fclose(fe);
+
+					rbuff[strlen(rbuff)-1] = '\0';
+					strcat(direct,rbuff+strlen("apn:"));
 				}
-				fclose(fe);
-				if(0 == file){
-					syslog(LOG_DEBUG,"未配置apn\n");
-					syslog(LOG_DEBUG,"\n");
-					}
+				strcat(direct,"\"\r\n");
+				syslog(LOG_DEBUG,"dir= %s\n",direct);
+
 				write(fd,"\r\n",strlen("\r\n"));
 				write(fd,direct,strlen(direct));
 			}
