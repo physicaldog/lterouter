@@ -8,6 +8,7 @@
 
 #define ConfigFile "/opt/config/netconfig"
 #define LAN "eth0"
+#define LANIP "192.168.99.1"
 #define WAN "usb0"
 
 int getConfig(char *Config, char *buff)
@@ -114,10 +115,15 @@ int lanInit()
 	char lanip[32] = {'\0'};
 
 	ret = getConfig("lanip",lanip);
-	printf("getip=%s",lanip);
-	if(0 == ret)
+	if(0 == ret){
 		ret = set_ip(LAN,lanip,"255.255.255.0");
-
+		if(0 != ret)
+			set_ip(LAN,LANIP,"255.255.255.0");
+	}
+	else{
+		set_ip(LAN,LANIP,"255.255.255.0");
+		
+	}
 	return 0;
 
 }
