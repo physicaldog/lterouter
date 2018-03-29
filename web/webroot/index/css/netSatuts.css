@@ -1,0 +1,329 @@
+@charset "utf-8";
+body{
+	min-width: 1000px;
+}
+* {
+	padding: 0;
+	margin: 0;
+	font-family: "Microsoft YaHei";
+	font-size: 14px;
+}
+.wifiModelName{
+	font-weight: bold;
+}
+
+#hides {
+	display: none;
+}
+
+a {
+	text-decoration: none;
+}
+
+li {
+	list-style-type: none;
+	margin-bottom: 5px;
+}
+
+input {
+	background: #1FA793;
+	border: none;
+	border-radius: 3px;
+	color: #FFFFFF;
+	height: 20px;
+	font-size: 12px;
+	line-height: 20px;
+	padding: 1px 5px;
+	margin-left: 7px;
+	width: 100px;
+}
+.switchBg{
+width: 31px;
+height: 14px;
+display: inline-block;
+background: url(../img/routerBg.png) -424px -35px no-repeat;
+vertical-align: top;
+}
+
+
+/**netStatus Area**/
+
+.StatusMain {
+	width: 100%;
+	min-height: 60em;
+	
+}
+
+.statusInfo {
+	float: left;
+	width: 20%;
+	min-height: 60em;  
+	background: #29C4B2;
+	color: #FFF;
+	 
+}
+
+.statusView {
+	float: right;
+	width: 80%;
+	min-height: 60em;  
+	background: #00B8A2;
+	color: #FFF;
+}
+
+.Info_tab {
+	width: 80%;
+	margin: 40px auto;
+	padding: 10px auto;
+}
+
+.InfoDetail {}
+
+.bottomSaveBtn {
+	background-color: #FBEB1A !important;
+	color: #005D83 !important;
+	border: 1px solid;
+	cursor: auto;
+}
+.switchCon {
+	width: 31px;
+	height: 15px;
+	cursor: pointer;
+	position: relative;
+	vertical-align: middle;
+	display: inline-block;
+}
+.switchBall{
+	width: 13px;
+height: 12px;
+top: 1px;
+left: 17px;
+position: absolute;
+display: inline-block;
+cursor: pointer;
+z-index: 1;
+}
+.switchConNetState {
+	font-size: 12px;
+	margin: 0 0 0 5px;
+}
+.bottomSaveBtn {
+	background: #FBEB1A;
+border-radius: 3px;
+margin-left: 90px;
+width: 50px;
+height: 20px;
+color: #000000;
+padding: 0px;
+}
+
+.subBtn {
+	cursor: pointer;
+	vertical-align: middle;
+}
+
+
+
+
+
+/***上网设置**/
+.netSetting{
+	min-height: 60em;
+	min-width: 980px;
+	background: #70D2EF;
+	color:#FFF;
+}
+.title{
+color: #FFFFFF;
+font-size: 24px;
+line-height: 26px;
+vertical-align: middle;
+}
+.xtxtxt{
+	margin-top: 15px;
+	margin-bottom:15px ;
+	height: 1px;
+	background: #0066A7;
+}
+i.helpBtn {
+    height: 20px;
+    width: 20px;
+    right: 2px;
+    top: 7px;
+    cursor: pointer;
+    position: absolute;
+    background: url(../../web-static/images/routerBg.png) -418px -162px no-repeat;
+}
+.block{
+	width: 50%;
+	margin: 25px auto;
+	font-size: 20px;
+}
+.xzljfs{
+	width: 225px;
+	height: 30px;
+	background: #2BA2D8;
+	color:#FFF;
+}
+.gridLineA{
+	margin: 25px auto;
+	
+}
+.gridStatus{
+	margin-top: 30px;
+}
+ul.gridLineA {
+    font-size: 0px;
+    height: 30px;
+    line-height: 30px;
+    margin-top: 25px;
+}
+ul.gridLine {
+    text-align: left;
+    list-style: none;
+}
+.desLblA{
+	width: 245px;
+font-size: 14px;
+color: #FFFFFF;
+text-align: right;
+margin-right: 15px;
+_margin-right: 12px;
+float: left;
+}
+
+ul.gridLine li.textCon {
+    border-radius: 3px;
+    border: 1px solid #2BA2D8;
+    background: #2BA2D8;
+}
+ul.gridLine li {
+    height: 100%;
+    line-height: 100%;
+    display: inline-block;
+    vertical-align: middle;
+    *display: inline;
+    *zoom: 1;
+}
+li.textConA {
+    width: 225px;
+}
+ul.gridLine input.text {
+    height: 30px;
+    line-height: 30px;
+    color: #FFFFFF;
+    font-size: 14px;
+    border: 0px;
+    padding: 0px;
+    *margin-top: -1px;
+    vertical-align: middle;
+    background: transparent;
+}
+ul.gridLine i.tip {
+    width: 13px;
+    height: 13px;
+    display: inline-block;
+    font-size: 12px;
+    background: url(../img/routerBg.png) -441px -68px no-repeat;
+    visibility: hidden;
+    vertical-align: middle;
+}
+
+
+
+/**路由器在线升级部分**/
+p.upDesTiTop {
+    margin-top: 25px !important;
+}
+p.upDesTi {
+    margin-top: 6px;
+}
+p.sysUpgrade {
+    margin: 30px 0 15px;
+    padding-right: 30px;
+    text-align: left;
+}
+#newSoftInfo {
+    background: #6ecae6;
+    border: 1px solid #1e96d4;
+    display: none;
+    padding: 15px 18px;
+    margin-top: 6px;
+    vertical-align: top;
+    white-space: pre-wrap;
+    word-break: break-all;
+    word-wrap: break-word;
+    width: 500px;
+}
+
+input.subBtn {
+    color: #333333;
+    font-size: 12px;
+    border-radius: 3px;
+    border: 0px;
+    cursor: pointer;
+    vertical-align: middle;
+    background: #FBEB1A;
+}
+
+
+
+input.fileBrowse {
+    padding: 3px 18px;
+    *padding: 2px 12px 0px;
+    margin-left: 5px;
+    vertical-align: middle;
+}
+input.subBtn {
+    color: #333333;
+    font-size: 12px;
+    border-radius: 3px;
+    border: 0px;
+    cursor: pointer;
+    vertical-align: middle;
+    background: #FBEB1A;
+}
+
+input.file {
+    font-size: 110px;
+    top: -5px;
+    right: -5px;
+    opacity: 0;
+    filter: alpha(opacity:0);
+    cursor: pointer;
+    position: absolute;
+    vertical-align: top;
+}
+input.fileTxt {
+    width: 226px;
+    height: 30px;
+    line-height: 30px;
+    color: #FFFFFF;
+    font-size: 12px;
+    border: 0px;
+    border-radius: 3px;
+    padding: 0 2px 0 4px;
+    vertical-align: middle;
+    background: #2ba2d8;
+}
+
+
+.apnorlan{
+	height: 30px;
+	line-height: 30px;
+	margin-bottom: 2px;
+	width: 60px;
+}
+.desLblAA{
+	width: 65px;
+    font-size: 14px;
+    color: #FFFFFF;
+    text-align: right;
+    margin-right: 15px;
+    float: left;
+}
+.textCon{
+	width: 220px;
+	text-align: left;
+}
+

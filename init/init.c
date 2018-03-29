@@ -3,6 +3,7 @@
 
 #define DATA_LEN	0xFF  /* test data's len */
 #define SerPort	"/dev/ttyem300"
+//#define SerPort	"/dev/ttyUSB2"
 
 char at_arr[16][64] = {/*{{{*/
 	"AT^SYSINFOEX\r\n", 
@@ -107,7 +108,7 @@ int main(void)
 	lanInit();
 	fd = openDev(SerPort);
 	if(0 >= fd){
-		syslog(LOG_DEBUG,"OPEN /dev/ttyUSB2 FAILED!\n");
+		syslog(LOG_DEBUG,"OPEN /dev/ttyem300 FAILED!\n");
 		return -1;
 	}
 

@@ -18,7 +18,8 @@ export initEXE
 webEXE = router-web
 export webEXE
 
-readdr = root@192.168.99.215:/opt
+#readdr = root@90.1.2.1:/opt
+readdr = root@192.168.1.1:/opt
 
 all:
 	$(MAKE) -C $(init)

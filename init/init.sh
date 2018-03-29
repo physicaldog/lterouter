@@ -15,6 +15,9 @@ WakeupIn=1
 WakeupOut=30
 SleepSta=3
 
+letrouter=/opt/init/lterouter
+routerweb=/opt/web/bin/router-web
+
 #udhcpd /etc/udhcpd.conf &
 DetectDev(){
     cd /dev/
@@ -85,7 +88,7 @@ TurnOff(){
 Reboot(){
 	cd $GpioDir/gpio$Reset
 	echo out > direction
-	echo 0 > value;sleep 1;echo 1 > value;sleep 10 
+	echo 0 > value;sleep 1;echo 1 > value;sleep 15 
 }
 #系统重启时硬件重启模组
 InitModule(){
@@ -101,7 +104,57 @@ InitModule(){
     fi
 }
 
+DetectLterouter(){
+	if [ `ps | grep lterouter | wc -l` -eq 1 ]
+	then
+		echo 0 #进程未启动
+	else
+		echo 1
+	fi
+}
+
+DetectRouterweb(){
+	if [ `ps | grep router-web | wc -l` -eq 1 ]
+	then
+		echo 0 #进程未启动
+	else
+		echo 1
+	fi
+}
+
+InitWork(){
+    echo "start to work"
+	while [ `DetectDev` -eq 0 ]
+	do
+		#echo "dev ok"
+		if [ `DetectLterouter` -eq 0 ]
+		then
+			echo "lterouter not found!"
+			nohup /opt/init/lterouter >/dev/null 2>&1 &
+		#else
+			#echo "lterouter done!"
+		fi
+		sleep 5
+
+		if [ `DetectRouterweb` -eq 0 ]
+		then
+			echo "router-web not found!"
+			nohup /opt/web/bin/router-web >/dev/null 2>&1 &
+		#else
+			#echo "router-web done!"
+		fi
+		sleep 5
+
+	done
+
+	echo "dev not found"
+	echo "Reboot system!!!"
+	`reboot`
+	#shutdown -r now	#当设备挂载失败时重启系统
+}
+
 InitGpio
 InitModule
-/opt/init/lterouter &
-/opt/web/webroot/bin/router-web &
+InitWork
+#/opt/init/lterouter &
+#/opt/web/webroot/bin/router-web &
