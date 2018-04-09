@@ -129,7 +129,7 @@ InitWork(){
 		#echo "dev ok"
 		if [ `DetectLterouter` -eq 0 ]
 		then
-			echo "lterouter not found!"
+			echo "lterouter start!!"
 			nohup /opt/init/lterouter >/dev/null 2>&1 &
 		#else
 			#echo "lterouter done!"
@@ -138,7 +138,7 @@ InitWork(){
 
 		if [ `DetectRouterweb` -eq 0 ]
 		then
-			echo "router-web not found!"
+			echo "router-web start!!"
 			nohup /opt/web/bin/router-web >/dev/null 2>&1 &
 		#else
 			#echo "router-web done!"

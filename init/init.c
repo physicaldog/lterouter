@@ -97,15 +97,29 @@ void send_at(int *fptr)
 
 }/*}}}*/
 
-
+void alarm_handler()
+{
+	syslog(LOG_DEBUG,"Alarm Reboot Device!!!\n");
+	system("bash `reboot`");
+}
 int main(void) 
 {
 	int i=0,ret=0,fd=0;
 	pthread_t rThread, tThread;
+	
+	/*添加系统日志*/
 	openlog("lterouter", LOG_CONS | LOG_PID, LOG_LOCAL2);
 	syslog(LOG_DEBUG,"This is lterouter syslog!\n");
 	syslog(LOG_DEBUG,"*********************************************\n");
+	
+	/*初始化lanip*/
 	lanInit();
+
+	/*当设备附着不上网络时定时重启*/
+	signal(SIGALRM,alarm_handler);
+	alarm(REBOOT_TIME);
+
+	/*打开模组串口*/
 	fd = openDev(SerPort);
 	if(0 >= fd){
 		syslog(LOG_DEBUG,"OPEN /dev/ttyem300 FAILED!\n");

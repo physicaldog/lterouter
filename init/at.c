@@ -41,6 +41,9 @@ void get_sysinfoex(char *buff)
 	if ('2' == ptr[1]){
 		syslog(LOG_DEBUG,"有效网络\n");
 		syslog(LOG_DEBUG,"\n");
+		/*成功附着网络重置定时器*/
+		alarm(REBOOT_TIME);
+
 		/*网络有效，检查网络链接状态*/
 		write(fd,at[1],strlen(at[1]));
 		net_sta = 1;

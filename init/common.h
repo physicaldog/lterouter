@@ -14,6 +14,9 @@
 #include <signal.h>
 #include <syslog.h>
 
+/*定时重启时间10分钟*/
+#define REBOOT_TIME 600
+
 int fd;
 /*网络状态标志：1 有效；0 无效*/
 int net_sta;
