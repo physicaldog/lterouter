@@ -59,31 +59,42 @@ DEPEND_FILES	= ../asp.o ../balloc.o ../base64.o ../cgi.o ../default.o  \
 				  ../sock.o ../sockGen.o $(SSLPATCHFILE) \
 				  ../security.o ../sym.o ../uemf.o ../url.o ../value.o \
 				  ../md5c.o ../um.o ../umui.o ../websda.o ../emfdb.o \
-				  ../webrom.o ../webs.o ../websuemf.o main.o a6g2cimpl.o set.o status.o setip.o
+				  ../webrom.o ../webs.o ../websuemf.o main.o a6g2cimpl.o set.o status.o setip.o \
+				 
 CFLAGS	= -DWEBS -DUEMF -DOS="LINUX" -DLINUX $(UMSW) $(DASW) $(SSLSW) $(IFMODSW) -I$(KERNELDIR)/include
 OTHERS	= -DB_STATS -DB_FILL -DDEBUG
 DEBUG	= -g -Wall
 IFLAGS 	= -I..
 LDFLAGS	= $(SSLLIB) $(IFMODLIB)
-
+#suyidir = /mnt/hgfs/ubuntuShare/lterouter/web/websvr-goahead-2.18/LINUX/suyi
+#suyi_web = $(suyidir)/suyi_web.o
+SUYI = libsuyi.a
+SUYI_FILES = suyi/suyi_common.o suyi/RunningStatus.o suyi/settingLTE.o \
+			 suyi/settingLAN.o suyi/Account.o suyi/index.o suyi/Version.o\
+			 suyi/Diagnose.o suyi/left.o suyi/ftpUpdate.o suyi/settingWH.o\
+			 suyi/SystemLog.o suyi/head.o suyi/module.o suyi/TR069.o
 compile: $(NAME)
-
 #
 #	Build archive of objects
 #
+#$(suyi_web):
+
+$(SUYI): $(SUYI_FILES)
+	$(AR) $(ARFLAGS) $(SUYI) $?
+
 $(ARCH): $(DEPEND_FILES)
 	$(AR) $(ARFLAGS) $(ARCH) $?
 
 #
 #	Primary link
 #
-$(NAME): Makefile $(ARCH)
+$(NAME): Makefile $(ARCH) $(SUYI)
 	$(CC) -o $(NAME) $(DEBUG) \
 		$(CFLAGS) $(IFLAGS) \
-		main.o $(ARCH) $(LDFLAGS)
+		main.o $(SUYI) $(ARCH) $(LDFLAGS)
 
 clean:
-	rm -f $(NAME) $(ARCH) $(DEPEND_FILES)
+	rm -f $(NAME) $(ARCH) $(DEPEND_FILES) $(SUYI) $(SUYI_FILES)
 
 install:
 	mkdir -m 755 -p /home/webroot/bin
@@ -94,9 +105,24 @@ install:
 	cp a6g2c.asp /home/webroot/default.asp
 	cp resphtml.tm /home/webroot/
 
-#
+#suyi_files
+suyi/settingLAN.o: suyi/settingLAN.c
+suyi/settingLTE.o: suyi/settingLTE.c
+suyi/RunningStatus.o: suyi/RunningStatus.c
+suyi/suyi_common.o: suyi/suyi_common.c
+suyi/Account.o: suyi/Account.c
+suyi/index.o: suyi/index.c
+suyi/Version.o: suyi/Version.c
+suyi/Diagnose.o: suyi/Diagnose.c
+suyi/left.o: suyi/left.c
+suyi/ftpUpdate.o: suyi/ftpUpdate.c
+suyi/settingWH.o: suyi/settingWH.c
+suyi/SystemLog.o: suyi/SystemLog.c
+suyi/head.o: suyi/head.c
+suyi/module.o: suyi/module.c
+suyi/TR069.o: suyi/TR069.c
+
 #	Dependencies
-#
 ../asp.o:  ../webs.h ../wsIntrn.h ../ej.h ../ejIntrn.h ../uemf.h
 
 ../balloc.o: ../balloc.c ../uemf.h
@@ -159,9 +185,10 @@ install:
 
 ../websSSL.o:  ../websSSL.c ../websSSL.h ../wsIntrn.h ../ej.h ../ejIntrn.h ../uemf.h
 
-setip.o: setip.c
+#setip.o: setip.c
 a6g2cimpl.o: a6g2cimpl.c a6g2cimpl.h
-routr-manager.o: router_status.h router_set.h status.c set.c setip.c
+#routr-manager.o: router_status.h router_set.h status.c set.c setip.c
+#./suyi/suyi_web.o: ./suyi/suyi_common.h  ./suyi/RunningStatus.c
 
 main.o:  main.c ../wsIntrn.h ../webs.h ../ej.h ../ejIntrn.h ../uemf.h
 

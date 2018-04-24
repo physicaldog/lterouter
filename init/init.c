@@ -2,7 +2,7 @@
 #include "at.h"
 
 #define DATA_LEN	0xFF  /* test data's len */
-#define SerPort	"/dev/ttyem300"
+#define SerPort	"/dev/ttyem302"
 //#define SerPort	"/dev/ttyUSB2"
 
 char at_arr[16][64] = {/*{{{*/
@@ -100,7 +100,9 @@ void send_at(int *fptr)
 void alarm_handler()
 {
 	syslog(LOG_DEBUG,"Alarm Reboot Device!!!\n");
-	system("bash `reboot`");
+	system("echo mv messages");
+	system("cp /var/log/messages /opt/log/");
+	system("reboot");
 }
 int main(void) 
 {

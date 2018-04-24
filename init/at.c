@@ -16,7 +16,7 @@ void direct_process(char *buff)
 		"NDISSTATQRY",
 	};
 	if ('^' == buff[0]) {
-		syslog(LOG_DEBUG,"Get direct:%s\n",buff);
+		//syslog(LOG_DEBUG,"Get direct:%s\n",buff);
 		//ptr = strstr(buff,at_arr[0]);
 		if ((strstr(buff,at_arr[0])) || (strstr(buff,at_arr[2]))) {
 			get_sysinfoex(buff);
@@ -33,14 +33,24 @@ void direct_process(char *buff)
 
 void get_sysinfoex(char *buff)
 {
+	int i = 0;
 	char *ptr = NULL;
+	char *qtr = NULL;
 
 	ptr = strstr(buff," ");
+	qtr = strchr(buff,',');
+	for(i=0;i<5;i++)
+	{
+		qtr = strchr(qtr,',');
+		qtr++;
+	}
 	if(NULL == ptr)
 		return;
-	if ('2' == ptr[1]){
-		syslog(LOG_DEBUG,"有效网络\n");
-		syslog(LOG_DEBUG,"\n");
+	//printf("网络有效,%c,%c\n",ptr[1],*qtr);
+	if (('2' == ptr[1]) && ('6' == *qtr)){
+//	if (('2' == ptr[1])){
+		//syslog(LOG_DEBUG,"有效网络\n");
+		//syslog(LOG_DEBUG,"\n");
 		/*成功附着网络重置定时器*/
 		alarm(REBOOT_TIME);
 
@@ -111,8 +121,8 @@ void get_ndisstat(char *buff)
 			}
 			break;
 		case '1'://获取ip
-			syslog(LOG_DEBUG,"有效连接\n");
-			syslog(LOG_DEBUG,"\n");
+			//syslog(LOG_DEBUG,"有效连接\n");
+			//syslog(LOG_DEBUG,"\n");
 			if(0 == ecm_done){
 				syslog(LOG_DEBUG,"获取ip\n");
 				system("bash /opt/init/netconf.sh");

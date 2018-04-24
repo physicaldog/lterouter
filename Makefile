@@ -19,7 +19,7 @@ webEXE = router-web
 export webEXE
 
 #readdr = root@90.1.2.1:/opt
-readdr = root@192.168.1.1:/opt
+readdr = root@192.168.4.1:/opt
 
 all:
 	$(MAKE) -C $(init)
@@ -43,7 +43,7 @@ clean:
 	cd $(init) && $(MAKE) clean 
 
 install:
-	-mkdir $(opt) $(opt)/config $(opt)/init $(opt)/web
+	-mkdir $(opt) $(opt)/config $(opt)/init $(opt)/web $(opt)/log
 	cp $(config)/* $(opt)/config/
 	cp $(init)/*.sh $(init)/$(initEXE) $(opt)/init/
 	cp $(webserver)/$(webEXE) $(webroot)/bin/

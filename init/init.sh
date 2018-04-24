@@ -5,8 +5,6 @@
 #2.启动模组
 #
 #
-#
-
 GpioDir=/sys/class/gpio
 PowerOn=121
 Reset=123
@@ -15,59 +13,49 @@ WakeupIn=1
 WakeupOut=30
 SleepSta=3
 
+logFile=/var/log/messages
+
 letrouter=/opt/init/lterouter
 routerweb=/opt/web/bin/router-web
 
 #udhcpd /etc/udhcpd.conf &
-DetectDev(){
-    cd /dev/
-    ret=`ifconfig -a | grep usb0`
-
-	#检查usb0网卡及虚拟串口是否存在
-    if [ $? -eq 0 ] && [ -e  ttyem300 ]
-    then
-        echo 0
-    else
-        echo 1
-    fi
-}
 
 #导出各gpio
 InitGpio(){
     cd $GpioDir
     if [ -e gpio$PowerOn ]
     then
-        echo "gpio$PowerOn done!"
+        echo "gpio$PowerOn done!" >> $logFile
     else
         echo $PowerOn > export
     fi
     if [ -e gpio$Reset ]
     then
-        echo "gpio$Reset done!"
+        echo "gpio$Reset done!" >> $logFile
     else
         echo $Reset > export
     fi
     if [ -e gpio$NetLed ]
     then
-        echo "gpio$NetLed done!"
+        echo "gpio$NetLed done!" >> $logFile
     else
         echo $NetLed > export
     fi
     if [ -e gpio$WakeupIn ]
     then
-        echo "gpio$WakeupIn done!"
+        echo "gpio$WakeupIn done!" >> $logFile
     else
         echo $WakeupIn > export
     fi
     if [ -e gpio$WakeupOut ]
     then
-        echo "gpio$WakeupOut done!"
+        echo "gpio$WakeupOut done!" >> $logFile
     else
         echo $WakeupOut > export
     fi
     if [ -e gpio$SleepSta ]
     then
-        echo "gpio$SleepSta done!"
+        echo "gpio$SleepSta done!" >> $logFile
     else
         echo $SleepSta > export
     fi
@@ -76,7 +64,7 @@ InitGpio(){
 TurnOn(){
     cd $GpioDir/gpio$PowerOn
     echo out > direction
-    echo 0 > value;sleep 2;echo 1 > value;sleep 10
+    echo 0 > value;sleep 2;echo 1 > value;sleep 5
 }
 
 TurnOff(){
@@ -92,19 +80,26 @@ Reboot(){
 }
 #系统重启时硬件重启模组
 InitModule(){
-    echo "start to Detect"
+    echo "start to Detect" >> $logFile
     ret=`DetectDev`
     if [ $ret -eq 0 ]
     then
-        echo "Dev Ok,reboot module!"
+        echo "Dev Ok,reboot module!" >> $logFile
 		Reboot
     else
-        echo Turn on Module!
+        echo Turn on Module! >> $logFile
         TurnOn
     fi
 }
 
 DetectLterouter(){
+	ps -fe|grep "lterouter" |grep -v grep
+	if [ $? -ne 0 ]
+	then
+		echo 0
+	else
+		echo 1
+	fi
 	if [ `ps | grep lterouter | wc -l` -eq 1 ]
 	then
 		echo 0 #进程未启动
@@ -116,39 +111,62 @@ DetectLterouter(){
 DetectRouterweb(){
 	if [ `ps | grep router-web | wc -l` -eq 1 ]
 	then
+		echo "router-web 进程未启动" >> $logFile
 		echo 0 #进程未启动
 	else
 		echo 1
 	fi
 }
 
+DetectDev(){
+    cd /dev/
+    ret=`ifconfig -a | grep usb0`
+
+	#检查usb0网卡及虚拟串口是否存在
+    if [ $? -eq 0 ] && [ -e  ttyem300 ]
+    then
+        echo 0
+    else
+        echo 1
+    fi
+#	echo 0
+}
+#lterouter启动前杀死udhcpd
+killdhcpd(){
+	ret=`pidof udhcpd`
+	kill $ret
+}
 InitWork(){
-    echo "start to work"
+    echo "start to work" >> $logFile
 	while [ `DetectDev` -eq 0 ]
 	do
 		#echo "dev ok"
-		if [ `DetectLterouter` -eq 0 ]
+		ps -fe|grep "lterouter" |grep -v grep >> /dev/null
+		if [ $? -ne 0 ]
 		then
-			echo "lterouter start!!"
+			echo "lterouter 进程未启动 1" >> $logFile
+			echo "lterouter start!!" >> $logFile
+			killdhcpd
 			nohup /opt/init/lterouter >/dev/null 2>&1 &
-		#else
-			#echo "lterouter done!"
+#		else
+#			echo "lterouter done!"
 		fi
-		sleep 5
+		sleep 1
 
-		if [ `DetectRouterweb` -eq 0 ]
+		ps -fe|grep "router-web" |grep -v grep >> /dev/null
+		if [ $? -ne 0 ]
 		then
-			echo "router-web start!!"
+			echo "router-web start!!" >> $logFile
 			nohup /opt/web/bin/router-web >/dev/null 2>&1 &
-		#else
-			#echo "router-web done!"
+#		else
+#			echo "router-web done!"
 		fi
 		sleep 5
 
 	done
 
-	echo "dev not found"
-	echo "Reboot system!!!"
+	echo "dev not found" >> $logFile
+	echo "Reboot system!!!" >> $logFIle
 	`reboot`
 	#shutdown -r now	#当设备挂载失败时重启系统
 }

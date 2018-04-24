@@ -23,6 +23,7 @@
 #include	<unistd.h>
 #include	<sys/types.h>
 #include	<sys/wait.h>
+#include <syslog.h>
 
 #ifdef WEBS_SSL_SUPPORT
 #include	"../websSSL.h"
@@ -37,15 +38,16 @@ void	formDefineUserMgmt(void);
 #include <termios.h> /* for serial port */
 
 #include "a6g2cimpl.h"
-#include "router_status.h"
-#include "router_set.h"
+//#include "router_status.h"
+//#include "router_set.h"
+#include "suyi/suyi_common.h"
 
 /*********************************** Locals ***********************************/
 /*
  *	Change configuration here
  */
 
-static char_t		*rootWeb = T("/opt/web/index");	/* Root web directory */
+static char_t		*rootWeb = T("/opt/web/staticPage");	/* Root web directory */
 static char_t		*password = T("");				/* Security password */
 static int			port = 80;						/* Server port */
 static int			retries = 5;					/* Server port retries */
@@ -230,15 +232,27 @@ static int initWebs()
  *	roter-manager handler function
  *	
  */
-    
-	websFormDefine(T("lteSet_apn"), apn_set);
-	websFormDefine(T("lteStatus_apn"), apn_query);
-	websFormDefine(T("lteSet_lanip"), lanip_set);
-	websFormDefine(T("lteStatus_lanip"), lanip_query);
-    
-    
-	websFormDefine(T("sysSet_sysReset"), sysReset);
-	websFormDefine(T("sysSet_moduleReset"), moduleReset);
+/*添加系统日志*/
+openlog("router_web", LOG_CONS | LOG_PID, LOG_LOCAL2);
+/*settingLAN*/
+	websFormDefine(T("settingLAN"), settingLAN);
+	websFormDefine(T("queryLAN"), queryLAN);
+
+/*seetingLTE*/
+	websFormDefine(T("settingAPN"), settingAPN);
+	websFormDefine(T("queryAPN"), queryAPN);
+/*Runningstatus*/
+	websFormDefine(T("deviceInfo"), deviceInfo);
+	websFormDefine(T("WANStatus"), WANStatus);
+	websFormDefine(T("LANStatus"), LANStatus);
+//	
+//	websFormDefine(T("lteSet_apn"), apn_set);
+//	websFormDefine(T("lteSet_lanip"), lanip_set);
+//	websFormDefine(T("lteStatus_lanip"), lanip_query);
+//    
+//    
+//	websFormDefine(T("sysSet_sysReset"), sysReset);
+//	websFormDefine(T("sysSet_moduleReset"), moduleReset);
 
 /*
  *	Now define the procedures. Replace these with your application
