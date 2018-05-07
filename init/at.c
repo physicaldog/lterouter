@@ -23,12 +23,60 @@ void direct_process(char *buff)
 			return;
 		}
 		//ptr = strstr(buff,at_arr[1]);
-		if (strstr(buff,"IPV4") && ((strstr(buff,at_arr[1])) || (strstr(buff,at_arr[3]))) ) {
+		else if (strstr(buff,"IPV4") && ((strstr(buff,at_arr[1])) || (strstr(buff,at_arr[3]))) ) {
 			get_ndisstat(buff);
+			return;
+		}
+		else if(strstr(buff,"NWTIME")){
+			get_nwtime(buff);
 			return;
 		}
 
 	}
+}
+
+void get_nwtime(char *buff)
+{
+	int i = 0,ret = 0;
+	char *ptr = NULL;
+	char *qtr = NULL;
+	char time[32] = {'\0'};
+	char hour[4] = {'\0'};
+
+	printf("get_nwtime\n");
+	printf("buff:%s\n",buff);
+	ptr = strstr(buff," ");
+	if(NULL == ptr)
+		return;
+	ptr++;
+	if('9' == *ptr){
+		setTime_done = 0;
+		return;
+	}
+	else{
+		sprintf(time,"date -s \"20");
+		for(i=0;i<2;i++){
+			qtr = strchr(ptr,'/');
+			if(qtr == NULL){
+				printf("qtr failed\n");
+				return;
+			}
+			printf("%c\n",*qtr);
+			*qtr = '-';
+		}
+//		qtr = strchr(ptr,',')
+//		memcpy()
+		qtr = strchr(ptr,',');
+		*qtr = ' ';
+		qtr = strchr(ptr,'+');
+		memset(qtr,'\0',strlen(qtr));
+		strcat(time,ptr);
+		strcat(time,"\"");
+		printf("%s\n",time);
+		system(time);
+		setTime_done = 1;
+	}
+
 }
 
 void get_sysinfoex(char *buff)
@@ -37,32 +85,43 @@ void get_sysinfoex(char *buff)
 	char *ptr = NULL;
 	char *qtr = NULL;
 
+	printf("get_sysinfoex\n");
+	printf("buff:%s\n",buff);
 	ptr = strstr(buff," ");
-	qtr = strchr(buff,',');
-	for(i=0;i<5;i++)
-	{
-		qtr = strchr(qtr,',');
-		qtr++;
-	}
 	if(NULL == ptr)
 		return;
-	//printf("网络有效,%c,%c\n",ptr[1],*qtr);
-	if (('2' == ptr[1]) && ('6' == *qtr)){
-//	if (('2' == ptr[1])){
-		//syslog(LOG_DEBUG,"有效网络\n");
-		//syslog(LOG_DEBUG,"\n");
-		/*成功附着网络重置定时器*/
-		alarm(REBOOT_TIME);
-
-		/*网络有效，检查网络链接状态*/
-		write(fd,at[1],strlen(at[1]));
-		net_sta = 1;
+	if(strstr(buff,"SRVST")){
+		if (('2' != ptr[1])){
+			syslog(LOG_DEBUG,"无效网络\n");
+			syslog(LOG_DEBUG,"\n");
+			net_sta = 0;
+			ecm_done = 0;
+		}
 	}
 	else{
-		syslog(LOG_DEBUG,"无效网络\n");
-		syslog(LOG_DEBUG,"\n");
-		net_sta = 0;
-		ecm_done = 0;
+		qtr = strchr(buff,',');
+		for(i=0;i<5;i++)
+		{
+			printf("%d ",i);
+			qtr = strchr(qtr,',');
+			qtr++;
+			printf("%d ",i);
+		}
+		printf("网络有效,%c,%c\n",ptr[1],*qtr);
+		if (('2' == ptr[1]) && ('6' == *qtr)){
+			alarm(REBOOT_TIME);
+
+			/*网络有效，检查网络链接状态*/
+			write(fd,at[1],strlen(at[1]));
+			net_sta = 1;
+		}
+		else{
+			syslog(LOG_DEBUG,"无效网络\n");
+			syslog(LOG_DEBUG,"\n");
+			net_sta = 0;
+			ecm_done = 0;
+		}
+
 	}
 }
 
@@ -123,6 +182,8 @@ void get_ndisstat(char *buff)
 		case '1'://获取ip
 			//syslog(LOG_DEBUG,"有效连接\n");
 			//syslog(LOG_DEBUG,"\n");
+			if(0 == setTime_done)
+				write(fd,"at^nwtime?\r\n",strlen("at^nwtime?\r\n"));
 			if(0 == ecm_done){
 				syslog(LOG_DEBUG,"获取ip\n");
 				system("bash /opt/init/netconf.sh");

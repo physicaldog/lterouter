@@ -29,6 +29,28 @@ void	formDefineUserMgmt(void);
 #include "router_status.h"
 #define ConfigFile "/opt/config/netconfig"
 
+//void deviceInfo(webs_t wp, char_t *path, char_t *query)
+//{
+//		//char buff[] = {""}
+//        //websWrite(wp,T("%s"),buff);
+//		printf("deviceinfo:");
+//        websWrite(wp,T("monkey"));
+//
+//        websDone(wp,200);
+//        return;
+//}
+//
+//void CPUUsageRate(webs_t wp, char_t *path, char_t *query)
+//{
+//
+//	char *name;
+//	printf("CPUUsageRate:");
+//	name = websGetVar(wp,T("name"),T("jk"));
+//	printf("%s\n",name);
+//	websDone(wp,200);
+//	return;
+//}
+
 int getConfig(char *Config, char *buff)
 {
     FILE *fe = NULL;

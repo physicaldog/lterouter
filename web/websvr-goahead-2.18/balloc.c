@@ -467,6 +467,26 @@ char_t *bstrdup(B_ARGS_DEC, char_t *s)
 
 /******************************************************************************/
 /*
+ *  Duplicate memory, allow NULL pointers and then clear buffer.
+ *  Added by LohCT to support binary file upload.
+ */
+
+char_t *bmemdup(B_ARGS_DEC, char_t *s, int size)
+{
+	char_t	*cp;
+
+    if ((cp = balloc(B_ARGS, size * sizeof(char_t))) != NULL) {
+        if (s == NULL) {
+            memset(cp, 0, size);
+        } else {
+            memcpy(cp, s, size);
+        }
+	}
+	return cp;
+}
+
+/******************************************************************************/
+/*
  *	Reallocate a block. Allow NULL pointers and just do a malloc.
  *	Note: if the realloc fails, we return NULL and the previous buffer is 
  *	preserved.
@@ -965,6 +985,23 @@ char *bstrdupANoBalloc(char *s)
 	}
 	buf = malloc(strlen(s)+1);
 	strcpy(buf, s);
+	return buf;
+}
+
+/******************************************************************************/
+
+/* Added by LohCT to support binary file upload. */
+char *bmemdupNoBalloc(char *s, int size)
+{
+	char*	buf;
+
+    if ((buf = malloc(size) != NULL) {
+        if (s == NULL) {
+            memset(buf, 0, size);
+        } else {
+            memcpy(buf, s, size);
+        }
+	}
 	return buf;
 }
 

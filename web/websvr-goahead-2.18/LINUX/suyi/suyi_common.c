@@ -7,6 +7,110 @@ extern char csq[];
 extern int rssi;
 
 
+char * get_timeStr(unsigned long uptime,char *timeStr)
+{
+	int year = 0;	
+	int mon = 0;	
+	int day = 0;	
+	int hour = 0;	
+	int min = 0;	
+	int sec = 0;	
+	char str[16] = {'\0'};
+	printf("get_uptime:%lu",uptime);
+	if(uptime > YEAR){
+		year = uptime / YEAR;
+		uptime = uptime % YEAR; 
+		sprintf(str,"%dy:",year);
+		strcat(timeStr,str);
+		memset(str,'\0',strlen(str));
+	}
+	if(uptime > MON){
+		mon = uptime / MON;
+		uptime = uptime % MON; 
+		sprintf(str,"%dm:",mon);
+		strcat(timeStr,str);
+		memset(str,'\0',strlen(str));
+	}
+	if(uptime > DAY){
+		day = uptime / day;
+		uptime = uptime % day; 
+		sprintf(str,"%dd:",day);
+		strcat(timeStr,str);
+		memset(str,'\0',strlen(str));
+	}
+	if(uptime > HOUR){
+		hour = uptime / HOUR;
+		uptime = uptime % HOUR; 
+		sprintf(str,"%dh:",hour);
+		strcat(timeStr,str);
+		memset(str,'\0',strlen(str));
+	}
+	if(uptime > MIN){
+		min = uptime / MIN;
+		uptime = uptime % MIN; 
+		sprintf(str,"%dm:",min);
+		strcat(timeStr,str);
+		memset(str,'\0',strlen(str));
+	}
+	sec = uptime;
+	sprintf(str,"%ds",sec);
+	strcat(timeStr,str);
+	memset(str,'\0',strlen(str));
+	return NULL;
+}
+
+struct timeval get_uptime(void)
+{
+	struct timeval now;
+	unsigned char  timestr[60] = {0};
+	unsigned char  uptimestr[30] = {0};
+	unsigned char * dotaddr;
+	unsigned long second;
+	char error = 0;
+	FILE * timefile = NULL;
+
+	timefile = fopen("/proc/uptime", "r");
+	if(!timefile)
+	{
+		printf("[%s:line:%d] error opening '/proc/uptime'",__FILE__,__LINE__);
+		error = 1;
+		goto out;
+	}
+
+	if( (fread(timestr, sizeof(char), 60, timefile)) == 0 )
+	{
+		printf("[%s:line:%d] read '/proc/uptime' error",__FILE__,__LINE__);
+		error = 1;
+		goto out;
+	}
+
+	dotaddr = strchr(timestr, '.');
+	if((dotaddr - timestr + 2) < 30)
+		memcpy(uptimestr, timestr, dotaddr - timestr + 2);
+	else
+	{
+		printf("[%s:line:%d] uptime string is too long",__FILE__,__LINE__);
+		error = 1;
+		goto out;
+	}
+	uptimestr[dotaddr - timestr + 2] = '\0';
+
+out:
+	if(error)
+	{
+		now.tv_sec  = 0;
+		now.tv_usec = 0;
+	}
+	else
+	{
+		now.tv_sec  = atol(uptimestr);
+		now.tv_usec = 0;
+	}
+
+	fclose(timefile);
+	return now;
+}
+
 int get_local_ip(char *ifname, char *ip, char *netmask, char *macaddr)
 {
 	char *temp = NULL;
@@ -103,7 +207,7 @@ int set_ip(char * ifname, char * ip, char * netmask)
         return 0;
 }
 
-int getConfig(char *Config, char *buff)
+int getConfig(char *Config, char *buff, char *ConfigFile)
 {
     FILE *fe = NULL;
     int fexist = 0;
@@ -115,6 +219,11 @@ int getConfig(char *Config, char *buff)
             printf("no netconfig file\n");
             return -1;//未找到配置文件
     }
+	
+	if(0 == strlen(Config))
+	{
+		printf("Config is NULL\n!");
+	}
 
     while (fgets(rbuff,sizeof(rbuff),fe)){
             if (strstr(rbuff,Config)){
@@ -137,10 +246,11 @@ int getConfig(char *Config, char *buff)
     return 0;
 }
 
-int setConfig(char *Config, char *content)
+int setConfig(char *Config, char *content, char *ConfigFile)
 {
 	FILE *fe = NULL;
 	FILE *tmp = NULL;
+	char tmpfile[64] = {'\0'};
 	char rbuff[64] = {'\0'};//读取文件缓存
 
 	fe = fopen(ConfigFile,"r+");
@@ -148,8 +258,9 @@ int setConfig(char *Config, char *content)
 		printf("no netconfig file\n");
 		return -1;
 	}
-
-	tmp = fopen(tmpFile,"w+");
+	strcpy(tmpfile,ConfigFile);
+	strcat(tmpfile,".bak");
+	tmp = fopen(tmpfile,"w+");
 	if (NULL == tmp){
 		printf("tmpfile create failed\n");
 		return -1;
@@ -170,8 +281,8 @@ int setConfig(char *Config, char *content)
 	fclose(fe);
 	fclose(tmp);
 
-	remove(ConfigFile);
-	rename(tmpFile,ConfigFile);
+	//remove(ConfigFile);
+	rename(tmpfile,ConfigFile);
 }
 #if 1
 int get_csq(char *buff)

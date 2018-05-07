@@ -71,7 +71,7 @@ LDFLAGS	= $(SSLLIB) $(IFMODLIB)
 SUYI = libsuyi.a
 SUYI_FILES = suyi/suyi_common.o suyi/RunningStatus.o suyi/settingLTE.o \
 			 suyi/settingLAN.o suyi/Account.o suyi/index.o suyi/Version.o\
-			 suyi/Diagnose.o suyi/left.o suyi/ftpUpdate.o suyi/settingWH.o\
+			 suyi/Diagnose.o suyi/left.o suyi/login.o suyi/settingWH.o\
 			 suyi/SystemLog.o suyi/head.o suyi/module.o suyi/TR069.o
 compile: $(NAME)
 #
@@ -88,10 +88,10 @@ $(ARCH): $(DEPEND_FILES)
 #
 #	Primary link
 #
-$(NAME): Makefile $(ARCH) $(SUYI)
+$(NAME): Makefile $(ARCH) $(SUYI) upldForm.o
 	$(CC) -o $(NAME) $(DEBUG) \
 		$(CFLAGS) $(IFLAGS) \
-		main.o $(SUYI) $(ARCH) $(LDFLAGS)
+		main.o $(SUYI) upldForm.o $(ARCH) $(LDFLAGS)
 
 clean:
 	rm -f $(NAME) $(ARCH) $(DEPEND_FILES) $(SUYI) $(SUYI_FILES)
@@ -115,7 +115,7 @@ suyi/index.o: suyi/index.c
 suyi/Version.o: suyi/Version.c
 suyi/Diagnose.o: suyi/Diagnose.c
 suyi/left.o: suyi/left.c
-suyi/ftpUpdate.o: suyi/ftpUpdate.c
+suyi/login.o: suyi/login.c
 suyi/settingWH.o: suyi/settingWH.c
 suyi/SystemLog.o: suyi/SystemLog.c
 suyi/head.o: suyi/head.c
@@ -185,6 +185,7 @@ suyi/TR069.o: suyi/TR069.c
 
 ../websSSL.o:  ../websSSL.c ../websSSL.h ../wsIntrn.h ../ej.h ../ejIntrn.h ../uemf.h
 
+upldForm.o:  upldForm.c ../webs.h
 #setip.o: setip.c
 a6g2cimpl.o: a6g2cimpl.c a6g2cimpl.h
 #routr-manager.o: router_status.h router_set.h status.c set.c setip.c

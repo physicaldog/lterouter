@@ -24,52 +24,52 @@ void	formDefineUserMgmt(void);
 
 int setConfig(char *Config, char *content)
 {
-    FILE *fe = NULL;
-    FILE *tmp = NULL;
-    char rbuff[64] = {'\0'};//读取文件缓存
+	FILE *fe = NULL;
+	FILE *tmp = NULL;
+	char rbuff[64] = {'\0'};//读取文件缓存
 
-    fe = fopen(ConfigFile,"r+");
-    if (NULL == fe){
-            printf("no netconfig file\n");
-            return -1;
-    }
+	fe = fopen(ConfigFile,"r+");
+	if (NULL == fe){
+		printf("no netconfig file\n");
+		return -1;
+	}
 
-    tmp = fopen(tmpFile,"w+");
-    if (NULL == tmp){
-            printf("tmpfile create failed\n");
-            return -1;
-    }
+	tmp = fopen(tmpFile,"w+");
+	if (NULL == tmp){
+		printf("tmpfile create failed\n");
+		return -1;
+	}
 
-    while (fgets(rbuff,sizeof(rbuff),fe)){
-            if (strstr(rbuff,Config)){
-                    continue;
-            }
-            else
-                    fwrite(rbuff,sizeof(char),strlen(rbuff),tmp);
-                    memset(rbuff,'\0',sizeof(rbuff));
-    }
-    fwrite(Config,sizeof(char),strlen(Config),tmp);
-    fwrite(content,sizeof(char),strlen(content),tmp);
-    fwrite("\n",sizeof(char),1,tmp);
-    fclose(fe);
-    fclose(tmp);
+	while (fgets(rbuff,sizeof(rbuff),fe)){
+		if (strstr(rbuff,Config)){
+			continue;
+		}
+		else
+			fwrite(rbuff,sizeof(char),strlen(rbuff),tmp);
+		memset(rbuff,'\0',sizeof(rbuff));
+	}
 
-    remove(ConfigFile);
-    rename(tmpFile,ConfigFile);
-    
+	fwrite(Config,sizeof(char),strlen(Config),tmp);
+	fwrite(content,sizeof(char),strlen(content),tmp);
+	fwrite("\n",sizeof(char),1,tmp);
+	fclose(fe);
+	fclose(tmp);
+
+	remove(ConfigFile);
+	rename(tmpFile,ConfigFile);
 }
 
 void lanip_set(webs_t wp, char_t *path, char_t *query)
 {
 	char *lanip;
-    lanip = websGetVar(wp,T("lanip"),T("jk"));
-    printf("lanip=%s\n",lanip);
+	lanip = websGetVar(wp,T("lanip"),T("jk"));
+	printf("lanip=%s\n",lanip);
 
-    setConfig("lanip:",lanip);
+	setConfig("lanip:",lanip);
 
-    set_ip("eth0",lanip,"255.255.255.0");
+	set_ip("eth0",lanip,"255.255.255.0");
 
-    websDone(wp,200);
+	websDone(wp,200);
 	return;
 }
 
@@ -77,19 +77,19 @@ void apn_set(webs_t wp, char_t *path, char_t *query)
 {
 	char *apn;
 
-    apn = websGetVar(wp,T("apn"),T("jk"));
-    printf("apn=%s\n",apn);
+	apn = websGetVar(wp,T("apn"),T("jk"));
+	printf("apn=%s\n",apn);
 
-    setConfig("apn:",apn);
+	setConfig("apn:",apn);
 
-    websDone(wp,200);
+	websDone(wp,200);
 	return;
 }
 
 void sysReset(webs_t wp, char_t *path, char_t *query)
 {
-    printf("sysReset!\n");
-    websDone(wp,200);
+	printf("sysReset!\n");
+	websDone(wp,200);
 	/*系统重启*/
 	sync();
 	reboot(RB_AUTOBOOT);
@@ -98,8 +98,8 @@ void sysReset(webs_t wp, char_t *path, char_t *query)
 
 void moduleReset(webs_t wp, char_t *path, char_t *query)
 {
-    printf("moduleReset\n");
-    websDone(wp,200);
+	printf("moduleReset\n");
+	websDone(wp,200);
 	return;
 }
 

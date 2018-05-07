@@ -22,6 +22,10 @@
 	#include	"websda.h"
 #endif
 
+/********************************** Defines ***********************************/
+#define  CTYPE_MULTIPART		T("multipart/form-data")
+#define  BOUNDARY_KWD           "boundary="
+
 /******************************** Global Data *********************************/
 
 websStatsType	websStats;				/* Web access stats */
@@ -75,6 +79,7 @@ static int 		websParseFirst(webs_t wp, char_t *text);
 static void 	websParseRequest(webs_t wp);
 static void		websSocketEvent(int sid, int mask, int data);
 static int		websGetTimeSinceMark(webs_t wp);
+static char_t*	 extractUploadedFileContent(webs_t wp, int * lenContent);
 
 #ifdef WEBS_LOG_SUPPORT
 static void 	websLog(webs_t wp, int code);
@@ -424,6 +429,8 @@ void websReadEvent(webs_t wp)
  */
 			} else 
 #endif
+            if (wp->postData) {
+#if 0
 			if (wp->query) {
 				if (wp->query[0] && !(wp->flags & WEBS_POST_DATA)) {
 /*
@@ -439,23 +446,31 @@ void websReadEvent(webs_t wp)
 					gstrcpy(&wp->query[len], text);
 
 				} else {
+#endif
 /*
  *					The existing query data came from the POST request so just
  *					append it.
  */
-               if (text != NULL)
-               {
-                  len = gstrlen(wp->query);
-                  wp->query = brealloc(B_L, wp->query, (len +	gstrlen(text) +
-                     1) * sizeof(char_t));
-                  if (wp->query) {
-                     gstrcpy(&wp->query[len], text);
-                  }
-               }
+/*
+					len = gstrlen(wp->query);
+					wp->query = brealloc(B_L, wp->query, (len +	gstrlen(text) +
+						1) * sizeof(char_t));
+					if (wp->query) {
+						gstrcpy(&wp->query[len], text);
+					}
 				}
+*/
+                    wp->postData = brealloc(B_L, wp->postData, (wp->lenPostData + nbytes +
+						1) * sizeof(char_t));
+                    if (wp->postData) {
+                        memcpy(&wp->postData[wp->lenPostData], text, nbytes);
+                        wp->lenPostData += nbytes;
+					}
 
 			} else {
-				wp->query = bstrdup(B_L, text);
+/*				wp->query = bstrdup(B_L, text);*/
+                wp->postData = bmemdup(B_L, text, nbytes);
+                wp->lenPostData = nbytes;
 			}
 /*
  *			Calculate how much more post data is to be read.
@@ -783,6 +798,10 @@ static int websParseFirst(webs_t wp, char_t *text)
 	wp->protocol = bstrdup(B_L, proto);
 	wp->protoVersion = bstrdup(B_L, protoVer);
 	
+    /* LohCT: Initialize to NULL */
+    wp->postData = NULL;
+	wp->lenPostData = 0;
+
 	if ((testPort = socketGetPort(wp->listenSid)) >= 0) {
 		wp->port = testPort;
 	} else {
@@ -1063,7 +1082,18 @@ static void websParseRequest(webs_t wp)
  */
 		} else if (gstrcmp(key, T("content-type")) == 0) {
 			websSetVar(wp, T("CONTENT_TYPE"), value);
-
+/* begin   support multipart form for file upload */
+			if (gstrncmp(value, CTYPE_MULTIPART, gstrlen(CTYPE_MULTIPART)) == 0) {
+				char_t* p;
+				wp->flags |= WEBS_MULTIPART_FORM;
+				if ((p = gstrstr(value, BOUNDARY_KWD)) != NULL) {
+					/* skip over the 'boundary=' part */
+					p+= gstrlen(BOUNDARY_KWD);
+					wp->multiPartBoundary = balloc(B_L, gstrlen(p) + 2);
+					gsprintf(wp->multiPartBoundary , "--%s", p);
+				}
+			}
+/* end  */
 #ifdef WEBS_KEEP_ALIVE_SUPPORT
 		} else if (gstrcmp(key, T("connection")) == 0) {
 			strlower(value);
@@ -1129,6 +1159,7 @@ void websSetEnv(webs_t wp)
 {
 	char_t	portBuf[8];
 	char_t	*keyword, *value, *valCheck, *valNew;
+    int len;
 
 	a_assert(websValid(wp));
 
@@ -1148,6 +1179,63 @@ void websSetEnv(webs_t wp)
 	bfreeSafe(B_L, value);
 	websSetVar(wp, T("SERVER_PROTOCOL"), wp->protoVersion);
 
+	/* multipart */
+	if (wp->flags & WEBS_MULTIPART_FORM) {
+		char_t* uploadedFileContent;
+		int lenUploadedFile;
+
+		/*
+		 * In case of file upload, the query field contains multiple
+		 * parts. One of them contains the content of the uploaded file.
+		 * Here we keep in the query field just this file content and
+		 * ignore all other parts.
+		 */
+		uploadedFileContent = extractUploadedFileContent(wp, &lenUploadedFile);
+		if (uploadedFileContent != NULL) {
+            bfree(B_L, wp->postData);
+			wp->postData = uploadedFileContent;
+			wp->lenPostData = lenUploadedFile;
+		}
+    } else {
+        if (wp->postData) {
+            if (wp->query) {
+                if (wp->query[0]) {
+/*
+ *					Special case where the POST request also had query data
+ *					specified in the URL, ie. url?query_data. In this case
+ *					the URL query data is separated by a '&' from the posted
+ *					query data.
+ */
+					len = gstrlen(wp->query);
+                    wp->query = brealloc(B_L, wp->query, (len + wp->lenPostData +
+						2) * sizeof(char_t));
+                    if (wp->query) {
+                        wp->query[len++] = '&';
+                        memcpy(&wp->query[len], wp->postData, wp->lenPostData);
+                        wp->query[len + wp->lenPostData] = '\0';
+                    }
+				} else {
+/*
+ *					The existing query data came from the POST request so just
+ *					append it.
+ */
+                    len = gstrlen(wp->query);
+                    wp->query = brealloc(B_L, wp->query, (len + wp->lenPostData +
+						1) * sizeof(char_t));
+                    if (wp->query) {
+                        memcpy(&wp->query[len], wp->postData, wp->lenPostData);
+                        wp->query[len + wp->lenPostData] = '\0';
+                    }
+                }
+			} else {
+                wp->query = balloc(B_L, wp->lenPostData + 1);
+                if (wp->query) {
+                    memcpy(wp->query, wp->postData, wp->lenPostData);
+                    wp->query[wp->lenPostData] = '\0';
+                }
+			}
+        }
+    }
 /*
  *	Decode and create an environment query variable for each query keyword.
  *	We split into pairs at each '&', then split pairs at the '='.
@@ -2008,6 +2096,9 @@ int websAlloc(int sid)
 	wp->wsp = NULL;
 #endif
 
+    /* LohCT: Initialize to NULL */
+    wp->multiPartBoundary = NULL;
+
 	ringqOpen(&wp->header, WEBS_HEADER_BUFINC, WEBS_MAX_HEADER);
 
 /*
@@ -2039,6 +2130,8 @@ void websFree(webs_t wp)
 		bfree(B_L, wp->lpath);
 	if (wp->query)
 		bfree(B_L, wp->query);
+    if (wp->postData)
+        bfree(B_L, wp->postData);
 	if (wp->decodedQuery)
 		bfree(B_L, wp->decodedQuery);
 	if (wp->authType)
@@ -2059,6 +2152,8 @@ void websFree(webs_t wp)
 		bfree(B_L, wp->protoVersion);
 	if (wp->cgiStdin)
 		bfree(B_L, wp->cgiStdin);
+    if (wp->multiPartBoundary)
+		bfree(B_L, wp->multiPartBoundary);
 
 
 #ifdef DIGEST_ACCESS_SUPPORT
@@ -2458,6 +2553,206 @@ static int websGetTimeSinceMark(webs_t wp)
 	return time(0) - wp->timestamp;
 }
 
+/******************************************************************************/
+/*
+ *	Extract from the wp->query field the content of the uploaded file.
+ *	This function is called when the wp->query field contains uploaded
+ *	file content in a multipart/form-data format.
+ */
+#define MAX_LINE 1024
+static char_t* extractUploadedFileContent(webs_t wp, int * lenContent)
+{
+    char_t* part = wp->postData;
+    char_t* endPart = wp->postData;
+    char_t* endLine;
+    char_t* fileContent = NULL;
+    int lineLen;
+    char_t buf[MAX_LINE];
+    int len;
+    int firstUploadFile;
+
+	if (wp->multiPartBoundary == NULL) {
+		/*
+		* content-type is multipart but there are no
+		* actually multiple parts. This happens, for example,
+		* when the java applet writes to the url.
+		* In this case just return the query as is.
+		*/
+        if (wp->postData == NULL) {
+            return NULL;
+        } else {
+            if (wp->query) {
+                if (wp->query[0]) {
+/*
+ *                  Special case where the POST request also had query data
+ *                  specified in the URL, ie. url?query_data. In this case
+ *                  the URL query data is separated by a '&' from the posted
+ *                  query data.
+ */
+                    len = gstrlen(wp->query);
+                    wp->query = brealloc(B_L, wp->query, (len + wp->lenPostData +
+                            2) * sizeof(char_t));
+                    if (wp->query) {
+                        wp->query[len++] = '&';
+                        memcpy(&wp->query[len], wp->postData, wp->lenPostData);
+                        wp->query[len + wp->lenPostData] = '\0';
+                    }    /* if (wp->query) */
+                } else {
+/*
+ *                  The existing query data came from the POST request so just
+ *                  append it.
+ */
+                    len = gstrlen(wp->query);
+                    wp->query = brealloc(B_L, wp->query, (len + wp->lenPostData +
+                            1) * sizeof(char_t));
+                    if (wp->query) {
+                        memcpy(&wp->query[len], wp->postData, wp->lenPostData);
+                        wp->query[len + wp->lenPostData] = '\0';
+                    }    /* if (wp->query) */
+                }    /* if (wp->query[0]) */
+            } else {
+                wp->query = balloc(B_L, wp->lenPostData + 1);
+                if (wp->query) {
+                    memcpy(wp->query, wp->postData, wp->lenPostData);
+                    wp->query[wp->lenPostData] = '\0';
+                }    /* if (wp->query) */
+            }
+            return NULL;
+        }
+    }    /* if (wp->multiPartBoundary == NULL) */
+
+    firstUploadFile = FALSE;
+    while ((endPart != NULL) && ((part = gstrstr(endPart, wp->multiPartBoundary)) != NULL)) {
+		part = gstrchr(part, '\n');
+        if (part == NULL) {
+            endPart = part;
+        } else {
+            part++;
+
+            /* supposed to be the Content-Disposition line */
+            if (gstrstr(part, "Content-Disposition") == NULL) {
+                endPart = part;
+            } else {
+                endLine = gstrchr(part, '\n');
+                if (endLine != NULL) {
+                    int endOfHeader = 0;
+
+                    lineLen = (int)endLine - (int)part;
+                    lineLen = (lineLen < MAX_LINE) ? lineLen : (MAX_LINE-1);
+                    gstrncpy(buf, part, lineLen);
+                    buf[lineLen] = 0;
+
+                    while (!endOfHeader) {
+                        /*
+                         * look for the next empty line that separates
+                         * between the header and the body of the part
+                         */
+                        part = gstrchr(part, '\n');
+                        if (part == NULL) {
+                            break;
+                        } else {
+                            part++;
+                            if ((*part) == '\n') {
+                                part +=1;
+                                endOfHeader = 1;
+                            } else if (((*part) == '\r') && ((*(part+1)) == '\n')) {
+                                part += 2;
+                                endOfHeader = 1;
+                            }
+                        }    /* if (part != NULL) */
+                    }    /* while (!endOfHeader) */
+
+                    if (endOfHeader) {
+                        char *      tmpStartStr = NULL;
+                        char *      tmpEndStr = NULL;
+                        char        tmpNameStr[MAX_LINE];
+                        int         tmpValLenByte = 0;
+
+                        tmpNameStr[0] = '\0';
+                        endPart = xmemstr(part, wp->multiPartBoundary, (wp->lenPostData - ((int)part - (int)wp->postData)));
+                        if (endPart != NULL) {
+                            if ((tmpStartStr = gstrstr(buf, "filename=")) != NULL) {
+                                /* this the uploaded file part */
+                                if (!firstUploadFile) {
+                                    firstUploadFile = TRUE;
+                                    if ((tmpEndStr = gstrchr(&tmpStartStr[10], '\"')) != NULL) {
+                                        if ((tmpValLenByte = ((int)tmpEndStr - (int)&tmpStartStr[10])) > 0) {
+                                            tmpValLenByte = (tmpValLenByte < MAX_LINE) ? tmpValLenByte : (MAX_LINE-1);
+                                            gstrcpy(tmpNameStr, "filename=");
+                                            gstrncat(tmpNameStr, &tmpStartStr[10], tmpValLenByte);
+                                        }
+                                    }    /* if ((tmpEndStr = gstrchr(&tmpStartStr[10], '\"')) != NULL) */
+                                    *lenContent = (int)endPart - (int)part - 2; /* exclude the ending \r\n */
+                                    fileContent = balloc(B_L, *lenContent);
+                                    memcpy(fileContent, part, *lenContent);
+                                }
+                            } else if ((tmpStartStr = gstrstr(buf, "form-data; name=")) != NULL) {
+                                /* this the parameter part */
+                                if ((tmpEndStr = gstrchr(&tmpStartStr[17], '\"')) != NULL) {
+                                    if ((tmpValLenByte = ((int)tmpEndStr - (int)&tmpStartStr[17])) > 0) {
+                                        tmpValLenByte = (tmpValLenByte < MAX_LINE) ? tmpValLenByte : (MAX_LINE-1);
+                                        gstrncpy(tmpNameStr, &tmpStartStr[17], tmpValLenByte);
+                                        tmpNameStr[tmpValLenByte] = '\0';
+                                        gstrcat(tmpNameStr, "=");
+                                        if ((tmpValLenByte = ((int)endPart - (int)part - 2)) > 0) {
+                                            tmpValLenByte = (tmpValLenByte < (MAX_LINE-strlen(tmpNameStr))) ? tmpValLenByte : (MAX_LINE-strlen(tmpNameStr)-1);
+                                            gstrncat(tmpNameStr, part, tmpValLenByte);
+                                        }
+                                    }    /* if ((tmpValLenByte = ((int)tmpEndStr - (int)&tmpStartStr[17])) > 0) */
+                                }    /* if ((tmpEndStr = gstrchr(&tmpStartStr[17], '\"')) != NULL) */
+                            } else {
+                                /* this is not the uploaded file part or parameter part */
+                                continue;
+                            }    /* if (gstrstr(buf, "filename=") != NULL) */
+
+                            if (tmpNameStr[0] != '\0') {
+                                if (wp->query) {
+                                    if (wp->query[0]) {
+/*
+ *                                      Special case where the POST request also had query data
+ *                                      specified in the URL, ie. url?query_data. In this case
+ *                                      the URL query data is separated by a '&' from the posted
+ *                                      query data.
+ */
+                                        len = gstrlen(wp->query);
+                                        wp->query = brealloc(B_L, wp->query, (len + gstrlen(tmpNameStr) +
+                                            2) * sizeof(char_t));
+                                        if (wp->query) {
+                                            wp->query[len++] = '&';
+                                            memcpy(&wp->query[len], tmpNameStr, gstrlen(tmpNameStr));
+                                            wp->query[len + gstrlen(tmpNameStr)] = '\0';
+                                        }    /* if (wp->query) */
+                                    } else {
+/*
+ *                                      The existing query data came from the POST request so just
+ *                                      append it.
+ */
+                                        len = gstrlen(wp->query);
+                                        wp->query = brealloc(B_L, wp->query, (len + gstrlen(tmpNameStr) +
+                                            1) * sizeof(char_t));
+                                        if (wp->query) {
+                                            memcpy(&wp->query[len], tmpNameStr, gstrlen(tmpNameStr));
+                                            wp->query[len + gstrlen(tmpNameStr)] = '\0';
+                                        }    /* if (wp->query) */
+                                    }    /* if (wp->query[0]) */
+                                } else {
+                                    wp->query = balloc(B_L, gstrlen(tmpNameStr) + 1);
+                                    if (wp->query) {
+                                        memcpy(wp->query, tmpNameStr, gstrlen(tmpNameStr));
+                                        wp->query[gstrlen(tmpNameStr)] = '\0';
+                                    }
+                                }    /* if (wp->query) */
+                            }    /* if (tmpNameStr[0] != '\0') */
+                        }    /* if (endPart != NULL) */
+                    } else {
+                        endPart = part;
+                    }    /* if (endOfHeader) */
+                }    /* if (endLine == NULL) */
+            }    /* if (gstrstr(part, "Content-Disposition") == NULL) */
+        }    /* if (part == NULL) */
+    }    /* while ((endPart != NULL) && ((part = gstrstr(endPart, wp->multiPartBoundary)) != NULL)) */
+	return (fileContent);
+}
 /******************************************************************************/
 /*
  *	Store the new realm name

@@ -69,6 +69,7 @@ static int  websHomePageHandler(webs_t wp, char_t *urlPrefix, char_t *webDir,
 				int arg, char_t *url, char_t *path, char_t *query);
 extern void defaultErrorHandler(int etype, char_t *msg);
 extern void defaultTraceHandler(int level, char_t *buf);
+extern void upldForm(webs_t wp, char_t *path, char_t *query);
 #ifdef B_STATS
 static void printMemStats(int handle, char_t *fmt, ...);
 static void memLeaks();
@@ -234,14 +235,25 @@ static int initWebs()
  */
 /*添加系统日志*/
 openlog("router_web", LOG_CONS | LOG_PID, LOG_LOCAL2);
+/*Version*/
+	websFormDefine(T("queryVer"), queryVer);
+/*login*/
+	websFormDefine(T("loginCheck"), loginCheck);
+/*Account*/
+	websFormDefine(T("settingPW"), settingPW);
+/*settingWH*/
+	websFormDefine(T("resetDev"), resetDev);
+	websFormDefine(T("sysReset"), sysReset);
 /*settingLAN*/
 	websFormDefine(T("settingLAN"), settingLAN);
 	websFormDefine(T("queryLAN"), queryLAN);
 
 /*seetingLTE*/
+	websFormDefine(T("queryIMSI"), queryIMSI);
 	websFormDefine(T("settingAPN"), settingAPN);
 	websFormDefine(T("queryAPN"), queryAPN);
 /*Runningstatus*/
+	websFormDefine(T("sysInfo"), sysInfo);
 	websFormDefine(T("deviceInfo"), deviceInfo);
 	websFormDefine(T("WANStatus"), WANStatus);
 	websFormDefine(T("LANStatus"), LANStatus);
@@ -265,12 +277,12 @@ openlog("router_web", LOG_CONS | LOG_PID, LOG_LOCAL2);
 
 	websFormDefine(T("lcdbkl"), on_bkl_set);	
 	
-#if 1
-	websAspDefine(T("query"), query);
-	websFormDefine(T("set"), set);
+
+//	websAspDefine(T("query"), query);
+//	websFormDefine(T("set"), set);
 	websAspDefine(T("aspTest"), aspTest);
-	websFormDefine(T("formTEST"), formTest);
-#endif
+	websFormDefine(T("formTest"), formTest);
+	websFormDefine(T("upldForm"), upldForm);
 
 /*
  *	Create the Form handlers for the User Management pages
@@ -450,7 +462,7 @@ static int websHomePageHandler(webs_t wp, char_t *urlPrefix, char_t *webDir,
  *	If the empty or "/" URL is invoked, redirect default URLs to the home page
  */
 	if (*url == '\0' || gstrcmp(url, T("/")) == 0) {
-		websRedirect(wp, T("index.html"));
+		websRedirect(wp, T("login.html"));
 		return 1;
 	}
 	return 0;

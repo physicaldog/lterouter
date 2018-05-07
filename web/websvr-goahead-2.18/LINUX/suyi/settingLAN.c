@@ -1,14 +1,21 @@
 #include"suyi_common.h"
+#define LanConf "/opt/config/LanConfig"
 
 void queryLAN(webs_t wp, char_t *path, char_t *query)
 {
-    char buff[64] = {'\0'};
+    char lanip[32] = {'\0'};
+    char netmask[32] = {'\0'};
 
     printf("lanip query\n");
-    getConfig("lanip:",buff);
-    printf("lan = %s\n",buff);
+    getConfig("lanip:",lanip,LanConf);
+    getConfig("netmask:",netmask,LanConf);
+    printf("lanip = %s\n",lanip);
+    printf("netmask = %s\n",netmask);
 
-    websWrite(wp,T("%s"),buff);
+    websWrite(wp,T("{"));
+    websWrite(wp,T("\"lanip\":\"%s\","),lanip);
+    websWrite(wp,T("\"netmask\":\"%s\""),netmask);
+    websWrite(wp,T("}"));
 
     websDone(wp,200);
 	return;
@@ -23,8 +30,8 @@ void settingLAN(webs_t wp, char_t *path, char_t *query)
 	printf("lanip=%s\n",lanip);
 	printf("netmask=%s\n",netmask);
 
-	setConfig("lanip:",lanip);
-	setConfig("netmask:",netmask);
+	setConfig("lanip:",lanip,LanConf);
+	setConfig("netmask:",netmask,LanConf);
 	//set_ip("eth0",lanip,"255.255.255.0");
 
     websWrite(wp,T("重启后生效"));

@@ -5,6 +5,7 @@
  ************************************************************************/
 #ifndef _ROUTER_SET_H_
 #define _ROUTER_SET_H_
+#define SerPort "ttyem300"
 
 
 /* the forms procedure routine */

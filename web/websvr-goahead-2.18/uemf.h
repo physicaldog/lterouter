@@ -889,6 +889,7 @@ extern char *bstrdupANoBalloc(char *s);
 #define bstrdup(B_ARGS, s) bstrdupNoBalloc(s)
 #define bstrdupA(B_ARGS, s) bstrdupANoBalloc(s)
 #define gstrdup(B_ARGS, s) bstrdupNoBalloc(s)
+#define bmemdup(B_ARGS, p, s) bmemdupNoBalloc(p, s)     /* Added by LohCT to support binary file upload. */
 
 #else /* BALLOC */
 
@@ -898,6 +899,7 @@ extern char *bstrdupANoBalloc(char *s);
 #define bfreeSafe(B_ARGS, p) bfreeSafe(p)
 #define brealloc(B_ARGS, p, size) brealloc(p, size)
 #define bstrdup(B_ARGS, p) bstrdup(p)
+#define bmemdup(B_ARGS, p, s) bmemdup(p, s)             /* Added by LohCT to support binary file upload. */
 
 #ifdef UNICODE
 #define bstrdupA(B_ARGS, p) bstrdupA(p)
@@ -913,6 +915,7 @@ extern void		bfree(B_ARGS_DEC, void *mp);
 extern void		bfreeSafe(B_ARGS_DEC, void *mp);
 extern void		*brealloc(B_ARGS_DEC, void *buf, int newsize);
 extern char_t	*bstrdup(B_ARGS_DEC, char_t *s);
+extern char_t   *bmemdup(B_ARGS_DEC, char_t *s, int size);      /* Added by LohCT to support binary file upload. */
 
 #ifdef UNICODE
 extern char *bstrdupA(B_ARGS_DEC, char *s);
@@ -1043,6 +1046,8 @@ extern char_t	*strlower(char_t *string);
 extern char_t	*strupper(char_t *string);
 
 extern char_t	*stritoa(int n, char_t *string, int width);
+
+extern char_t   *xmemstr(char_t *memBlk, char_t *find, int memSize);        /* Added by LohCT to support binary file upload. */
 
 extern sym_fd_t	symOpen(int hash_size);
 extern void		symClose(sym_fd_t sd);

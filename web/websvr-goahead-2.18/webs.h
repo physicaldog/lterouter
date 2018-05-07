@@ -67,6 +67,7 @@
 #define WEBS_AUTH_BASIC			0x10000		/* Basic authentication request */
 #define WEBS_AUTH_DIGEST		0x20000		/* Digest authentication request */
 #define WEBS_HEADER_DONE		0x40000		/* Already output the HTTP header */
+#define WEBS_MULTIPART_FORM		0x80000		/* Post multipart form for file upload   orik */
 
 /*
  *	URL handler flags
@@ -98,8 +99,10 @@ typedef struct websRec {
 	char_t			*userName;			/* Authorization username */
 	char_t			*cookie;			/* Cookie string */
 	char_t			*userAgent;			/* User agent (browser) */
+	char_t*         multiPartBoundary;	/* orik Boundary string for multipart */
 	char_t			*protocol;			/* Protocol (normally HTTP) */
 	char_t			*protoVersion;		/* Protocol version */
+    char_t          *postData;          /* Post data */
 	int				sid;				/* Socket id (handler) */
 	int				listenSid;			/* Listen Socket id */
 	int				port;				/* Request port number */
@@ -108,6 +111,7 @@ typedef struct websRec {
 	int				code;				/* Request result code */
 	int				clen;				/* Content length */
 	int				wid;				/* Index into webs */
+    int             lenPostData;        /* Post data length */
 	char_t			*cgiStdin;			/* filename for CGI stdin */
 	int				docfd;				/* Document file descriptor */
 	int				numbytes;			/* Bytes to transfer to browser */

@@ -1,4 +1,6 @@
 #include"suyi_common.h"
+#define ApnConf "/opt/config/ApnConfig"
+#define Version "/opt/config/Version"
 char netmode;
 char netStatus;
 char simStatus;
@@ -9,22 +11,40 @@ int  rssi = 0;
 
 void sysInfo(webs_t wp, char_t *path, char_t *query)
 {
-	//char buff[] = {""}
+	char timeStr[64] = {'\0'};
 	//websWrite(wp,T("%s"),buff);
-	printf("sysinfo:\n");
-	websWrite(wp,T("monkey"));
+	struct timeval uptime;
+	printf("sysInfo:\n");
 
+	uptime = get_uptime();
+	
+	printf("uptime = %lu\n", uptime.tv_sec);
+	//get_timeStr(uptime.tv_sec,timeStr);
+	//printf("timeStr:%s\n",timeStr);
+	websWrite(wp,T("{"));
+	websWrite(wp,T("\"uptime\":\"%lu\""),uptime.tv_sec);
+
+	websWrite(wp,T("}"));
 	websDone(wp,200);
 	return;
 }
 
 void deviceInfo(webs_t wp, char_t *path, char_t *query)
 {
-	printf("deviceinfo:\n");
-	websWrite(wp,T("{\"product_Name\":\"Customer Premise Equipment\","));
-	websWrite(wp,T("\"product_Modle\":\"suyi_CPE\","));
-	websWrite(wp,T("\"hw_ver\":\"CPE_V1.0\","));
-	websWrite(wp,T("\"fw_ver\":\"CPE_V1.0\"}"));
+    char pName[32] = {'\0'};
+    char pModle[32] = {'\0'};
+    char sVer[32] = {'\0'};
+	printf("Deviceinfo:\n");
+    getConfig("productName:",pName,Version);
+    getConfig("productModle:",pModle,Version);
+    getConfig("softVersion:",sVer,Version);
+    printf("pName:%s,pModle:%s,sVer:%s\n",pName,pModle,sVer);
+
+    websWrite(wp,T("{"));
+    websWrite(wp,T("\"pName\":\"%s\","),pName);
+    websWrite(wp,T("\"pModle\":\"%s\","),pModle);
+    websWrite(wp,T("\"sVer\":\"%s\""),sVer);
+    websWrite(wp,T("}"));
 
 	websDone(wp,200);
 	return;
@@ -47,7 +67,7 @@ void WANStatus(webs_t wp, char_t *path, char_t *query)
 	//getSysinfo(fd);
 	at_send(fd,"at^sysinfoex\r\n");
 	at_read(fd);
-	printf("sysinfo\n");
+	printf("sysinfoex\n");
 
 	tcflush(fd,TCIFLUSH);
 	at_send(fd,"at^ndisstatqry?\r\n");
@@ -61,7 +81,7 @@ void WANStatus(webs_t wp, char_t *path, char_t *query)
 	printf("csq\n");
 	close(fd);
 
-	getConfig("apn:",buff);
+	getConfig("apn:",buff,ApnConf);
 	printf("apn:%s\n",buff);
 	get_local_ip(WAN_NAME,ip,netmask,macaddr);
 	printf("wanip:%s,netmask:%s,macaddr:%s\n",ip,netmask,macaddr);

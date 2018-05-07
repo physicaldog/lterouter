@@ -1,0 +1,7 @@
+md5.o: md5.c \
+ /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/stdc-predef.h \
+ ../../libcwmp/include/cwmp/md5.h
+
+/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/stdc-predef.h:
+
+../../libcwmp/include/cwmp/md5.h:
