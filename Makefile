@@ -12,7 +12,7 @@ web = $(PWD)/web
 webroot = $(web)/webroot
 webserver = $(web)/websvr-goahead-2.18/LINUX
 opt = ~/cpe_FileSystem/opt
-page="cpe"
+staticPage = ~/ubuntushare/staticPage
 
 initEXE = lterouter
 export initEXE
@@ -27,16 +27,19 @@ all:
 	cd $(webserver) && $(MAKE)
 
 config:
+	cp $(config)/* $(opt)/config/
 	scp -r $(config)/* $(readdr)/config
 
 init:
 	$(MAKE) -C $(init)
+	cp $(init)/*.sh $(init)/$(initEXE) $(opt)/init/
 	scp -r $(init)/*.sh $(init)/$(initEXE) $(readdr)/init/
 	#cd $(init) && $(MAKE)
 	
 web:
 	cd $(webserver) && $(MAKE) 
 	cp $(webserver)/$(webEXE) $(webroot)/bin/
+	cp -r $(webroot)/* $(opt)/web/
 	scp -r $(webroot)/* $(readdr)/web/
 
 clean:
@@ -50,12 +53,16 @@ opt:
 	cp $(init)/*.sh $(init)/$(initEXE) $(opt)/init/
 	cp $(webserver)/$(webEXE) $(webroot)/bin/
 	cp -r $(webroot)/* $(opt)/web/
-	#system.tar 恢复出厂设置使用 解压时必须进入对应的目录
-	cd $(opt)/upgrade/;tar -cf system.tar ../*  
+	cp -r $(staticPage) $(opt)/web/
+	rm -rf $(opt)/web/staticPage/.git
+#system.tar 恢复出厂设置使用 解压时必须进入对应的目录
+	cd $(opt);tar -cf upgrade/config.tar ./config
 
+#网页升级包，升级后删除
 package:
-	#网页升级包，升级后删除
+	rm -rf ~/ubuntushare/package/*
 	cd $(opt);tar -cf ~/ubuntushare/package/cpe.tar ./*
+	cd ~/ubuntushare/package;md5sum cpe.tar > cpe.md5;tar -cf system.tar ./*
 
 install:
 	scp -r $(opt)/* $(readdr)

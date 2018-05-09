@@ -237,6 +237,8 @@ static int initWebs()
 openlog("router_web", LOG_CONS | LOG_PID, LOG_LOCAL2);
 /*Version*/
 	websFormDefine(T("queryVer"), queryVer);
+	websFormDefine(T("upldForm"), upGrade);
+	//websFormDefine(T("upldForm"), upldForm);
 /*login*/
 	websFormDefine(T("loginCheck"), loginCheck);
 /*Account*/
@@ -282,7 +284,6 @@ openlog("router_web", LOG_CONS | LOG_PID, LOG_LOCAL2);
 //	websFormDefine(T("set"), set);
 	websAspDefine(T("aspTest"), aspTest);
 	websFormDefine(T("formTest"), formTest);
-	websFormDefine(T("upldForm"), upldForm);
 
 /*
  *	Create the Form handlers for the User Management pages

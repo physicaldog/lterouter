@@ -47,6 +47,7 @@ void	formDefineUserMgmt(void);
 #define HOUR 3600
 #define MIN 60
 /*Version*/
+void upGrade(webs_t wp, char_t * path, char_t * query) ;
 void queryVer(webs_t wp, char_t *path, char_t *query);
 
 /*login*/

@@ -81,6 +81,7 @@ void upldForm(webs_t wp, char_t * path, char_t * query) {
         }
     }
 
+	system("rm /opt/cpe.tar");
     websFooter(wp);
     websDone(wp, 200);
 }    /* void upldForm(webs_t wp, char_t * path, char_t * query) */
