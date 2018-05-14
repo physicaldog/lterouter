@@ -1,6 +1,8 @@
 #include "common.h"
 #include "at.h"
 
+#define ApnConf "/opt/config/ApnConfig"
+
 char *at[8] = {
 	"AT^NDISDUP=1,1,",
 	"AT^NDISSTATQRY?\r\n",
@@ -148,7 +150,8 @@ void get_ndisstat(char *buff)
 				syslog(LOG_DEBUG,"开始拨号\n");
 				strcat(direct,"AT^NDISDUP=1,1,\"");//
 				//从配置文件中获取apn;                   
-				fe = fopen("/opt/config/netconfig","r");
+				#if 0
+				fe = fopen("/opt/config/ApnConfig","r");
 				if (NULL == fe){
 					syslog(LOG_DEBUG,"netconfig open failed!\n");
 					//return;
@@ -172,6 +175,9 @@ void get_ndisstat(char *buff)
 					rbuff[strlen(rbuff)-1] = '\0';
 					strcat(direct,rbuff+strlen("apn:"));
 				}
+				#endif
+				getConfig("apn",rbuff,ApnConf);
+				strcat(direct,rbuff);
 				strcat(direct,"\"\r\n");
 				syslog(LOG_DEBUG,"dir= %s\n",direct);
 

@@ -236,7 +236,9 @@ int getConfig(char *Config, char *buff, char *ConfigFile)
     fclose(fe);
     if(fexist)
 	{
-        strcat(buff,rbuff+strlen(Config));
+		ptr = strchr(rbuff,':');
+		
+        strcat(buff,(++ptr));
 		while(ptr=strchr(buff,'\n'))
 			*ptr = '\0';
 	}
@@ -253,6 +255,7 @@ int setConfig(char *Config, char *content, char *ConfigFile)
 	char tmpfile[64] = {'\0'};
 	char rbuff[64] = {'\0'};//读取文件缓存
 
+	printf("setConfig : %s\n",Config);
 	fe = fopen(ConfigFile,"r+");
 	if (NULL == fe){
 		printf("no netconfig file\n");
@@ -276,6 +279,8 @@ int setConfig(char *Config, char *content, char *ConfigFile)
 	}
 
 	fwrite(Config,sizeof(char),strlen(Config),tmp);
+	//printf("setting 1\n");
+	fwrite(":",sizeof(char),strlen(":"),tmp);
 	fwrite(content,sizeof(char),strlen(content),tmp);
 	fwrite("\n",sizeof(char),1,tmp);
 	fclose(fe);

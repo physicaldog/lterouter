@@ -8,9 +8,9 @@ void queryVer(webs_t wp, char_t *path, char_t *query)
     char pModle[32] = {'\0'};
     char sVer[32] = {'\0'};
     printf("version query\n");
-    getConfig("productName:",pName,Version);
-    getConfig("productModle:",pModle,Version);
-    getConfig("softVersion:",sVer,Version);
+    getConfig("productName",pName,Version);
+    getConfig("productModle",pModle,Version);
+    getConfig("softVersion",sVer,Version);
     printf("pName:%s,pModle:%s,sVer:%s\n",pName,pModle,sVer);
 
     websWrite(wp,T("{"));

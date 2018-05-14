@@ -7,11 +7,95 @@
 #include <sys/ioctl.h>
 #include <unistd.h>
 
-#define ConfigFile "/opt/config/netconfig"
+#define LanConf "/opt/config/LanConfig"
+#define ApnConf "/opt/config/ApnConfig"
 #define LAN "eth0"
 #define LANIP "192.168.1.1"
 #define WAN "usb0"
 
+int getConfig(char *Config, char *buff, char *ConfigFile)
+{
+    FILE *fe = NULL;
+    int fexist = 0;
+	char *ptr = NULL;
+    char rbuff[64] = {'\0'};//读取文件缓存
+
+    fe = fopen(ConfigFile,"r+");
+    if (NULL == fe){
+            printf("no netconfig file\n");
+            return -1;//未找到配置文件
+    }
+	
+	if(0 == strlen(Config))
+	{
+		printf("Config is NULL\n!");
+	}
+
+    while (fgets(rbuff,sizeof(rbuff),fe)){
+            if (strstr(rbuff,Config)){
+                    fexist = 1;
+                    break;
+                    }
+            else
+                    memset(rbuff,'\0',sizeof(rbuff));
+    }
+    fclose(fe);
+    if(fexist)
+	{
+		ptr = strchr(rbuff,':');
+		
+        strcat(buff,(++ptr));
+		while(ptr=strchr(buff,'\n'))
+			*ptr = '\0';
+	}
+    else
+        return -2;//未配置
+    
+    return 0;
+}
+
+int setConfig(char *Config, char *content, char *ConfigFile)
+{
+	FILE *fe = NULL;
+	FILE *tmp = NULL;
+	char tmpfile[64] = {'\0'};
+	char rbuff[64] = {'\0'};//读取文件缓存
+
+	printf("setConfig : %s\n",Config);
+	fe = fopen(ConfigFile,"r+");
+	if (NULL == fe){
+		printf("no netconfig file\n");
+		return -1;
+	}
+	strcpy(tmpfile,ConfigFile);
+	strcat(tmpfile,".bak");
+	tmp = fopen(tmpfile,"w+");
+	if (NULL == tmp){
+		printf("tmpfile create failed\n");
+		return -1;
+	}
+
+	while (fgets(rbuff,sizeof(rbuff),fe)){
+		if (strstr(rbuff,Config)){
+			continue;
+		}
+		else
+			fwrite(rbuff,sizeof(char),strlen(rbuff),tmp);
+		memset(rbuff,'\0',sizeof(rbuff));
+	}
+
+	fwrite(Config,sizeof(char),strlen(Config),tmp);
+	//printf("setting 1\n");
+	fwrite(":",sizeof(char),strlen(":"),tmp);
+	fwrite(content,sizeof(char),strlen(content),tmp);
+	fwrite("\n",sizeof(char),1,tmp);
+	fclose(fe);
+	fclose(tmp);
+
+	//remove(ConfigFile);
+	rename(tmpfile,ConfigFile);
+}
+#if 0
 int getConfig(char *Config, char *buff)
 {
 	FILE *fe = NULL;
@@ -41,6 +125,44 @@ int getConfig(char *Config, char *buff)
 	return 0;
 }
 
+int setConfig(char *Config, char *content)
+{
+	FILE *fe = NULL;
+	FILE *tmp = NULL;
+	char rbuff[64] = {'\0'};//读取文件缓存
+
+	fe = fopen("/opt/config/udhcpd.conf","r+");
+	if (NULL == fe){
+		printf("no netconfig file\n");
+		return -1;
+	}
+
+	tmp = fopen("/opt/config/udhcpd.conf.bak","w+");
+	if (NULL == tmp){
+		printf("tmpfile create failed\n");
+		return -1;
+	}
+
+	while (fgets(rbuff,sizeof(rbuff),fe)){
+		if (strstr(rbuff,Config)){
+			continue;
+		}
+		else
+			fwrite(rbuff,sizeof(char),strlen(rbuff),tmp);
+		memset(rbuff,'\0',sizeof(rbuff));
+	}
+
+	fwrite(Config,sizeof(char),strlen(Config),tmp);
+	fwrite(" ",sizeof(char),1,tmp);
+	fwrite(content,sizeof(char),strlen(content),tmp);
+	fwrite("\n",sizeof(char),1,tmp);
+	fclose(fe);
+	fclose(tmp);
+
+	remove("/opt/config/udhcpd.conf");
+	rename("/opt/config/udhcpd.conf.bak","/opt/config/udhcpd.conf");
+}
+#endif
 int get_local_ip(char * ifname, char * ip)
 {
 	char *temp = NULL;
@@ -111,43 +233,6 @@ int set_ip(char * ifname, char * ip, char * netmask)
 }
 
 
-int setConfig(char *Config, char *content)
-{
-	FILE *fe = NULL;
-	FILE *tmp = NULL;
-	char rbuff[64] = {'\0'};//读取文件缓存
-
-	fe = fopen("/opt/config/udhcpd.conf","r+");
-	if (NULL == fe){
-		printf("no netconfig file\n");
-		return -1;
-	}
-
-	tmp = fopen("/opt/config/udhcpd.conf.bak","w+");
-	if (NULL == tmp){
-		printf("tmpfile create failed\n");
-		return -1;
-	}
-
-	while (fgets(rbuff,sizeof(rbuff),fe)){
-		if (strstr(rbuff,Config)){
-			continue;
-		}
-		else
-			fwrite(rbuff,sizeof(char),strlen(rbuff),tmp);
-		memset(rbuff,'\0',sizeof(rbuff));
-	}
-
-	fwrite(Config,sizeof(char),strlen(Config),tmp);
-	fwrite(" ",sizeof(char),1,tmp);
-	fwrite(content,sizeof(char),strlen(content),tmp);
-	fwrite("\n",sizeof(char),1,tmp);
-	fclose(fe);
-	fclose(tmp);
-
-	remove("/opt/config/udhcpd.conf");
-	rename("/opt/config/udhcpd.conf.bak","/opt/config/udhcpd.conf");
-}
 void setcontent(FILE *fd,char *Config, char *content)
 {
 	fwrite(Config,sizeof(char),strlen(Config),fd);
@@ -192,7 +277,7 @@ int lanInit()
 	char lanip_end[32] = {'\0'};
 	char ip[32] = {'\0'};
 
-	ret = getConfig("lanip",lanip);
+	ret = getConfig("lanip",lanip,LanConf);
 	
 	if(0 == ret){
 		ret = set_ip(LAN,lanip,"255.255.255.0");

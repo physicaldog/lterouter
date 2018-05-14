@@ -235,6 +235,8 @@ static int initWebs()
  */
 /*添加系统日志*/
 openlog("router_web", LOG_CONS | LOG_PID, LOG_LOCAL2);
+/*Diagnose*/
+	websFormDefine(T("pingTest"), pingTest);
 /*Version*/
 	websFormDefine(T("queryVer"), queryVer);
 	websFormDefine(T("upldForm"), upGrade);

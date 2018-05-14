@@ -46,6 +46,8 @@ void	formDefineUserMgmt(void);
 #define DAY 24*3600
 #define HOUR 3600
 #define MIN 60
+/*Diagnose*/
+void pingTest(webs_t wp, char_t *path, char_t *query);
 /*Version*/
 void upGrade(webs_t wp, char_t * path, char_t * query) ;
 void queryVer(webs_t wp, char_t *path, char_t *query);

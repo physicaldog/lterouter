@@ -10,10 +10,10 @@ void settingPW(webs_t wp, char_t *path, char_t *query)
 	currPW = websGetVar(wp,T("currPW"),T(""));
 	newPW = websGetVar(wp,T("newPW"),T(""));
 	printf("currPW:%s,PW:%s\n",currPW,newPW);
-	getConfig("suyi:",PW,UserPW);
+	getConfig("suyi",PW,UserPW);
 	//printf("PW:%s\n",PW);
 	if((0 == strcmp(PW,currPW))){
-		setConfig("suyi:",newPW,UserPW);
+		setConfig("suyi",newPW,UserPW);
 		websWrite(wp,T("设置成功"));
 	}
 	else{

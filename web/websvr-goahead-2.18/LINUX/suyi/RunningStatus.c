@@ -35,9 +35,9 @@ void deviceInfo(webs_t wp, char_t *path, char_t *query)
     char pModle[32] = {'\0'};
     char sVer[32] = {'\0'};
 	printf("Deviceinfo:\n");
-    getConfig("productName:",pName,Version);
-    getConfig("productModle:",pModle,Version);
-    getConfig("softVersion:",sVer,Version);
+    getConfig("productName",pName,Version);
+    getConfig("productModle",pModle,Version);
+    getConfig("softVersion",sVer,Version);
     printf("pName:%s,pModle:%s,sVer:%s\n",pName,pModle,sVer);
 
     websWrite(wp,T("{"));
@@ -81,7 +81,7 @@ void WANStatus(webs_t wp, char_t *path, char_t *query)
 	printf("csq\n");
 	close(fd);
 
-	getConfig("apn:",buff,ApnConf);
+	getConfig("apn",buff,ApnConf);
 	printf("apn:%s\n",buff);
 	get_local_ip(WAN_NAME,ip,netmask,macaddr);
 	printf("wanip:%s,netmask:%s,macaddr:%s\n",ip,netmask,macaddr);

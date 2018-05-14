@@ -26,3 +26,4 @@ int ecm_done;
 /*系统时间设置标志：1 已设置；0 未设置*/
 int setTime_done;
 
+int getConfig(char *Config, char *buff, char *ConfigFile);

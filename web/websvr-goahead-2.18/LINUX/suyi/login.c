@@ -12,7 +12,7 @@ void loginCheck(webs_t wp, char_t *path, char_t *query)
 	username = websGetVar(wp,T("username"),T(""));
 	password = websGetVar(wp,T("password"),T(""));
 	strcat(name,username);
-	strcat(name,":");
+	//strcat(name,":");
 	getConfig(name,PW,UserPW);
 	printf("uname:%s,uPW:%s,PW:%s\n",username,password,PW);
 	if(0 == strcmp(PW,password))
