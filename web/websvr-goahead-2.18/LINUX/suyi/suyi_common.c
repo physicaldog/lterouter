@@ -5,6 +5,9 @@ extern char simStatus;
 extern char ecmStatus;
 extern char csq[];
 extern int rssi;
+extern int  rsrp;
+extern int  sinr;
+extern int  rsrq;
 
 
 char * get_timeStr(unsigned long uptime,char *timeStr)
@@ -290,6 +293,52 @@ int setConfig(char *Config, char *content, char *ConfigFile)
 	rename(tmpfile,ConfigFile);
 }
 #if 1
+int get_hcsq(char *buff)
+{
+	int i=0;
+	char sysmode[8] = {0};
+	char rssib[32] = {0};
+	char rsrpb[32] = {0};
+	char sinrb[32] = {0};
+	char rsrqb[32] = {0};
+	char *ptr = NULL;
+	char *qtr = NULL;
+	printf("********get_hcsq=%s********\n",buff);
+	ptr = strstr(buff,"LTE");
+	if(NULL == ptr)
+		return 0;
+	ptr = strstr(buff,"\n");
+	*ptr = '\0';
+	ptr = strchr(buff,',');
+	strcpy(rssib,(++ptr));
+
+	ptr = strchr(rssib,',');
+	strcpy(rsrpb,(++ptr));
+
+	ptr = strchr(rsrpb,',');
+	strcpy(sinrb,(++ptr));
+
+	ptr = strchr(sinrb,',');
+	strcpy(rsrqb,(++ptr));
+	
+	qtr = strchr(rssib,',');
+	*qtr = '\0';
+
+	qtr = strchr(rsrpb,',');
+	*qtr = '\0';
+	
+	qtr = strchr(sinrb,',');
+	*qtr = '\0';
+	
+	rssi = atoi(rssib);
+	rsrp = atoi(rsrpb);
+	sinr = atoi(sinrb);
+	rsrq = atoi(rsrqb);
+	printf("rssi=%s rsrp=%s sinr=%s rsrq=%s\n",rssib,rsrpb,sinrb,rsrqb);
+	printf("rssi=%d rsrp=%d sinr=%d rsrq=%d\n",rssi,rsrp,sinr,rsrq);
+	return 0;
+}
+
 int get_csq(char *buff)
 {
 	int i=0;
@@ -312,6 +361,7 @@ int get_csq(char *buff)
 	printf("csq=%s,rssi=%d\n",csq,rssi);
 	return 0;
 }
+
 int get_sysinfoex(char *buff)
 {
 	int i=0;
@@ -350,12 +400,18 @@ int direct_process(char *buff)
 		"SYSINFOEX",
 		"NDISSTATQRY",
 		"CSQ",
+		"HCSQ",
 	};
 
 	if(strstr(buff,"ERROR"))
 		return 0;
+	/*
 	if (strstr(buff,"CSQ")) {
 		get_csq(buff);
+		return 0;
+	}*/
+	if (strstr(buff,"HCSQ")) {
+		get_hcsq(buff);
 		return 0;
 	}
 	if ('^' == buff[0]) {

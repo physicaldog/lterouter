@@ -7,6 +7,9 @@ char simStatus;
 char ecmStatus;
 char csq[4] = {'\0'};
 int  rssi = 0;
+int  rsrp = 0;
+int  sinr = 0;
+int  rsrq = 0;
 
 
 void sysInfo(webs_t wp, char_t *path, char_t *query)
@@ -55,6 +58,8 @@ void WANStatus(webs_t wp, char_t *path, char_t *query)
 
 	int fd = 0;
 	char *name;
+	char sinrb[8] = {0};
+	char rsrqb[8] = {0};
 	char buff[64] = {'\0'};//读取文件缓存
 	char ip[32] = {'\0'};//读取文件缓存
 	char netmask[32] = {'\0'};//读取文件缓存
@@ -75,7 +80,8 @@ void WANStatus(webs_t wp, char_t *path, char_t *query)
 	printf("ndis\n");
 
 	tcflush(fd,TCIFLUSH);
-	at_send(fd,"at+csq\r\n");
+	//at_send(fd,"at+csq\r\n");
+	at_send(fd,"at^hcsq?\r\n");
 	printf("send_csq\n");
 	at_read(fd);
 	printf("csq\n");
@@ -109,10 +115,27 @@ void WANStatus(webs_t wp, char_t *path, char_t *query)
 	else
 		websWrite(wp,T("\"ecmStatus\":\"未连接\","));
 	if((0 == rssi) || (99 == rssi))		
-		websWrite(wp,T("\"csq\":\"信号不可測\","));
+		websWrite(wp,T("\"rssi\":\"信号不可測\","));
 	else
-		websWrite(wp,T("\"csq\":\"%ddBm\","),(-113+2*rssi));
-		
+		websWrite(wp,T("\"rssi\":\"%d dBm\","),(-121+rssi));
+
+	if((0 == rsrp) || (255 == rsrp))		
+		websWrite(wp,T("\"rsrp\":\"信号不可測\","));
+	else
+		websWrite(wp,T("\"rsrp\":\"%d dBm\","),(-140+rsrp));
+
+	if((0 == sinr) || (99 == sinr))		
+		websWrite(wp,T("\"sinr\":\"信号不可測\","));
+	else{
+		sprintf(sinrb,"%.1f",(-20.2+0.2*sinr));
+		websWrite(wp,T("\"sinr\":\"%s dBm\","),sinrb);
+	}
+	if((0 == rsrq) || (255 == rsrq))		
+		websWrite(wp,T("\"rsrq\":\"信号不可測\","));
+	else{
+		sprintf(rsrqb,"%.1f",(-20.0+0.5*rsrq));
+		websWrite(wp,T("\"rsrq\":\"%s dBm\","),rsrqb);
+	}
 	websWrite(wp,T("\"apn\":\"%s\","),buff);
 	websWrite(wp,T("\"wanip\":\"%s\","),ip);
 	websWrite(wp,T("\"wanmask\":\"%s\","),netmask);
