@@ -128,7 +128,7 @@ void WANStatus(webs_t wp, char_t *path, char_t *query)
 		websWrite(wp,T("\"sinr\":\"信号不可測\","));
 	else{
 		sprintf(sinrb,"%.1f",(-20.2+0.2*sinr));
-		websWrite(wp,T("\"sinr\":\"%s dBm\","),sinrb);
+		websWrite(wp,T("\"sinr\":\"%s dB\","),sinrb);
 	}
 	if((0 == rsrq) || (255 == rsrq))		
 		websWrite(wp,T("\"rsrq\":\"信号不可測\","));

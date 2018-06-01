@@ -245,21 +245,21 @@ int setDhcpConf(char *ip)
 {
 	FILE *fd = NULL;
 	char *p = NULL;
-	char ip_end[32] = {'\0'};
+	char ip_str[32] = {'\0'};
 
 	fd = fopen("/opt/config/udhcpd.conf","w+");
 	if (NULL == fd){
 		printf("no udhcpd.conf file\n");
 		return -1;
 	}
-	p = strrchr(ip,'.');
-	p[1]++;
 	//p[1] = itoa(atoi(p[1])+1);
-	setcontent(fd,"start",ip);
-	strcpy(ip_end,ip);
-	p = strrchr(ip_end,'.');
+	strcpy(ip_str,ip);
+	p = strrchr(ip_str,'.');
+	p[1]++;
+	setcontent(fd,"start",ip_str);
+	p = strrchr(ip_str,'.');
 	strcpy(++p,"254\n");
-	setcontent(fd,"end",ip_end);
+	setcontent(fd,"end",ip_str);
 	setcontent(fd,"option subnet","255.255.255.0");
 	setcontent(fd,"opt router",ip);
 	setcontent(fd,"interface","eth0");
