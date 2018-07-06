@@ -69,7 +69,7 @@ void WANStatus(webs_t wp, char_t *path, char_t *query)
 	FILE *fp;
 	char *ptr = NULL;
 	printf("\n********%s********\n",__FUNCTION__);
-	fp = popen("date +\"%Y-%m-%d %H:%M\"","r");
+	fp = popen("date +\"%Y-%m-%d %Hh:%Mm\"","r");
 	fread(system_date,1,sizeof(system_date),fp);
 	fclose(fp);
 

@@ -65,6 +65,8 @@ void loginCheck(webs_t wp, char_t *path, char_t *query);
 /*Account*/
 void settingPW(webs_t wp, char_t *path, char_t *query);
 /*settingWH*/
+void queryTime(webs_t wp, char_t *path, char_t *query);
+void settingTime(webs_t wp, char_t *path, char_t *query);
 void sysReset(webs_t wp, char_t *path, char_t *query);
 void resetDev(webs_t wp, char_t *path, char_t *query);
 

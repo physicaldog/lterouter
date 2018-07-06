@@ -255,6 +255,8 @@ openlog("router_web", LOG_CONS | LOG_PID, LOG_LOCAL2);
 /*Account*/
 	websFormDefine(T("settingPW"), settingPW);
 /*settingWH*/
+	websFormDefine(T("queryTime"), queryTime);
+	websFormDefine(T("settingTime"), settingTime);
 	websFormDefine(T("resetDev"), resetDev);
 	websFormDefine(T("sysReset"), sysReset);
 /*settingLAN*/
