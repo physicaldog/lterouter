@@ -402,6 +402,7 @@ int direct_process(char *buff)
 		"CSQ",
 		"HCSQ",
 	};
+	printf("\n********%s********\n",__FUNCTION__);
 
 	if(strstr(buff,"ERROR"))
 		return 0;
@@ -415,7 +416,9 @@ int direct_process(char *buff)
 		return 0;
 	}
 	if ('^' == buff[0]) {
-		//syslog(LOG_DEBUG,"Get direct:%s\n",buff);
+		if(strstr(buff,"AT^"))
+			return;
+		syslog(LOG_DEBUG,"Get direct:%s\n",buff);
 		//ptr = strstr(buff,at_arr[0]);
 		if ((strstr(buff,at_arr[0])) || (strstr(buff,at_arr[2]))) {
 			get_sysinfoex(buff);

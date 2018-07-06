@@ -8,6 +8,8 @@ CC = arm-linux-gnueabihf-gcc
 
 config = $(PWD)/config
 init = $(PWD)/init
+dtu = $(PWD)/dtu
+security = $(PWD)/security
 web = $(PWD)/web
 webroot = $(web)/webroot
 webserver = $(web)/websvr-goahead-2.18/LINUX
@@ -16,6 +18,8 @@ staticPage = ~/ubuntushare/staticPage
 
 initEXE = lterouter
 export initEXE
+dtuEXE = suyi_dtu
+export dtuEXE
 webEXE = router-web
 export webEXE
 
@@ -24,6 +28,7 @@ readdr = root@192.168.1.1:/opt
 
 all:
 	$(MAKE) -C $(init)
+	$(MAKE) -C $(dtu)
 	cd $(webserver) && $(MAKE)
 
 config:
@@ -35,6 +40,16 @@ init:
 	cp $(init)/*.sh $(init)/$(initEXE) $(opt)/init/
 	scp -r $(init)/*.sh $(init)/$(initEXE) $(readdr)/init/
 	#cd $(init) && $(MAKE)
+dtu:
+	$(MAKE) -C $(dtu)
+	cp $(dtu)/$(dtuEXE) $(opt)/dtu/
+	scp -r $(dtu)/$(dtuEXE) $(readdr)/dtu/
+	#cd $(init) && $(MAKE)
+
+security:
+	cp $(security)/* $(opt)/security/
+	scp -r $(security)/* $(readdr)/security/
+	#cd $(init) && $(MAKE)
 	
 web:
 	cd $(webserver) && $(MAKE) 
@@ -45,12 +60,15 @@ web:
 clean:
 	cd $(webserver) && $(MAKE) clean 
 	cd $(init) && $(MAKE) clean 
+	cd $(dtu) && $(MAKE) clean 
 
 opt:
 	rm $(opt)/* -rf
-	-mkdir $(opt) $(opt)/config $(opt)/init $(opt)/web $(opt)/log $(opt)/upgrade
+	-mkdir $(opt) $(opt)/config $(opt)/init $(opt)/security $(opt)/dtu $(opt)/web $(opt)/log $(opt)/upgrade
 	cp $(config)/* $(opt)/config/
 	cp $(init)/*.sh $(init)/$(initEXE) $(opt)/init/
+	cp $(dtu)/$(dtuEXE) $(opt)/dtu/
+	cp $(security)/* $(opt)/security/
 	cp $(webserver)/$(webEXE) $(webroot)/bin/
 	cp -r $(webroot)/* $(opt)/web/
 	cp -r $(staticPage) $(opt)/web/
@@ -67,4 +85,4 @@ package:
 install:
 	scp -r $(opt)/* $(readdr)
 
-.PHONY:all clean config init web install 
+.PHONY:all clean config init dtu web install security

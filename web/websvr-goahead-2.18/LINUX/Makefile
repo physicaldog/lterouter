@@ -70,9 +70,9 @@ LDFLAGS	= $(SSLLIB) $(IFMODLIB)
 #suyi_web = $(suyidir)/suyi_web.o
 SUYI = libsuyi.a
 SUYI_FILES = suyi/suyi_common.o suyi/RunningStatus.o suyi/settingLTE.o \
-			 suyi/settingLAN.o suyi/Account.o suyi/index.o suyi/Version.o\
+			 suyi/settingDtu.o suyi/settingLAN.o suyi/Account.o suyi/index.o suyi/Version.o\
 			 suyi/Diagnose.o suyi/left.o suyi/login.o suyi/settingWH.o\
-			 suyi/SystemLog.o suyi/head.o suyi/module.o suyi/TR069.o
+			 suyi/SystemLog.o suyi/head.o suyi/module.o suyi/TR069.o suyi/settingSecurity.o
 compile: $(NAME)
 #
 #	Build archive of objects
@@ -106,6 +106,9 @@ install:
 	cp resphtml.tm /home/webroot/
 
 #suyi_files
+#suyi_files
+suyi/settingSecurity.o: suyi/settingSecurity.c
+suyi/settingDtu.o: suyi/settingDtu.c
 suyi/settingLAN.o: suyi/settingLAN.c
 suyi/settingLTE.o: suyi/settingLTE.c
 suyi/RunningStatus.o: suyi/RunningStatus.c

@@ -17,9 +17,12 @@ void direct_process(char *buff)
 		"SYSINFOEX",
 		"NDISSTATQRY",
 	};
+	printf("%s\n",__FUNCTION__);
 	if ('^' == buff[0]) {
 		//syslog(LOG_DEBUG,"Get direct:%s\n",buff);
 		//ptr = strstr(buff,at_arr[0]);
+		if(strstr(buff,"AT^"))
+			return;
 		if ((strstr(buff,at_arr[0])) || (strstr(buff,at_arr[2]))) {
 			get_sysinfoex(buff);
 			return;
@@ -45,7 +48,7 @@ void get_nwtime(char *buff)
 	char time[32] = {'\0'};
 	char hour[4] = {'\0'};
 
-	printf("get_nwtime\n");
+	printf("%s\n",__FUNCTION__);
 	printf("buff:%s\n",buff);
 	ptr = strstr(buff," ");
 	if(NULL == ptr)
@@ -87,8 +90,11 @@ void get_sysinfoex(char *buff)
 	char *ptr = NULL;
 	char *qtr = NULL;
 
-	printf("get_sysinfoex\n");
+	printf("%s\n",__FUNCTION__);
 	printf("buff:%s\n",buff);
+	printf("buff:%s\n",buff);
+
+
 	ptr = strstr(buff," ");
 	if(NULL == ptr)
 		return;
@@ -98,19 +104,20 @@ void get_sysinfoex(char *buff)
 			syslog(LOG_DEBUG,"\n");
 			net_sta = 0;
 			ecm_done = 0;
+			system("kill `cat /opt/udhcpc.pid`");
 		}
 	}
 	else{
 		qtr = strchr(buff,',');
 		for(i=0;i<5;i++)
 		{
-			printf("%d ",i);
+			//printf("%d ",i);
 			qtr = strchr(qtr,',');
 			qtr++;
-			printf("%d ",i);
+			//printf("%d ",i);
 		}
-		printf("网络有效,%c,%c\n",ptr[1],*qtr);
 		if (('2' == ptr[1]) && ('6' == *qtr)){
+			printf("网络有效\n");
 			alarm(REBOOT_TIME);
 
 			/*网络有效，检查网络链接状态*/
@@ -118,9 +125,11 @@ void get_sysinfoex(char *buff)
 			net_sta = 1;
 		}
 		else{
+			printf("网络无效\n");
 			syslog(LOG_DEBUG,"无效网络\n");
 			syslog(LOG_DEBUG,"\n");
 			net_sta = 0;
+			system("kill `cat /opt/udhcpc.pid`");
 			ecm_done = 0;
 		}
 
@@ -138,6 +147,7 @@ void get_ndisstat(char *buff)
 	char direct[64] = {'\0'};//
 
 
+	printf("%s\n",__FUNCTION__);
 	ptr = strstr(buff," ");
 	if(NULL == ptr)
 		return;
@@ -150,32 +160,6 @@ void get_ndisstat(char *buff)
 				syslog(LOG_DEBUG,"开始拨号\n");
 				strcat(direct,"AT^NDISDUP=1,1,\"");//
 				//从配置文件中获取apn;                   
-				#if 0
-				fe = fopen("/opt/config/ApnConfig","r");
-				if (NULL == fe){
-					syslog(LOG_DEBUG,"netconfig open failed!\n");
-					//return;
-				}
-				else{
-					while(fgets(rbuff,sizeof(rbuff),fe)){
-						if(strstr(rbuff,"apn:"))
-						{   
-							file = 1;
-							break;
-						}
-						else
-							memset(rbuff,'\0',sizeof(rbuff));
-					}
-					if(0 == file){
-						syslog(LOG_DEBUG,"未配置apn\n");
-						syslog(LOG_DEBUG,"\n");
-					}
-					fclose(fe);
-
-					rbuff[strlen(rbuff)-1] = '\0';
-					strcat(direct,rbuff+strlen("apn:"));
-				}
-				#endif
 				getConfig("apn",rbuff,ApnConf);
 				strcat(direct,rbuff);
 				strcat(direct,"\"\r\n");

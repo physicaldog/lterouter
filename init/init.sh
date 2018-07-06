@@ -134,45 +134,99 @@ DetectDev(){
 #lterouter启动前杀死udhcpd
 killdhcpd(){
 	ret=`pidof udhcpd`
-	kill $ret
+	nohup kill $ret > /dev/null 2>&1 &
 }
+
+runDtu(){
+	if [ -e /opt/config/startDtu ]
+	then
+		ps -fe|grep "suyi_dtu" |grep -v grep >> /dev/null
+		if [ $? -ne 0 ]
+		then
+			echo "startDtu!!!!!!" >> $logFile 
+ill -9 $ret &
+			nohup /opt/dtu/suyi_dtu >/dev/null 2>&1 &
+		fi
+	else
+		ret=`pidof suyi_dtu`
+		nohup kill -9 $ret > /dev/null 2>&1 &
+	fi
+
+}
+
+checkSecurityLib(){
+	echo "do nari init" >> $logFile
+	
+	if [ -e "/lib/libnari.so" ]
+	then
+		echo "do nothing" >> $logFile
+	else
+		echo "do nariinit.sh" >> $logFile
+		cd /opt/security;
+		./nariinit.sh
+	fi
+	
+}
+
+runSecurity(){
+	if [ -e /opt/config/startSecurity ]
+	then
+		ps -fe|grep "naripcaccess" |grep -v grep >> /dev/null
+		if [ $? -ne 0 ]
+		then
+			echo "startSecurity!!!!!!!!" >> $logFile 
+			nohup /opt/security/naripcaccess /opt/security/naripcaccess.conf >/dev/null 2>&1 &
+		fi
+	else
+		ret=`pidof naripcaccess`
+		nohup kill -9 $ret > /dev/null 2>&1 &
+		echo > /opt/log/SecurityLog
+	fi
+
+}
+
 InitWork(){
     echo "start to work" >> $logFile
 	while [ `DetectDev` -eq 0 ]
 	do
-		#echo "dev ok"
-		ps -fe|grep "lterouter" |grep -v grep >> /dev/null
-		if [ $? -ne 0 ]
-		then
-			echo "lterouter 进程未启动 1" >> $logFile
-			echo "lterouter start!!" >> $logFile
-			killdhcpd
-			nohup /opt/init/lterouter >/dev/null 2>&1 &
-#		else
-#			echo "lterouter done!"
-		fi
-		sleep 1
-
 		ps -fe|grep "router-web" |grep -v grep >> /dev/null
 		if [ $? -ne 0 ]
 		then
 			echo "router-web start!!" >> $logFile
-			nohup /opt/web/bin/router-web >/dev/null 2>&1 &
+			nohup /opt/web/bin/router-web > /dev/null 2>&1 &
 #		else
 #			echo "router-web done!"
 		fi
-		sleep 5
-
+		sleep 1
+		#echo "dev ok"
+		ps -fe|grep "lterouter" |grep -v grep >> /dev/null
+		if [ $? -ne 0 ]
+		then
+			echo "lterouter start!!" >> $logFile
+			killdhcpd
+			nohup /opt/init/lterouter > /dev/null 2>&1 &
+#		else
+#			echo "lterouter done!"
+		fi
+		sleep 1
+		runSecurity
+		sleep 1;
+		runDtu
+		
 	done
 
 	echo "dev not found" >> $logFile
-	echo "Reboot system!!!" >> $logFIle
-	`reboot`
+	echo "Reboot system!!!" >> $logFile
+	cp /var/log/messages /opt/log/syslog
+
+	sleep 10
+	#`reboot`
 	#shutdown -r now	#当设备挂载失败时重启系统
 }
 
 InitGpio
 InitModule
+checkSecurityLib
 InitWork
 #/opt/init/lterouter &
 #/opt/web/webroot/bin/router-web &

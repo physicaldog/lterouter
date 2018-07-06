@@ -1,0 +1,8 @@
+mode:1
+server_ip:
+server_port:
+local_port:1010
+baudrate:9600
+parity:N
+data_bit:8
+stop_bit:1

@@ -14,10 +14,11 @@ int  rsrq = 0;
 
 void sysInfo(webs_t wp, char_t *path, char_t *query)
 {
-	char timeStr[64] = {'\0'};
+	char timeStr[64] = {0};
 	//websWrite(wp,T("%s"),buff);
 	struct timeval uptime;
-	printf("sysInfo:\n");
+	printf("\n********%s********\n",__FUNCTION__);
+
 
 	uptime = get_uptime();
 	
@@ -37,7 +38,7 @@ void deviceInfo(webs_t wp, char_t *path, char_t *query)
     char pName[32] = {'\0'};
     char pModle[32] = {'\0'};
     char sVer[32] = {'\0'};
-	printf("Deviceinfo:\n");
+	printf("\n********%s********\n",__FUNCTION__);
     getConfig("productName",pName,Version);
     getConfig("productModle",pModle,Version);
     getConfig("softVersion",sVer,Version);
@@ -64,9 +65,29 @@ void WANStatus(webs_t wp, char_t *path, char_t *query)
 	char ip[32] = {'\0'};//读取文件缓存
 	char netmask[32] = {'\0'};//读取文件缓存
 	char macaddr[32] = {'\0'};//读取文件缓存
-	printf("CPUUsageRate:\n");
-	fd = openDev(SerPort);
+	char *system_date[64] = {0};
+	FILE *fp;
+	char *ptr = NULL;
+	printf("\n********%s********\n",__FUNCTION__);
+	fp = popen("date +\"%Y-%m-%d %H:%M\"","r");
+	fread(system_date,1,sizeof(system_date),fp);
+	fclose(fp);
 
+	if(NULL != (ptr = strchr(system_date,'\n')))
+		*ptr = 0;
+	printf("system_date:%s\n",system_date);
+
+	fd = openDev(SerPort);
+	if(0 >= fd){
+		printf("serPort open failed!\n");
+		websWrite(wp,T("{"));
+		websWrite(wp,T("\"system_date\":\"%s\","),system_date);
+		websWrite(wp,T("\"netStatus\":\"设备异常！\""));
+		websWrite(wp,T("}"));
+		websDone(wp,200);
+		return;
+
+	}
 	tcflush(fd,TCIFLUSH);
 	printf("fd=%d\n",fd);
 	//getSysinfo(fd);
@@ -136,6 +157,7 @@ void WANStatus(webs_t wp, char_t *path, char_t *query)
 		sprintf(rsrqb,"%.1f",(-20.0+0.5*rsrq));
 		websWrite(wp,T("\"rsrq\":\"%s dBm\","),rsrqb);
 	}
+	websWrite(wp,T("\"system_date\":\"%s\","),system_date);
 	websWrite(wp,T("\"apn\":\"%s\","),buff);
 	websWrite(wp,T("\"wanip\":\"%s\","),ip);
 	websWrite(wp,T("\"wanmask\":\"%s\","),netmask);

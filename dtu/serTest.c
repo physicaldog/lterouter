@@ -1,18 +1,16 @@
-/*#include <stdio.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <fcntl.h>
 #include <termios.h>
 
-#define SerPort "/dev/ttymxc1"
-#define BAUDRATE 9600
+#define SerPort "/dev/ttymxc2"
+#define BAUDRATE 115200
 #define DATA_BIT 8
 #define PARITY 'N'
 #define STOP_BIT 1
 #define Vmin 255
 #define Vtime 1
-*/
-#include "suyi_dtu.h"
 
 void set_timeOut(struct termios *termptr, unsigned int min, unsigned int time)
 {
@@ -127,36 +125,15 @@ void set_mode(struct termios *termptr)
 
 }
 //参数需改成文件读取方式
-void setTermios(struct termios *termptr,char *baudrate,char *parity,char *data_bit,char *stop_bit)
+void setTermios(struct termios *termptr,char *ConfigFile)
 {
-	 int ret = 0;
-
 	printf("********%s********\n",__FUNCTION__);	
-/*
-	ret = getConfig("baudrate",baudrate,ConfigFile);
-	if(0 > ret){
-		strcpy(baudrate,"9600");
-	}
-	ret = getConfig("parity",parity,ConfigFile);
-	if(0 > ret){
-		strcpy(parity,"N");
-	}
-	ret = getConfig("data_bit",data_bit,ConfigFile);
-	if(0 > ret){
-		strcpy(data_bit,"8");
-	}
-	ret = getConfig("stop_bit",stop_bit,ConfigFile);
-	if(0 > ret){
-		strcpy(stop_bit,"1");
-	}
-	
-*/
-	printf("%ld,%c,%d,%d\n",atol(baudrate),parity[0],atoi(data_bit),atoi(stop_bit));
+
 	set_mode(termptr);
-	set_baudrate(termptr,atoi(baudrate));
-	set_data_bit(termptr, atoi(data_bit));
-	set_parity(termptr, parity[0]);
-	set_stopBit(termptr, atoi(stop_bit));
+	set_baudrate(termptr, BAUDRATE);
+	set_data_bit(termptr, DATA_BIT);
+	set_parity(termptr, PARITY);
+	set_stopBit(termptr, STOP_BIT);
 
 	//字符间隔时间超过100ms时返回，判定为一桢结束。默认一桢数据长度不超过255个字符。
 	set_timeOut(termptr,Vmin,Vtime);
@@ -195,7 +172,7 @@ void serWrite(int fd, char *buffer, unsigned int len)
 		printf("serWrite failed!\n");
 }
 
-int openSer(char *SerDev,char *baudrate,char *parity,char *data_bit,char *stop_bit)
+int openSer(char *SerDev)
 {
 	int ret = 0;
 	int fd = 0;
@@ -212,7 +189,7 @@ int openSer(char *SerDev,char *baudrate,char *parity,char *data_bit,char *stop_b
 		perror("can not get termios attr");
 		return -1;
 	}
-	setTermios(&termptr,baudrate,parity,data_bit,stop_bit);
+	setTermios(&termptr,NULL);
 	ret = tcsetattr(fd,TCSANOW,&termptr);
 	if(-1 == ret){
 		perror("can not set termios attr");
@@ -220,7 +197,7 @@ int openSer(char *SerDev,char *baudrate,char *parity,char *data_bit,char *stop_b
 	}
 	return fd;
 }
-#if 0
+#if 1
 int main()
 {
 	int ret = 0;
@@ -238,8 +215,9 @@ int main()
 
 	while(1){
 		serRead(fd,buffer,255);
+		printf("recv:%s\n",buffer);
 		serWrite(fd,buffer,strlen(buffer));
-		serWrite(fd,"\n",1);
+		//serWrite(fd,"\n",1);
 		memset(buffer,0,sizeof(buffer));
 	}	
 

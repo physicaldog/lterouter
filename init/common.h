@@ -14,7 +14,7 @@
 #include <signal.h>
 #include <syslog.h>
 
-#define DATA_LEN	0xFF  /* test data's len */
+#define DATA_LEN	255 /* test data's len */
 /*定时重启时间10分钟*/
 #define REBOOT_TIME 600
 

@@ -1,5 +1,5 @@
 /************************************************************************
-	> File Name: suyi_common.h
+
 	> Author: sunxueqian
 	> Mail: physicalmonkey@outlook.com
  ************************************************************************/
@@ -46,7 +46,15 @@ void	formDefineUserMgmt(void);
 #define DAY 24*3600
 #define HOUR 3600
 #define MIN 60
+/*security*/
+void startSecurity(webs_t wp, char_t *path, char_t *query);
+void cancelSecurity(webs_t wp, char_t *path, char_t *query);
+void getSecurityLog(webs_t wp, char_t *path, char_t *query);
+void querySecurity(webs_t wp, char_t *path, char_t *query);
+void settingSecurity(webs_t wp, char_t *path, char_t *query);
 /*Diagnose*/
+void cleanLog(webs_t wp, char_t *path, char_t *query);
+void getPingLog(webs_t wp, char_t *path, char_t *query);
 void pingTest(webs_t wp, char_t *path, char_t *query);
 /*Version*/
 void upGrade(webs_t wp, char_t * path, char_t * query) ;
@@ -67,6 +75,11 @@ void settingLAN(webs_t wp, char_t *path, char_t *query);
 void queryIMSI(webs_t wp, char_t *path, char_t *query);
 void queryAPN(webs_t wp, char_t *path, char_t *query);
 void settingAPN(webs_t wp, char_t *path, char_t *query);
+/*settingSerial*/
+void startDtu(webs_t wp, char_t *path, char_t *query);
+void cancelDtu(webs_t wp, char_t *path, char_t *query);
+void settingDtu(webs_t wp, char_t *path, char_t *query);
+void queryDtu(webs_t wp, char_t *path, char_t *query);
 
 /*Rynningstatus*/
 void sysInfo(webs_t wp, char_t *path, char_t *query);

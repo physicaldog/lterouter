@@ -236,15 +236,11 @@ static int initWebs()
 /*添加系统日志*/
 openlog("router_web", LOG_CONS | LOG_PID, LOG_LOCAL2);
 /*security*/
-	websFormDefine(T("startSecurity"), startSecurity);
-	websFormDefine(T("cancelSecurity"), cancelSecurity);
 	websFormDefine(T("settingSecurity"), settingSecurity);
 	websFormDefine(T("querySecurity"), querySecurity);
 	websFormDefine(T("getSecurityLog"), getSecurityLog);
 
 /*Diagnose*/
-	websFormDefine(T("cleanLog"), cleanLog);
-	websFormDefine(T("getPingLog"), getPingLog);
 	websFormDefine(T("pingTest"), pingTest);
 /*Version*/
 	websFormDefine(T("queryVer"), queryVer);
@@ -266,8 +262,6 @@ openlog("router_web", LOG_CONS | LOG_PID, LOG_LOCAL2);
 	websFormDefine(T("settingAPN"), settingAPN);
 	websFormDefine(T("queryAPN"), queryAPN);
 /*settingDtu*/
-	websFormDefine(T("startDtu"), startDtu);
-	websFormDefine(T("cancelDtu"), cancelDtu);
 	websFormDefine(T("settingDtu"), settingDtu);
 	websFormDefine(T("queryDtu"), queryDtu);
 /*Runningstatus*/

@@ -19,6 +19,7 @@ static int openDev(char *Dev)
 	struct termios opt; 
 
 	//iFd = open(Dev, O_RDWR | O_NOCTTY | O_NONBLOCK);                        
+	printf("%s\n",__FUNCTION__);
 	iFd = open(Dev, O_RDWR | O_NOCTTY);                        
 	if(iFd < 0) {
 		syslog(LOG_DEBUG,"open %s failed!\n",Dev);
@@ -58,14 +59,16 @@ void status_read(int *fptr)
 	char* ptr = rbuff;
 	int ret=0;
 	fd = *fptr;
+	printf("%s\n",__FUNCTION__);
 	while (1) {
+		//printf("%s\n",__FUNCTION__);
 		ret = read(*fptr, ptr, 0x01);
 		if (1 == ret) {
 			if ('\n' != *ptr) {
 				ptr++;
 			}
 			else {
-				//printf("%s",rbuff);
+				printf("%s",rbuff);
 				//syslog(LOG_DEBUG,"Get direct: %s\n",rbuff);
 				direct_process(rbuff);
 				memset(rbuff,0,strlen(rbuff));
@@ -85,6 +88,7 @@ void send_at(int *fptr)
 	int ret;
 	/*循环检测，防止主动上报信息接受失败*/
 	while(1){
+		printf("%s\n",__FUNCTION__);
 		ret = write(*fptr, at_arr[0], strlen(at_arr[0]));
 		if(ret < 0){
 			syslog(LOG_DEBUG,"send_at\n");
@@ -109,6 +113,7 @@ int main(void)
 	int i=0,ret=0,fd=0;
 	pthread_t rThread, tThread;
 	
+	printf("%s\n",__FUNCTION__);
 	/*添加系统日志*/
 	openlog("lterouter", LOG_CONS | LOG_PID, LOG_LOCAL2);
 	syslog(LOG_DEBUG,"This is lterouter syslog!\n");
