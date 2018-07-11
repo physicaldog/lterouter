@@ -1,6 +1,0 @@
-#
-#   auth.txt - Authorization data
-#
-role name=manage abilities=manage
-
-user name=suyi password=BF1:00128:xXzWbkkX73s1CoDn:MJWNg8ECt3PPpp+a+7F5tXrFRmz6BlEX roles=manage
