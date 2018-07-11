@@ -9,7 +9,7 @@ void queryTime(webs_t wp, char_t *path, char_t *query)
     char system_time[64] = {0};
     printf("\n********%s********\n",__FUNCTION__);
 	
-	fp = popen("date +\"%Y-%m-%d %Hh:%Mm:%Ss\"","r");
+	fp = popen("date +\"%Y-%m-%d %H:%M:%S\"","r");
 	if(fp){
 		ret = fread(system_time,1,sizeof(system_time),fp);
 		if(NULL != (ptr = strchr(system_time,'\n')))
@@ -43,10 +43,48 @@ void settingTime(webs_t wp, char_t *path, char_t *query)
 		system(command);
 	}
 
-    //websWrite(wp,T(""));
+    websWrite(wp,T("设置完成"));
 	websDone(wp,200);
 	return;
 }
+
+void setManualTime(webs_t wp, char_t *path, char_t *query)
+{
+	printf("\n********%s********\n",__FUNCTION__);
+	system("touch /opt/config/ManualTime");
+
+    websWrite(wp,T("设置完成"));
+	websDone(wp,200);
+	return;
+
+}
+
+void setAutoTime(webs_t wp, char_t *path, char_t *query)
+{
+	printf("\n********%s********\n",__FUNCTION__);
+	system("rm /opt/config/ManualTime");
+
+    websWrite(wp,T("设置完成"));
+	websDone(wp,200);
+	return;
+}
+
+void checkManualTime(webs_t wp, char_t *path, char_t *query)
+{
+	int ret = 0; 
+    printf("\n********%s********\n",__FUNCTION__);
+    websWrite(wp,T("{"));
+	ret = access("/opt/config/ManualTime",0);
+	if(-1 == ret){
+		websWrite(wp,T("\"value\":\"0\""));
+	}else{
+		websWrite(wp,T("\"value\":\"1\""));
+	}
+    websWrite(wp,T("}"));
+	websDone(wp,200);
+	return;
+}
+
 void resetDev(webs_t wp, char_t *path, char_t *query)
 {
 	printf("resetDev!\n");

@@ -85,6 +85,77 @@ int setGW(char *Config, char *content, char *ConfigFile)
 	rename(tmpfile,ConfigFile);
 }
 
+
+void checkSecurityEnable(webs_t wp, char_t *path, char_t *query)
+{
+	int ret = 0;
+	char gw_ip[32] = {0};
+	char gw_port[32] = {0};
+	char *ptr = NULL;
+	printf("\n********%s********\n",__FUNCTION__);
+
+	websWrite(wp,T("{"));
+	ret = access("/opt/config/startSecurity",0);
+	if(-1 == ret){
+		websWrite(wp,T("\"start\":\"0\","));
+	}else{
+		websWrite(wp,T("\"start\":\"1\","));
+	}
+
+	getGW("connect",gw_ip,SecurityConf);
+	printf("ip = %s\n",gw_ip);
+	ptr = strchr(gw_ip,':');
+	if(NULL == ptr){
+		websWrite(wp,T("\"gw_ip\":\"0\","));
+		websWrite(wp,T("\"gw_port\":\"0\""));
+
+	}else{
+
+		*ptr = '\0';
+		strcpy(gw_port,(++ptr));
+		printf("ip:%s,port:%s\n",gw_ip,gw_port);
+
+		websWrite(wp,T("\"gw_ip\":\"%s\","),gw_ip);
+		websWrite(wp,T("\"gw_port\":\"%s\""),gw_port);
+	}
+
+	websWrite(wp,T("}"));
+	websDone(wp,200);
+	return;
+}
+
+void startSecurity(webs_t wp, char_t *path, char_t *query)
+{
+	char *gw_ip;
+	char *gw_port;
+	char ipAndport[64] = {0};
+
+	printf("\n********%s********\n",__FUNCTION__);
+	gw_ip = websGetVar(wp,T("gw_ip"),T(""));
+	gw_port = websGetVar(wp,T("gw_port"),T(""));
+
+	strcat(ipAndport,gw_ip);
+	strcat(ipAndport,":");
+	strcat(ipAndport,gw_port);
+	setGW("connect",ipAndport,SecurityConf);
+	system("touch /opt/config/startSecurity");
+
+    websWrite(wp,T("安全加密功能已启动"));
+	websDone(wp,200);
+	return;
+}
+
+void cancelSecurity(webs_t wp, char_t *path, char_t *query)
+{
+	printf("\n********%s********\n",__FUNCTION__);
+
+	system("rm /opt/config/startSecurity");
+
+    websWrite(wp,T("安全加密功能已关闭"));
+	websDone(wp,200);
+	return;
+}
+
 void getSecurityLog(webs_t wp, char_t *path, char_t *query)
 {
 	int ret = 0;
@@ -118,29 +189,6 @@ void getSecurityLog(webs_t wp, char_t *path, char_t *query)
 	websDone(wp,200);
 	return;
 }
-
-void startSecurity(webs_t wp, char_t *path, char_t *query)
-{
-
-	printf("\n********%s********\n",__FUNCTION__);
-	system("touch /opt/config/startSecurity");
-
-
-    websWrite(wp,T("安全加密功能已启动"));
-	websDone(wp,200);
-	return;
-}
-
-void cancelSecurity(webs_t wp, char_t *path, char_t *query)
-{
-	printf("\n********%s********\n",__FUNCTION__);
-
-	system("rm /opt/config/startSecurity");
-
-    websWrite(wp,T("安全加密功能已关闭"));
-	websDone(wp,200);
-	return;
-}
 void settingSecurity(webs_t wp, char_t *path, char_t *query)
 {
 	char *gw_ip;
@@ -159,6 +207,10 @@ void settingSecurity(webs_t wp, char_t *path, char_t *query)
 	//system("sed -i 's/$/\r/' /opt/pingtest"); linux文件转windows
 
 
+	system("touch /opt/config/startSecurity");
+
+
+    websWrite(wp,T("安全加密功能已启用"));
     websWrite(wp,T("设置完成"));
 	websDone(wp,200);
 	return;

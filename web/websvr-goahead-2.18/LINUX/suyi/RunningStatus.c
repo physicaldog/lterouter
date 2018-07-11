@@ -10,6 +10,7 @@ int  rssi = 0;
 int  rsrp = 0;
 int  sinr = 0;
 int  rsrq = 0;
+int  AutoTime = 0;
 
 
 void sysInfo(webs_t wp, char_t *path, char_t *query)
@@ -58,6 +59,7 @@ void WANStatus(webs_t wp, char_t *path, char_t *query)
 {
 
 	int fd = 0;
+	int ret = 0;
 	char *name;
 	char sinrb[8] = {0};
 	char rsrqb[8] = {0};
@@ -69,6 +71,7 @@ void WANStatus(webs_t wp, char_t *path, char_t *query)
 	FILE *fp;
 	char *ptr = NULL;
 	printf("\n********%s********\n",__FUNCTION__);
+
 	fp = popen("date +\"%Y-%m-%d %Hh:%Mm\"","r");
 	fread(system_date,1,sizeof(system_date),fp);
 	fclose(fp);
@@ -106,7 +109,6 @@ void WANStatus(webs_t wp, char_t *path, char_t *query)
 	printf("send_csq\n");
 	at_read(fd);
 	printf("csq\n");
-	close(fd);
 
 	getConfig("apn",buff,ApnConf);
 	printf("apn:%s\n",buff);
@@ -165,8 +167,24 @@ void WANStatus(webs_t wp, char_t *path, char_t *query)
 	websWrite(wp,T("}"));
 	rssi = 0;
 	printf("websdone!\n");
-
 	websDone(wp,200);
+
+	ret = access("/opt/config/ManualTime",0);
+	if(0 == ret){
+		AutoTime = 0;
+	}else{
+		if(0 == AutoTime){
+			tcflush(fd,TCIFLUSH);
+			at_send(fd,"at^nwtime?\r\n");
+			at_read(fd);
+			AutoTime = 1;
+		}else{
+
+		}
+	}
+
+
+	close(fd);
 	return;
 }
 

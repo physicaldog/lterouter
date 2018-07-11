@@ -8,6 +8,7 @@ extern int rssi;
 extern int  rsrp;
 extern int  sinr;
 extern int  rsrq;
+int setTime_done = 0;
 
 
 char * get_timeStr(unsigned long uptime,char *timeStr)
@@ -391,6 +392,51 @@ int get_ndisstat(char *buff)
 	return 0;
 }
 
+void get_nwtime(char *buff)
+{
+	int i = 0,ret = 0;
+	char *ptr = NULL;
+	char *qtr = NULL;
+	char time[32] = {'\0'};
+	char hour[4] = {'\0'};
+
+	printf("%s\n",__FUNCTION__);
+	printf("buff:%s\n",buff);
+	ptr = strstr(buff," ");
+	if(NULL == ptr)
+		return;
+	ptr++;
+	if('9' == *ptr){
+		setTime_done = 0;
+		return;
+	}
+	else{
+		sprintf(time,"date -s \"20");
+		for(i=0;i<2;i++){
+			qtr = strchr(ptr,'/');
+			if(qtr == NULL){
+				printf("qtr failed\n");
+				return;
+			}
+			printf("%c\n",*qtr);
+			*qtr = '-';
+		}
+//		qtr = strchr(ptr,',')
+//		memcpy()
+		qtr = strchr(ptr,',');
+		*qtr = ' ';
+		qtr = strchr(ptr,'+');
+		memset(qtr,'\0',strlen(qtr));
+		strcat(time,ptr);
+		strcat(time,"\"");
+		printf("%s\n",time);
+		system(time);
+		setTime_done = 1;
+	}
+
+	return 0;
+}
+
 int direct_process(char *buff)
 {
 	char *ptr = NULL;
@@ -427,6 +473,10 @@ int direct_process(char *buff)
 		//ptr = strstr(buff,at_arr[1]);
 		if (strstr(buff,"IPV4") && ((strstr(buff,at_arr[1])) || (strstr(buff,at_arr[3]))) ) {
 			get_ndisstat(buff);
+			return 0;
+		}
+		if(strstr(buff,"NWTIME")){
+			get_nwtime(buff);
 			return 0;
 		}
 	}

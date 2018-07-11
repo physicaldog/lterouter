@@ -236,6 +236,7 @@ static int initWebs()
 /*添加系统日志*/
 openlog("router_web", LOG_CONS | LOG_PID, LOG_LOCAL2);
 /*security*/
+	websFormDefine(T("checkSecurityEnable"), checkSecurityEnable);
 	websFormDefine(T("startSecurity"), startSecurity);
 	websFormDefine(T("cancelSecurity"), cancelSecurity);
 	websFormDefine(T("settingSecurity"), settingSecurity);
@@ -255,6 +256,9 @@ openlog("router_web", LOG_CONS | LOG_PID, LOG_LOCAL2);
 /*Account*/
 	websFormDefine(T("settingPW"), settingPW);
 /*settingWH*/
+	websFormDefine(T("checkManualTime"), checkManualTime);
+	websFormDefine(T("setManualTime"), setManualTime);
+	websFormDefine(T("setAutoTime"), setAutoTime);
 	websFormDefine(T("queryTime"), queryTime);
 	websFormDefine(T("settingTime"), settingTime);
 	websFormDefine(T("resetDev"), resetDev);
@@ -268,6 +272,8 @@ openlog("router_web", LOG_CONS | LOG_PID, LOG_LOCAL2);
 	websFormDefine(T("settingAPN"), settingAPN);
 	websFormDefine(T("queryAPN"), queryAPN);
 /*settingDtu*/
+	websFormDefine(T("checkDtuEnable"), checkDtuEnable);
+	websFormDefine(T("getDtuLog"), getDtuLog);
 	websFormDefine(T("startDtu"), startDtu);
 	websFormDefine(T("cancelDtu"), cancelDtu);
 	websFormDefine(T("settingDtu"), settingDtu);

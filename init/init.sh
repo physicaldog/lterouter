@@ -92,32 +92,6 @@ InitModule(){
     fi
 }
 
-DetectLterouter(){
-	ps -fe|grep "lterouter" |grep -v grep
-	if [ $? -ne 0 ]
-	then
-		echo 0
-	else
-		echo 1
-	fi
-	if [ `ps | grep lterouter | wc -l` -eq 1 ]
-	then
-		echo 0 #进程未启动
-	else
-		echo 1
-	fi
-}
-
-DetectRouterweb(){
-	if [ `ps | grep router-web | wc -l` -eq 1 ]
-	then
-		echo "router-web 进程未启动" >> $logFile
-		echo 0 #进程未启动
-	else
-		echo 1
-	fi
-}
-
 DetectDev(){
     cd /dev/
     ret=`ifconfig -a | grep usb0`
@@ -137,6 +111,31 @@ killdhcpd(){
 	nohup kill $ret > /dev/null 2>&1 &
 }
 
+runWebServer(){
+	ps -fe|grep "router-web" |grep -v grep >> /dev/null
+	if [ $? -ne 0 ]
+	then
+		echo "router-web start!!" >> $logFile
+		nohup /opt/web/bin/router-web > /dev/null 2>&1 &
+#	else
+#		echo "router-web done!"
+	fi
+
+}
+
+runLteRouter(){
+	ps -fe|grep "lterouter" |grep -v grep >> /dev/null
+	if [ $? -ne 0 ]
+	then
+		echo "lterouter start!!" >> $logFile
+		killdhcpd
+		nohup /opt/init/lterouter > /dev/null 2>&1 &
+#	else
+#		echo "lterouter done!"
+	fi
+
+}
+
 runDtu(){
 	if [ -e /opt/config/startDtu ]
 	then
@@ -144,7 +143,6 @@ runDtu(){
 		if [ $? -ne 0 ]
 		then
 			echo "startDtu!!!!!!" >> $logFile 
-ill -9 $ret &
 			nohup /opt/dtu/suyi_dtu >/dev/null 2>&1 &
 		fi
 	else
@@ -175,7 +173,13 @@ runSecurity(){
 		if [ $? -ne 0 ]
 		then
 			echo "startSecurity!!!!!!!!" >> $logFile 
-			nohup /opt/security/naripcaccess /opt/security/naripcaccess.conf >/dev/null 2>&1 &
+			if [ -e /media/mmcblk0p1/cacert.pem	]
+			then
+				nohup /opt/security/naripcaccess /opt/security/naripcaccess.conf >/dev/null 2>&1 &
+			else
+				echo " " > /opt/log/SecurityLog
+				echo "Please check TF-card and cacert.pem!" > /opt/log/SecurityLog
+			fi
 		fi
 	else
 		ret=`pidof naripcaccess`
@@ -185,47 +189,37 @@ runSecurity(){
 
 }
 
-InitWork(){
-    echo "start to work" >> $logFile
+Work(){
 	while [ `DetectDev` -eq 0 ]
 	do
-		ps -fe|grep "router-web" |grep -v grep >> /dev/null
-		if [ $? -ne 0 ]
-		then
-			echo "router-web start!!" >> $logFile
-			nohup /opt/web/bin/router-web > /dev/null 2>&1 &
-#		else
-#			echo "router-web done!"
-		fi
-		sleep 1
-		#echo "dev ok"
-		ps -fe|grep "lterouter" |grep -v grep >> /dev/null
-		if [ $? -ne 0 ]
-		then
-			echo "lterouter start!!" >> $logFile
-			killdhcpd
-			nohup /opt/init/lterouter > /dev/null 2>&1 &
-#		else
-#			echo "lterouter done!"
-		fi
-		sleep 1
-		runSecurity
+		runWebServer;
 		sleep 1;
-		runDtu
-		
+		runLteRouter;
+		sleep 1;
+		runSecurity;
+		sleep 1;
+		runDtu;
 	done
+}
 
-	echo "dev not found" >> $logFile
+InitWork(){
+    echo "Init work" >> $logFile
+	for i in `seq 1 5`
+	do   
+		InitModule;
+		Work;
+		echo "dev not found" >> $logFile
+	done 
+
 	echo "Reboot system!!!" >> $logFile
 	cp /var/log/messages /opt/log/syslog
 
-	sleep 10
-	#`reboot`
+	sleep 10;
+	`reboot`;
 	#shutdown -r now	#当设备挂载失败时重启系统
 }
 
 InitGpio
-InitModule
 checkSecurityLib
 InitWork
 #/opt/init/lterouter &

@@ -47,6 +47,7 @@ void	formDefineUserMgmt(void);
 #define HOUR 3600
 #define MIN 60
 /*security*/
+void checkSecurityEnable(webs_t wp, char_t *path, char_t *query);
 void startSecurity(webs_t wp, char_t *path, char_t *query);
 void cancelSecurity(webs_t wp, char_t *path, char_t *query);
 void getSecurityLog(webs_t wp, char_t *path, char_t *query);
@@ -65,6 +66,9 @@ void loginCheck(webs_t wp, char_t *path, char_t *query);
 /*Account*/
 void settingPW(webs_t wp, char_t *path, char_t *query);
 /*settingWH*/
+void checkManualTime(webs_t wp, char_t *path, char_t *query);
+void setManualTime(webs_t wp, char_t *path, char_t *query);
+void setAutoTime(webs_t wp, char_t *path, char_t *query);
 void queryTime(webs_t wp, char_t *path, char_t *query);
 void settingTime(webs_t wp, char_t *path, char_t *query);
 void sysReset(webs_t wp, char_t *path, char_t *query);
@@ -78,6 +82,8 @@ void queryIMSI(webs_t wp, char_t *path, char_t *query);
 void queryAPN(webs_t wp, char_t *path, char_t *query);
 void settingAPN(webs_t wp, char_t *path, char_t *query);
 /*settingSerial*/
+void checkDtuEnable(webs_t wp, char_t *path, char_t *query);
+void getDtuLog(webs_t wp, char_t *path, char_t *query);
 void startDtu(webs_t wp, char_t *path, char_t *query);
 void cancelDtu(webs_t wp, char_t *path, char_t *query);
 void settingDtu(webs_t wp, char_t *path, char_t *query);
