@@ -49,7 +49,7 @@ void	formDefineUserMgmt(void);
 
 static char_t		*rootWeb = T("/opt/web/staticPage");	/* Root web directory */
 static char_t		*password = T("");				/* Security password */
-static int			port = 80;						/* Server port */
+static int			port = 800;						/* Server port */
 static int			retries = 5;					/* Server port retries */
 static int			finished;						/* Finished flag */
 

@@ -7,20 +7,26 @@
 CC = arm-linux-gnueabihf-gcc
 
 config = $(PWD)/config
+log = $(PWD)/log
+tmp = $(PWD)/tmp
 init = $(PWD)/init
 dtu = $(PWD)/dtu
 security = $(PWD)/security
 web = $(PWD)/web
 webroot = $(web)/webroot
+webServer = $(web)/websvr-goahead-4.0.2
+webBin = $(webServer)/build/linux-arm-default/bin
+webPage = ~/ubuntushare/webPage
 webserver = $(web)/websvr-goahead-2.18/LINUX
+webpage = ~/ubuntushare/staticPage
 opt = ~/cpe_FileSystem/opt
-staticPage = ~/ubuntushare/staticPage
+package=/home/xueqian/ubuntushare/package
 
 initEXE = lterouter
 export initEXE
 dtuEXE = suyi_dtu
 export dtuEXE
-webEXE = router-web
+webEXE = goahead
 export webEXE
 
 #readdr = root@90.1.2.1:/opt
@@ -29,10 +35,12 @@ readdr = root@192.168.1.1:/opt
 all:
 	$(MAKE) -C $(init)
 	$(MAKE) -C $(dtu)
-	cd $(webserver) && $(MAKE)
+	cd $(webServer) && $(MAKE)
 
 config:
 	cp $(config)/* $(opt)/config/
+	cp $(log)/* $(opt)/log/
+	-cp $(tmp)/* $(opt)/tmp/
 	scp -r $(config)/* $(readdr)/config
 
 init:
@@ -52,10 +60,23 @@ security:
 	#cd $(init) && $(MAKE)
 	
 web:
+	cd $(webServer) && $(MAKE) CC=arm-linux-gnueabihf-gcc ARCH=arm  
+	cp $(webServer)/src/auth.txt $(webServer)/src/route.txt $(webBin);
+	cp -r $(webBin)/* $(opt)/web/webServer/
+	cp -r $(webPage)/* $(opt)/web/webPage/
+	scp -r $(webBin)/* $(readdr)/web/webServer/
+	scp -r $(webPage)/* $(readdr)/web/webPage/
+
+webPage:
+	cp -r $(webPage)/* $(opt)/web/webPage/
+	scp -r $(webPage)/* $(readdr)/web/webPage/
+
+goahead2:
 	cd $(webserver) && $(MAKE) 
-	cp $(webserver)/$(webEXE) $(webroot)/bin/
-	cp -r $(webroot)/* $(opt)/web/
-	scp -r $(webroot)/* $(readdr)/web/
+	cp $(webserver)/$(webEXE) $(opt)/web/webServer
+	cp -r $(webpage)/* $(opt)/web/staticPage
+	scp $(webserver)/$(webEXE) $(readdr)/web/webServer
+	scp -r $(webpage) $(readdr)/web/
 
 clean:
 	cd $(webserver) && $(MAKE) clean 
@@ -64,23 +85,27 @@ clean:
 
 opt:
 	rm $(opt)/* -rf
-	-mkdir $(opt) $(opt)/config $(opt)/init $(opt)/security $(opt)/dtu $(opt)/web $(opt)/log $(opt)/upgrade
+	-mkdir $(opt) $(opt)/config $(opt)/init $(opt)/security $(opt)/dtu $(opt)/web $(opt)/web/webServer $(opt)/web/webPage $(opt)/tmp $(opt)/log $(opt)/upgrade
 	cp $(config)/* $(opt)/config/
+	cp $(log)/* $(opt)/log/
+	-cp $(tmp)/* $(opt)/tmp/
 	cp $(init)/*.sh $(init)/$(initEXE) $(opt)/init/
 	cp $(dtu)/$(dtuEXE) $(opt)/dtu/
 	cp $(security)/* $(opt)/security/
-	cp $(webserver)/$(webEXE) $(webroot)/bin/
-	cp -r $(webroot)/* $(opt)/web/
-	cp -r $(staticPage) $(opt)/web/
-	rm -rf $(opt)/web/staticPage/.git
+	cp $(webServer)/src/auth.txt $(webServer)/src/route.txt $(webBin);
+	cp -r $(webBin)/* $(opt)/web/webServer/
+	cp -r $(webPage)/* $(opt)/web/webPage/
 #system.tar 恢复出厂设置使用 解压时必须进入对应的目录
 	cd $(opt);tar -cf upgrade/config.tar ./config
 
 #网页升级包，升级后删除
 package:
-	rm -rf ~/ubuntushare/package/*
-	cd $(opt);tar -cf ~/ubuntushare/package/cpe.tar ./*
-	cd ~/ubuntushare/package;md5sum cpe.tar > cpe.md5;tar -cf system.tar ./*
+	-rm  ~/ubuntushare/package/system/*
+	-rm ~/ubuntushare/package/system.tar;
+	tar -cf $(package)/system/cpe.tar -C $(opt) .;
+	cd ~/ubuntushare/package/system/;md5sum cpe.tar > cpe.md5;
+	cd $(package);tar -cf - system|openssl des3 -salt -k monkey | dd of=system.tar
+	#dd if=system.tar |openssl des3 -d -k monkey|tar xf -
 
 install:
 	scp -r $(opt)/* $(readdr)

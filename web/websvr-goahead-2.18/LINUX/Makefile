@@ -26,7 +26,7 @@ DASW	= -DDIGEST_ACCESS_SUPPORT
 #	SSL switches
 #
 # You must uncomment this line to enable SSL
-# SSLPATCHFILE = ../websSSL.o
+SSLPATCHFILE = ../websSSL.o
 #
 # Then uncomment these three lines if you are using the RSAREF library
 # and set them to the correct path.
@@ -42,9 +42,9 @@ DASW	= -DDIGEST_ACCESS_SUPPORT
 # files reside, and change the value of SSLLIB to the path to your
 # OpenSSL libssl.a and libcrypto.a.
 #
-# SSLINC = /usr/include/openssl
-# SSLLIB = /usr/lib/libssl.a /usr/lib/libcrypto.a
-# SSLSW	= -DWEBS_SSL_SUPPORT -I$(SSLINC) -DOPENSSL
+ SSLINC = /home/xueqian/arm_ssl_install/include
+ SSLLIB = /home/xueqian/arm_ssl_install/lib/libssl.a /home/xueqian/arm_ssl_install/lib/libcrypto.a
+ SSLSW	= -DWEBS_SSL_SUPPORT -I$(SSLINC) -DOPENSSL
 
 
 # If-Modified-Support switches (requires math library, libm.a)
@@ -65,7 +65,7 @@ CFLAGS	= -DWEBS -DUEMF -DOS="LINUX" -DLINUX $(UMSW) $(DASW) $(SSLSW) $(IFMODSW) 
 OTHERS	= -DB_STATS -DB_FILL -DDEBUG
 DEBUG	= -g -Wall
 IFLAGS 	= -I..
-LDFLAGS	= $(SSLLIB) $(IFMODLIB)
+LDFLAGS	= $(SSLLIB) $(IFMODLIB) -ldl
 #suyidir = /mnt/hgfs/ubuntuShare/lterouter/web/websvr-goahead-2.18/LINUX/suyi
 #suyi_web = $(suyidir)/suyi_web.o
 SUYI = libsuyi.a

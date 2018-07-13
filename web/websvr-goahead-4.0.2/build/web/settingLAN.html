@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Cache-Control" CONTENT="no-cache">
+<meta http-equiv="Pragma" CONTENT="no-cache">
+<link href="css/subpage.css" type="text/css" rel="stylesheet">
+<script language="JavaScript" src="js/jquery-1.10.1.min.js" type="text/JavaScript"></script>
+<script language="JavaScript" src="js/settingLAN.js" type="text/JavaScript"></script>
+</head>
+<body>
+
+<form id="logout" name="details" method="post" action="/action/logout">
+</form>
+
+<div id="target" method="post">
+	<input id="localparam" name="localparam" value="" type="hidden">
+	<input id="localurl" name="localurl" value="/overview.asp" type="hidden">
+	<div class="main_content">
+		<div class="content_right_title"> <span>LAN设置</span></div>
+		<div class="content_right_center">
+             <!--主机配置-->
+			<div class="content_item_title">LAN主机配置</div>
+			<div class="content_item" id="uptime_contentitem" style="min-height:20px;">
+				<div class="content_item_left">IP地址</div>
+				<div class="content_item_right" id="uptime"><input id="lanip" value=""/>*格式：255.255.255.0*</div>
+			</div>
+			<div class="content_item" id="onlinetime_contentitem" style="min-height:20px;">
+				<div class="content_item_left">子网掩码</div>
+				<div class="content_item_right" id="uptime"><input id="netmask" value=""/>*格式：255.255.255.0*</div>
+			</div>
+		<div class="reset" style="width: 100%;height: 30px;margin:40px 0 100px 0;">
+			<div style="float: right;margin-right: 10%;">
+				<button style="width: 100px;height: 30px;" onclick="settingLAN()"> 提交 </button>
+			    <button style="width: 100px;height: 30px;" onclick="queryLAN()"> 查询 </button>
+			</div>
+		</div>
+        <!--<div class="content_item_title"> <span>DHCP配置</span></div>
+            <div class="content_item" id="uptime_contentitem" style="min-height:20px;">
+				<div class="content_item_left">DHCP服务器</div>
+				<div class="content_item_right" id="uptime"><input type="checkbox" style="width: 15px;height: 15px;">    启用</div>
+			</div>
+			<div class="content_item" id="uptime_contentitem" style="min-height:20px;">
+				<div class="content_item_left">起始地址</div>
+				<div class="content_item_right" id="uptime"><input value="255.255.255.0"/>   *</div>
+			</div>
+			<div class="content_item" id="uptime_contentitem" style="min-height:20px;">
+				<div class="content_item_left">结束地址</div>
+				<div class="content_item_right" id="uptime"><input value="255.255.255.0"/>   *</div>
+			</div>
+			<div class="content_item" id="uptime_contentitem" style="min-height:20px;">
+				<div class="content_item_left">租约时间</div>
+				<div class="content_item_right" id="uptime"><input value="255.255.255.0"/>   *  分钟（2~1440）</div>
+			</div>
+            
+		<div class="reset" style="width: 100%;height: 30px;margin:40px 0 100px 0;">
+			<div style="float: right;margin-right: 10%;">
+				<button style="width: 100px;height: 30px;"> 提交 </button>
+			    <button style="width: 100px;height: 30px;"> 查询 </button>
+			</div>
+		</div>
+		<div class="content_item_title"> <span>绑定地址列表</span></div>
+		<button style="width: 100px;height: 25px;float:right;border-radius: 5px;margin:10px 0 10px 0;"> 添加列表 </button>
+		<div style="" id="id_devListDiv">
+				<table id="devtable" class="table_list">
+					<tbody>
+						<tr>
+							<th>索引</th>
+							<th>IP地址</th>
+							<th>MAC地址</th>
+							<th>操作</th>
+						</tr>
+					</tbody>
+				</table>
+			</div>-->
+	</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+</body></html>

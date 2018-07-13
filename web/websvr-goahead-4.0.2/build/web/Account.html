@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Cache-Control" CONTENT="no-cache">
+<meta http-equiv="Pragma" CONTENT="no-cache">
+<link href="css/subpage.css" type="text/css" rel="stylesheet">
+<script language="JavaScript" src="js/jquery-1.10.1.min.js" type="text/JavaScript"></script>
+<script language="JavaScript" src="js/Account.js" type="text/JavaScript"></script>
+</head>
+<body>
+
+<form id="logout" name="details" method="post" action="/action/logout">
+</form>
+
+<div id="target" action="/action/sumbitProc" method="post">
+	<input id="localparam" name="localparam" value="" type="hidden">
+	<input id="localurl" name="localurl" value="/overview.asp" type="hidden">
+	<div class="main_content">
+		<div class="content_right_title"> <span>账户</span></div>
+		<div class="content_right_center" style="border-bottom: 1px solid #666;padding-bottom: 15px;">
+             <!--模块信息-->
+			<div class="content_item_title">修改密码</div>
+			<div class="content_item" id="uptime_contentitem" style="min-height:20px;">
+				<div class="content_item_left">用户名</div>
+				<div class="content_item_right" id="userName">
+					<select name="">
+						<option value="admin">suyi</option>
+						<!--<option value="user">user</option>-->
+					</select>
+				</div>
+			</div>
+			<div class="content_item" id="uptime_contentitem" style="min-height:20px;">
+				<div class="content_item_left">当前密码</div>
+				<div class="content_item_right" id="uptime">
+					<input type="text" name="" id="currPW" value="" />
+				</div>
+			</div>
+			<div class="content_item" id="uptime_contentitem" style="min-height:20px;">
+				<div class="content_item_left">新密码</div>
+				<div class="content_item_right" id="uptime">
+					<input type="text" name="" id="newPW" value="" />　*（5-15位ASCII码）（1~9000）
+				</div>
+			</div>
+<!--			<div class="content_item" id="uptime_contentitem" style="min-height:20px;">
+				<div class="content_item_left">确认密码</div>
+				<div class="content_item_right" id="uptime">
+					<input type="text" name="" id="" value="newPW2" />　*（5-15位ASCII码）（1~9000）
+				</div>
+			</div>-->
+        <div class="reset" style="width: 100%;height: 30px;margin:40px 0 0 0;">
+			<div style="float: right;margin-right: 10%;">
+				<button style="width: 100px;height: 30px;" onclick="settingPW()"> 提交 </button>
+			    <button style="width: 100px;height: 30px;" onclick="cancelPW()"> 取消 </button>
+			</div>
+		</div>
+		<!--<div class="content_item_title">配置</div>
+		<div class="content_item" id="uptime_contentitem" style="min-height:20px;">
+				<div class="content_item_left">用户账号</div>
+				<div class="content_item_right" id="uptime">
+					<input type="checkbox" name="" id="" value="" style="width: 16px;height: 16px;"/> 启用
+				</div>
+			</div>
+			<div class="reset" style="width: 100%;height: 30px;margin:40px 0 0 0;">
+			<div style="float: right;margin-right: 10%;">
+				<button style="width: 100px;height: 30px;"> 提交 </button>
+			    <button style="width: 100px;height: 30px;"> 取消 </button>
+			</div>
+		</div>
+		</div>-->
+	</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+</body></html>

@@ -1506,6 +1506,7 @@ void websRedirect(webs_t wp, char_t *url)
 		redirectFmt = T("http://%s/%s");
 
 #ifdef WEBS_SSL_SUPPORT
+		printf("https redir\n");
 		if (wp->flags & WEBS_SECURE) {
 			redirectFmt = T("https://%s/%s");
 		}

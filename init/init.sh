@@ -16,7 +16,8 @@ SleepSta=3
 logFile=/var/log/messages
 
 letrouter=/opt/init/lterouter
-routerweb=/opt/web/bin/router-web
+webServer=/opt/web/webServer
+webPage=/opt/web/webPage
 
 #udhcpd /etc/udhcpd.conf &
 
@@ -112,13 +113,14 @@ killdhcpd(){
 }
 
 runWebServer(){
-	ps -fe|grep "router-web" |grep -v grep >> /dev/null
+	ps -fe|grep "goahead" |grep -v grep >> /dev/null
 	if [ $? -ne 0 ]
 	then
-		echo "router-web start!!" >> $logFile
-		nohup /opt/web/bin/router-web > /dev/null 2>&1 &
+		echo "goahead start!!" >> $logFile
+		echo $webServer
+		nohup $webServer/goahead --home $webServer $webPage 'https://*:443' > /dev/null 2>&1 &
 #	else
-#		echo "router-web done!"
+#		echo "goahead done!"
 	fi
 
 }
@@ -137,7 +139,7 @@ runLteRouter(){
 }
 
 runDtu(){
-	if [ -e /opt/config/startDtu ]
+	if [ -e /opt/tmp/startDtu ]
 	then
 		ps -fe|grep "suyi_dtu" |grep -v grep >> /dev/null
 		if [ $? -ne 0 ]
@@ -167,7 +169,7 @@ checkSecurityLib(){
 }
 
 runSecurity(){
-	if [ -e /opt/config/startSecurity ]
+	if [ -e /opt/tmp/startSecurity ]
 	then
 		ps -fe|grep "naripcaccess" |grep -v grep >> /dev/null
 		if [ $? -ne 0 ]
@@ -219,8 +221,17 @@ InitWork(){
 	#shutdown -r now	#当设备挂载失败时重启系统
 }
 
-InitGpio
-checkSecurityLib
-InitWork
-#/opt/init/lterouter &
-#/opt/web/webroot/bin/router-web &
+InitTime(){
+    if [ -e /opt/tmp/ManualTime ]
+    then
+        date -s "`cat /opt/config/TimeConfig`"
+		/opt/init/timeInit.sh &
+    fi
+
+}
+
+echo 1 >> /opt/config/RebootCount
+InitTime;
+InitGpio;
+checkSecurityLib;
+InitWork;

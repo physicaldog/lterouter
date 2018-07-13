@@ -1,0 +1,1 @@
+ --no-print-directory -s -- CC=arm-linux-gnueabihf-gcc ARCH=arm

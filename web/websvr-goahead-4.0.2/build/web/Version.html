@@ -1,0 +1,69 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Cache-Control" CONTENT="no-cache">
+<meta http-equiv="Pragma" CONTENT="no-cache">
+<link href="css/subpage.css" type="text/css" rel="stylesheet">
+<script language="JavaScript" src="js/jquery-1.10.1.min.js" type="text/JavaScript"></script>
+<script language="JavaScript" src="js/Vserion.js" type="text/JavaScript"></script>
+</head>
+<body>
+
+<form id="logout" name="details" method="post" action="/action/logout">
+</form>
+
+<div id="target" action="/action/sumbitProc" method="post">
+	<input id="localparam" name="localparam" value="" type="hidden">
+	<input id="localurl" name="localurl" value="/overview.asp" type="hidden">
+	<div class="main_content">
+		<div class="content_right_title"> <span>版本管理</span></div>
+		<div class="content_right_center" style="border-bottom: 1px solid #666;padding-bottom: 15px;">
+             <!--模块信息-->
+			<div class="content_item_title">版本信息</div>
+			<div class="content_item" id="uptime_contentitem" style="min-height:20px;">
+				<div class="content_item_left">产品型号</div>
+				<div class="content_item_right" id="uptime">CPE_V1.2</div>
+			</div>
+<!--			<div class="content_item" id="onlinetime_contentitem" style="min-height:20px;">
+				<div class="content_item_left">单板序列号</div>
+				<div class="content_item_right" id="onlinetime">MH8041MH8041MH8041MH8041</div>
+			</div>-->
+			<div class="content_item" id="onlinetime_contentitem" style="min-height:20px;">
+				<div class="content_item_left">当前软件版本</div>
+				<div class="content_item_right" id="softversion">--</div>
+			</div>
+<!--			<div class="content_item" id="onlinetime_contentitem" style="min-height:20px;">
+				<div class="content_item_left">备用软件版本</div>
+				<div class="content_item_right" id="onlinetime">--</div>
+			</div>-->
+            <div class="content_item_title"> <span>版本升级</span></div>
+                <form id="softupdate" action=/action/upldForm method=POST enctype="multipart/form-data">  
+				    
+                	<div class="content_item" id="uptime_contentitem" style="min-height:20px;">
+				        选择文件:<input class="inputContent" id="fileupload" type="file" name="fileupload" size=60 value="">
+				        
+				        <input style="width: 100px;height:25px;" type="submit" name="update" value="提交" ></input>  
+				
+				</div>
+                </form>
+        </div>
+		<form action="/action/uploadTest" method ="post" enctype="multipart/form-data">
+		<input type="file" name="files[]" multiple/>
+
+		<input type="submit" value="提交">
+		</form>
+
+
+	</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+</body></html>
