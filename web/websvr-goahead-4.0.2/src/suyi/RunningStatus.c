@@ -10,7 +10,7 @@ int  rssi = 0;
 int  rsrp = 0;
 int  sinr = 0;
 int  rsrq = 0;
-int  Autoime = 0;
+int  AutoTime = 0;
 
 
 void sysInfo(Webs *wp)
@@ -178,15 +178,15 @@ void WANStatus(Webs *wp)
 	printf("websdone!\n");
 	websDone(wp);
 
-	ret = access("/opt/config/Manualime",0);
+	ret = access("/opt/config/ManualTime",0);
 	if(0 == ret){
-		Autoime = 0;
+		AutoTime = 0;
 	}else{
-		if(0 == Autoime){
+		if(0 == AutoTime){
 			tcflush(fd,TCIOFLUSH);
 			at_send(fd,"at^nwtime?\r\n");
 			at_read(fd);
-			Autoime = 1;
+			AutoTime = 1;
 		}else{
 
 		}
