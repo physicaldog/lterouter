@@ -80,6 +80,7 @@ void setManualTime(Webs *wp);
 void setAutoTime(Webs *wp);
 void queryTime(Webs *wp);
 void settingTime(Webs *wp);
+void getRebootCount(Webs *wp);
 void sysReset(Webs *wp);
 void resetDev(Webs *wp);
 

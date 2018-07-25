@@ -1,7 +1,9 @@
 //初始化加载
 $(function() {
+	getRebootCount();
 	checkManualTime();
 	checkRadio();
+	
 });
 
 function settingTime() {
@@ -106,6 +108,19 @@ function checkRadio() {
 }
 
 //重启 --提交
+
+function getRebootCount() {
+	$.ajax({
+		type: "get",
+		url: "/goform/getRebootCount",
+		async: true,
+		success: function(data) {
+			alert(data);
+			$('#rebootCount').text(data);
+		}
+	});
+}
+
 function resetDev() {
 	$.ajax({
 		type: "get",

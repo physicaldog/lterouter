@@ -100,12 +100,13 @@ void checkManualTime(Webs *wp)
 	return;
 }
 
-void resetDev(Webs *wp)
+void getRebootCount(Webs *wp)
 {
+	int ret = 0; 
 	FILE *fp = NULL;
 	char *ptr = NULL;
 	char count[32] = {0};
-	printf("\n********%s********\n",__FUNCTION__);
+    printf("\n********%s********\n",__FUNCTION__);
 	websSetStatus(wp, 200);
 	websWriteHeaders(wp, -1, 0);//参数二需要未-1,否则前端收不到数据
 	websWriteEndHeaders(wp);
@@ -119,7 +120,20 @@ void resetDev(Webs *wp)
 	}
 	printf("count=%s\n",count);
 
-    websWrite(wp,("%s 设备重启中..."),count);
+    websWrite(wp,("设备启动次数：%s"),count);
+	websDone(wp);
+	return;
+}
+
+void resetDev(Webs *wp)
+{
+	printf("\n********%s********\n",__FUNCTION__);
+	websSetStatus(wp, 200);
+	websWriteHeaders(wp, -1, 0);//参数二需要未-1,否则前端收不到数据
+	websWriteEndHeaders(wp);
+
+
+    websWrite(wp,(" 设备重启中..."));
 	websDone(wp);
 	/*系统重启*/
 	sync();

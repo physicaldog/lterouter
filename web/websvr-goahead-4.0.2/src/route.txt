@@ -83,6 +83,7 @@ route uri=/action/setManualTime
 route uri=/action/setAutoTime
 route uri=/action/queryTime
 route uri=/action/settingTime
+route uri=/action/getRebootCount
 route uri=/action/resetDev
 route uri=/action/sysReset
 

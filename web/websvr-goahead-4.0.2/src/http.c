@@ -404,6 +404,7 @@ PUBLIC int websOpen(cchar *documents, cchar *routeFile)
 	websDefineAction("setAutoTime", setAutoTime);
 	websDefineAction("queryTime", queryTime);
 	websDefineAction("settingTime", settingTime);
+	websDefineAction("getRebootCount", getRebootCount);
 	websDefineAction("resetDev", resetDev);
 	websDefineAction("sysReset", sysReset);
 
