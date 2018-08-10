@@ -69,26 +69,26 @@
 						target="main">功能调试</a><img class="icon5" src="img/coin21.png" />
 				</dd>
 				<dd>
+    				<form name="details" method="post" action="/action/logout">
 					<img class="coin11" src="img/coin111.png" /><img class="coin22"
-						src="img/coin222.png" /><a class="cks" href="Account.html"
-						target="main">密码修改</a><img class="icon5" src="img/coin21.png" />
-				</dd>
-				<dd>
-					<img class="coin11" src="img/coin111.png" /><img class="coin22"
-						src="img/coin222.png" /><a class="cks" href="javascript:void(0)" onclick="exitOnclick()"
+						src="img/coin222.png" /><a class="cks" href="/action/logout" onclick="exit()"
 						target="main">退出登录</a><img class="icon5" src="img/coin21.png" />
+					</form>
 				</dd>
 			</dl>
-			
-
 		</div>
 
 	</div>
 </body>
 <script type="text/javascript" language="JavaScript">
-	function exitOnclick(){
+	function exit(){
+		var keys = document.cookie.match(/[^ =;]+(?=\=)/g);
+		if(keys) {
+			for(var i = keys.length; i--;)
+				document.cookie = keys[i] + '=0;expires=' + new Date(0).toUTCString()
+			}
 		 $.cookie('netstats', null);   
-		 window.parent.location.replace("login.html");
+		 window.parent.location.replace("pub/login.html");
 	}
 </script>
 </html>

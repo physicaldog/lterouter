@@ -10,8 +10,9 @@
 #   Examples:
 #
 #   Define roles
-#       role name=manager abilities=view,edit,delete
+       role name=manager abilities=view,edit,delete
+       role name=viewer abilities=view
 #
 #   Define a user
-#       user name=joshua password=2fd6e47ff9bb70c0465fd2f5c8e5305e roles=manager,purchaser
+       user name=Q/U/DHc+LECbmdbrRCs/mw== password=DKJs5bWdx1CR083wib95wg== roles=viewer
 #

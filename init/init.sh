@@ -118,7 +118,7 @@ runWebServer(){
 	then
 		echo "goahead start!!" >> $logFile
 		echo $webServer
-		nohup $webServer/goahead --home $webServer $webPage 'https://*:443' > /dev/null 2>&1 &
+		nohup $webServer/goahead --home $webServer $webPage > /dev/null 2>&1 &
 #	else
 #		echo "goahead done!"
 	fi

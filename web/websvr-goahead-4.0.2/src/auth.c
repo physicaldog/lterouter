@@ -582,9 +582,10 @@ PUBLIC bool websVerifyPasswordFromFile(Webs *wp)
     char    passbuf[ME_GOAHEAD_LIMIT_PASSWORD * 3 + 3];
     bool    success;
 
+	printf("\n****%s****\n",__FUNCTION__);
     assert(wp);
     if (!wp->user && (wp->user = websLookupUser(wp->username)) == 0) {
-        trace(5, "verifyUser: Unknown user \"%s\"", wp->username);
+        trace(2, "verifyUser: Unknown user \"%s\"", wp->username);
         return 0;
     }
     /*
@@ -593,10 +594,12 @@ PUBLIC bool websVerifyPasswordFromFile(Webs *wp)
      */
     if (!wp->encoded) {
         fmt(passbuf, sizeof(passbuf), "%s:%s:%s", wp->username, ME_GOAHEAD_REALM, wp->password);
-        wfree(wp->password);
-        wp->password = websMD5(passbuf);
+        //wfree(wp->password);
+        //wp->password = websMD5(passbuf);
         wp->encoded = 1;
     }
+
+	printf("%s,%s\n",wp->password, wp->user->password);
     if (wp->digest) {
         success = smatch(wp->password, wp->digest);
     } else {

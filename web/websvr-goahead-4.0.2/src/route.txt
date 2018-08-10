@@ -14,13 +14,13 @@
 #   Examples:
 #
 #   Universally redirect http to https for secure communications
-#       route uri=/ protocol=http redirect=*@https handler=redirect
+       route uri=/ protocol=http redirect=*@https handler=redirect
 #
 #   Form based login pattern. 
-#       route uri=/pub/
-#       route uri=/action/login methods=POST handler=action redirect=200@/ redirect=401@/pub/login.html
-#       route uri=/action/logout methods=POST handler=action redirect=200@/pub/login.html
-#       route uri=/ auth=form handler=continue redirect=401@/pub/login.html
+       route uri=/pub/
+       route uri=/action/login methods=POST handler=action redirect=200@/ redirect=401@/pub/login.html
+       route uri=/action/logout methods=POST handler=action redirect=401@/pub/login.html
+       route uri=/ auth=form handler=continue redirect=401@/pub/login.html
 #
 #   Sample basic or digest authentication for user "joshua" 
 #       route uri=/auth/basic/ auth=basic abilities=manage

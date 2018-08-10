@@ -35,7 +35,7 @@ readdr = root@192.168.1.1:/opt
 all:
 	$(MAKE) -C $(init)
 	$(MAKE) -C $(dtu)
-	cd $(webServer) && $(MAKE)
+	cd $(webServer) && $(MAKE) CC=arm-linux-gnueabihf-gcc ARCH=arm  
 
 config:
 	cp $(config)/* $(opt)/config/
@@ -79,7 +79,7 @@ goahead2:
 	scp -r $(webpage) $(readdr)/web/
 
 clean:
-	cd $(webserver) && $(MAKE) clean 
+	cd $(webServer) && $(MAKE) clean 
 	cd $(init) && $(MAKE) clean 
 	cd $(dtu) && $(MAKE) clean 
 

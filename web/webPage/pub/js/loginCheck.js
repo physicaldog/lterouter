@@ -12,7 +12,6 @@ $(document).ready(function(){
 	}, "手机号码格式错误"); 
 });
 function validate(){
-//	$(".password").val($.md5($(".password").val()));
 	return $("#loginForm").validate({
 		rules:{
 			username:{
@@ -34,43 +33,40 @@ function validate(){
 
 	})
 }
-	var key  = CryptoJS.enc.Latin1.parse('nbWondersGroup88'); //密钥
-	var iv   = CryptoJS.enc.Latin1.parse('nbWondersGroup88'); //密钥
-function loginCheck(){
-//  alert(123);
-	alert($('#uname').val()+"     "+$('#uPW').val());
 
-	/*var username = encrypt($('#uname').val());*/
-//加密
-	/*var encrypted = CryptoJS.AES.encrypt($('#uname').val(),key,{iv:iv,mode:CryptoJS.mode.CBC,padding:CryptoJS.pad.ZeroPadding});
-	var encrypted2 = CryptoJS.AES.encrypt($('#uPW').val(),key,{iv:iv,mode:CryptoJS.mode.CBC,padding:CryptoJS.pad.ZeroPadding});*/
-	
+var key  = CryptoJS.enc.Latin1.parse('monkeymonkeymonk'); //密钥
+var iv   = CryptoJS.enc.Latin1.parse('monkeymonkeymonk'); //向量
+
+function loginCheck(){
+	//alert($('#uname').val()+"     "+$('#uPW').val());
 	$('#uname').val(CryptoJS.AES.encrypt($('#uname').val(),key,{iv:iv,mode:CryptoJS.mode.CBC,padding:CryptoJS.pad.ZeroPadding}));
 	$('#uPW').val(CryptoJS.AES.encrypt($('#uPW').val(),key,{iv:iv,mode:CryptoJS.mode.CBC,padding:CryptoJS.pad.ZeroPadding}));
-	alert(encrypted+"     "+encrypted2);
+	//alert($('#uname').val()+"     "+$('#uPW').val());
 	//登陆表单验证
-	if(validate().form()){
+/*	if(validate().form()){
 		$.ajax({
 		type:"post",
 		url:"/action/login",
 		async:true,
-		data : $("#loginForm").serialize(),
+		data:$("#loginForm").serialize(),
 		success:function(data){
-			if (parseInt(data)==1) {
+			alert(1);
+			alert(data);
+		if (parseInt(data)==1) {
 				var loginstate=new Date(); 
               loginstate.setTime(new Date().getTime()+5*60*1000); //设置有效时间为5分钟
               $.cookie('netstats', '1', { expires: loginstate });  
 	            window.location.replace("index.html");
-	            
 			} else{
 				//alert(data);
 				//layer.msg('用户名或者密码错误!', {icon: 2});
 				layer.msg('用户名或者密码错误!');
+	            window.location.replace("index.html");
 			}
 			console.log("fanhuizhi"+data)
 		}
 	});
-	}
+	}*/
 }
 
 //解密
