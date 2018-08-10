@@ -4,6 +4,7 @@
 #include <fcntl.h>
 #include <termios.h>
 #include <errno.h>
+#include <syslog.h>
 
 #include <sys/types.h>
 #include <sys/socket.h>

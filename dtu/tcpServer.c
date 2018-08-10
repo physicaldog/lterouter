@@ -20,23 +20,23 @@ int tcpSev_init(struct sockaddr_in *host_addr,int client_num)
 {
 	int ret = 0;
 	int sockfd = 0;
-	printf("********%s********\n",__FUNCTION__);
+	log_msg("********%s********\n",__FUNCTION__);
 
 	sockfd = socket(AF_INET,SOCK_STREAM,0);
 	if(-1 == sockfd){
-		perror("sockfd open failed");
+		log_ret("sockfd open failed");
 		return -1;
 	}
 
 	ret = bind(sockfd,(struct sockaddr *)host_addr,sizeof(struct sockaddr_in));
 	if(-1 == ret){
-		perror("bind failed");
+		log_ret("bind failed");
 		return -1;
 	}
 
 	ret = listen(sockfd,client_num);
 	if(-1 == ret){
-		perror("listen failed");
+		log_ret("listen failed");
 		return -1;
 	}
 
@@ -52,25 +52,25 @@ int set_tcp_keepAlive(int fd, int start, int interval, int count)
 	//启用心跳机制，如果您想关闭，将keepAlive置零即可  
 	if(setsockopt(fd,SOL_SOCKET,SO_KEEPALIVE,(void*)&keepAlive,sizeof(keepAlive)) == -1)  
 	{  
-		perror("setsockopt");  
+		log_ret("setsockopt");  
 		return -1;  
 	}  
 	//启用心跳机制开始到首次心跳侦测包发送之间的空闲时间  
 	if(setsockopt(fd,SOL_TCP,TCP_KEEPIDLE,(void *)&start,sizeof(start)) == -1)  
 	{  
-		perror("setsockopt");  
+		log_ret("setsockopt");  
 		return -1;  
 	}  
 	//两次心跳侦测包之间的间隔时间  
 	if(setsockopt(fd,SOL_TCP,TCP_KEEPINTVL,(void *)&interval,sizeof(interval)) == -1)  
 	{  
-		perror("setsockopt");  
+		log_ret("setsockopt");  
 		return -1;  
 	}  
 	//探测次数，即将几次探测失败判定为TCP断开  
 	if(setsockopt(fd,SOL_TCP,TCP_KEEPCNT,(void *)&count,sizeof(count)) == -1)  
 	{  
-		perror("setsockopt");  
+		log_ret("setsockopt");  
 		return -1;  
 	}  
 	return 0;  
@@ -108,7 +108,7 @@ int TcpServer_Mode()
 
 	struct termios termptr;
 
-	printf("********%s********\n",__FUNCTION__);
+	log_msg("********%s********\n",__FUNCTION__);
 
 	getConfig("local_port",local_port,DtuConf);
 	get_SerialConf(baudrate,parity,data_bit,stop_bit);
@@ -122,18 +122,18 @@ int TcpServer_Mode()
 
 	sockfd = tcpSev_init(&host_addr,CLIENT_NUM);
 	if(-1 == sockfd){
-		perror("sockfd open failed");
+		log_ret("sockfd open failed");
 		return -1;
 	}
 
 
 	while(1){
-		printf("start accept:\n");
+		log_msg("start accept:\n");
 		addr_len = sizeof(struct sockaddr_in);
 		bzero(&client_addr,addr_len);
 		nsockfd = accept(sockfd,(struct sockaddr *)&client_addr,&addr_len);
 		if(-1 == nsockfd){
-			perror("accpet failed");
+			log_ret("accpet failed");
 			return -1;
 		}
 		if(nsockfd > fd_max)
@@ -141,7 +141,7 @@ int TcpServer_Mode()
 
 		client_port = ntohs(client_addr.sin_port);
 		inet_ntop(AF_INET,&client_addr.sin_addr.s_addr,client_ip,sizeof(client_ip));	
-		printf("client form:%s:%d\n",client_ip,client_port);
+		log_msg("client form:%s:%d\n",client_ip,client_port);
 
 		set_tcp_keepAlive(nsockfd, keepIdle, keepInterval,keepCount);
 
@@ -149,7 +149,7 @@ int TcpServer_Mode()
 		/*初始化串口*/
 		fd = openSer(SerPort,baudrate,parity,data_bit,stop_bit);
 		if(0 >= fd){
-			perror("openSer failed!");
+			log_ret("openSer failed!");
 			/*串口打开失败则关闭sock*/
 			close(nsockfd);
 			return -1;
@@ -161,7 +161,7 @@ int TcpServer_Mode()
 
 
 		while(1){
-			printf("start select\n");
+			log_msg("start select\n");
 			/*初始化select 读集合*/
 			FD_ZERO(&rdfds);
 			FD_SET(fd,&rdfds);
@@ -170,18 +170,18 @@ int TcpServer_Mode()
 
 			ret = select(fd_max+1,&rdfds,NULL,NULL,&timeout);
 			if(-1 == ret){
-				perror("select");
+				log_ret("select");
 				return -1;
 			}else if(0 == ret){
-				printf("Timeout!\n");
+				log_msg("Timeout!\n");
 
 				ret = recv(nsockfd,rbuff,sizeof(rbuff),MSG_DONTWAIT);
-				printf("ret =%d\n",ret);
+				log_msg("ret =%d\n",ret);
 				if((0 > ret)){
 					if((errno == EINTR || errno == EWOULDBLOCK || errno == EAGAIN)){
-						printf("please wait!\n");
+						log_msg("please wait!\n");
 					}else{
-						printf("网络断开\n");
+						log_msg("网络断开\n");
 						FD_CLR(nsockfd,&rdfds);
 						FD_CLR(fd,&rdfds);
 						close(fd);
@@ -189,7 +189,7 @@ int TcpServer_Mode()
 						break;
 					}
 				}else if(0 == ret){
-					printf("链接关闭!\n");
+					log_msg("链接关闭!\n");
 					FD_CLR(nsockfd,&rdfds);
 					FD_CLR(fd,&rdfds);
 					close(fd);
@@ -200,14 +200,14 @@ int TcpServer_Mode()
 				if(FD_ISSET(nsockfd,&rdfds)){
 					ret = read(nsockfd,rbuff,sizeof(rbuff));
 					if(0 == ret){
-						perror("read 链接关闭！");
+						log_ret("read 链接关闭！");
 						FD_CLR(nsockfd,&rdfds);
 						FD_CLR(fd,&rdfds);
 						close(fd);
 						close(nsockfd);
 						break;
 					}else if(0 > ret){
-						perror("socket read failed");
+						log_ret("socket read failed");
 						//清理缓冲区
 						FD_CLR(nsockfd,&rdfds);
 						FD_CLR(fd,&rdfds);
@@ -215,7 +215,7 @@ int TcpServer_Mode()
 						close(nsockfd);
 						break;
 					}else{
-						printf("MESSAGE from socket:%s\n",rbuff);
+						log_msg("MESSAGE from socket:%s\n",rbuff);
 						ret = write(fd,rbuff,strlen(rbuff));
 						//fsync(fd);
 						tcdrain(fd);
@@ -224,15 +224,15 @@ int TcpServer_Mode()
 					}
 				}
 				if(FD_ISSET(fd,&rdfds)){
-					//printf("read serial message\n");
+					//log_msg("read serial message\n");
 					ret = read(fd,tbuff,sizeof(tbuff));
 					if(0 == ret){
-						perror("ret = 0");
+						log_ret("ret = 0");
 					}else if(0 > ret){
-						perror("read serial failed");
+						log_ret("read serial failed");
 						//清理缓冲区
 					}else{
-						printf("MESSAGE from serial:%s\n",tbuff);
+						log_msg("MESSAGE from serial:%s\n",tbuff);
 						/*错误处理*/
 						ret=write(nsockfd,tbuff,strlen(tbuff));
 						memset(tbuff,0,sizeof(tbuff));
@@ -272,24 +272,24 @@ int main()
 	int keepInterval = 1; // 探测时发包的时间间隔为5 秒
 	int keepCount = 3; // 探测尝试的次数.如果第1次探测包就收到响应了,则后2次的不再发.
 
-	printf("********%s********\n",__FUNCTION__);
+	log_msg("********%s********\n",__FUNCTION__);
 
 	bzero(&host_addr,sizeof(host_addr));
 	host_addr.sin_family = AF_INET;
 	host_addr.sin_port = htons(PORT);
 	ret = inet_pton(AF_INET,HOST_IP,&(host_addr.sin_addr.s_addr));
 	if(-1 == ret){
-		perror("sockfd open failed");
+		log_ret("sockfd open failed");
 		return -1;
 	}
 	else if(0 == ret){
-		printf("无效地址,采用本地任意地址\n");
+		log_msg("无效地址,采用本地任意地址\n");
 		host_addr.sin_addr.s_addr = htonl(INADDR_ANY);
 	}
 
 	sockfd = tcpSev_init(&host_addr,CLIENT_NUM);
 	if(-1 == sockfd){
-		perror("sockfd open failed");
+		log_ret("sockfd open failed");
 		return -1;
 	}
 
@@ -298,17 +298,17 @@ int main()
 	//FD_SET(sockfd,&rdfds);
 
 	while(1){
-		printf("start accept:\n");
+		log_msg("start accept:\n");
 		addr_len = sizeof(struct sockaddr_in);
 		bzero(&client_addr,addr_len);
 		nsockfd = accept(sockfd,(struct sockaddr *)&client_addr,&addr_len);
 		if(-1 == nsockfd){
-			perror("accpet failed");
+			log_ret("accpet failed");
 			return -1;
 		}
 		client_port = ntohs(client_addr.sin_port);
 		inet_ntop(AF_INET,&client_addr.sin_addr.s_addr,client_ip,sizeof(client_ip));	
-		printf("client form:%s:%d\n",client_ip,client_port);
+		log_msg("client form:%s:%d\n",client_ip,client_port);
 
 		set_tcp_keepAlive(nsockfd, keepIdle, keepInterval,keepCount);
 
@@ -317,40 +317,40 @@ int main()
 			fd_max = nsockfd;
 
 		while(1){
-			printf("start select\n");
+			log_msg("start select\n");
 			timeout.tv_sec = 10;
 			ret = select(fd_max+1,&rdfds,NULL,NULL,&timeout);
 			if(-1 == ret){
-				perror("select");
+				log_ret("select");
 				return -1;
 			}else if(0 == ret){
-				printf("Timeout!\n");
+				log_msg("Timeout!\n");
 
 				/*
 				   addr_len = sizeof(tcpInfo);
 				   getsockopt(nsockfd,IPPROTO_TCP,TCP_INFO,&tcpInfo,(socklen_t*)&addr_len);
 				   if((tcpInfo.tcpi_state == TCP_ESTABLISHED)){
-				   printf("please wait!\n");
+				   log_msg("please wait!\n");
 				   }else{
-				   printf("nsockfd closed!\n");
+				   log_msg("nsockfd closed!\n");
 				   FD_CLR(nsockfd,&rdfds);
 				   close(nsockfd);
 				   break;
 				   }
 				 */
 				ret = recv(nsockfd,rbuff,sizeof(rbuff),MSG_DONTWAIT);
-				printf("ret =%d\n",ret);
+				log_msg("ret =%d\n",ret);
 				if((0 > ret)){
 					if((errno == EINTR || errno == EWOULDBLOCK || errno == EAGAIN)){
-						printf("please wait!\n");
+						log_msg("please wait!\n");
 					}else{
-						printf("网络断开\n");
+						log_msg("网络断开\n");
 						FD_CLR(nsockfd,&rdfds);
 						close(nsockfd);
 						break;
 					}
 				}else if(0 == ret){
-					printf("链接关闭!\n");
+					log_msg("链接关闭!\n");
 					FD_CLR(nsockfd,&rdfds);
 					close(nsockfd);
 					break;
@@ -360,17 +360,17 @@ int main()
 				/*
 				   if(FD_ISSET(sockfd,&rdfds)){
 
-				   printf("start accept:\n");
+				   log_msg("start accept:\n");
 				   addr_len = sizeof(struct sockaddr_in);
 				   bzero(&client_addr,addr_len);
 				   nsockfd = accept(sockfd,(struct sockaddr *)&client_addr,&addr_len);
 				   if(-1 == nsockfd){
-				   perror("accpet failed");
+				   log_ret("accpet failed");
 				   return -1;
 				   }
 				   client_port = ntohs(client_addr.sin_port);
 				   inet_ntop(AF_INET,&client_addr.sin_addr.s_addr,client_ip,sizeof(client_ip));	
-				   printf("client form:%s:%d\n",client_ip,client_port);
+				   log_msg("client form:%s:%d\n",client_ip,client_port);
 
 				   FD_SET(nsockfd,&rdfds);
 				   if(nsockfd > fd_max)
@@ -378,20 +378,20 @@ int main()
 
 				   }*/
 				if(FD_ISSET(nsockfd,&rdfds)){
-					printf("read message\n");
+					log_msg("read message\n");
 					ret = read(nsockfd,rbuff,sizeof(rbuff));
 					if(0 == ret){
-						perror("链接关闭！");
+						log_ret("链接关闭！");
 						FD_CLR(nsockfd,&rdfds);
 						close(nsockfd);
 						break;
 					}else if(0 > ret){
-						perror("read failed");
+						log_ret("read failed");
 						//清理缓冲区
 						FD_CLR(nsockfd,&rdfds);
 						break;
 					}else{
-						printf("read:%s\n",rbuff);
+						log_msg("read:%s\n",rbuff);
 						memset(rbuff,0,sizeof(rbuff));
 						//FD_SET(nsockfd,&rdfds);
 					}

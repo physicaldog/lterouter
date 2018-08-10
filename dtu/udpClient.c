@@ -27,7 +27,7 @@ int UdpClient_Mode()
 	char rbuff[1024] = {0};
 	char tbuff[1024] = {0};
 
-	printf("\n********%s*********\n",__FUNCTION__);
+	log_msg("\n********%s*********\n",__FUNCTION__);
 
 	/*初始化select 读集合*/
 	FD_ZERO(&rdfds);
@@ -35,7 +35,7 @@ int UdpClient_Mode()
 	/*初始化串口*/
 	fd = openSer(SerPort,baudrate,parity,data_bit,stop_bit);
 	if(0 >= fd){
-		perror("openSer failed!");
+		log_ret("openSer failed!");
 		/*串口打开失败则关闭sock*/
 		return -1;
 	}
@@ -46,7 +46,7 @@ int UdpClient_Mode()
 
 	getConfig("server_ip",server_ip,DtuConf);
 	if(0 == strlen(server_ip)){
-		printf("server_ip not config!\n");
+		log_msg("server_ip not config!\n");
 		return -1;
 	}
 	getConfig("server_port",server_port,DtuConf);
@@ -56,7 +56,7 @@ int UdpClient_Mode()
 	if(atoi(server_port))
 		host_addr.sin_port = htons(atoi(server_port));
 	else{
-		printf("server_port not config\n");
+		log_msg("server_port not config\n");
 		return -1;
 	}
 
@@ -69,7 +69,7 @@ int UdpClient_Mode()
 	sockfd = socket(AF_INET,SOCK_DGRAM,0);
 	//sockfd = socket(AF_INET,SOCK_STREAM,0);
 	if(-1 == sockfd){
-		perror("socket create failed!");
+		log_ret("socket create failed!");
 		return -1;
 	}
 	if(sockfd > fd_max)
@@ -77,32 +77,32 @@ int UdpClient_Mode()
 
 	ret = bind(sockfd,(struct sockaddr *)&client_addr,sizeof(struct sockaddr));
 	if(-1 == ret){
-		perror("bind failed");
+		log_ret("bind failed");
 		return -1;
 	}
 	addr_len =  sizeof(struct sockaddr);
 	while(1){
-		printf("start select\n");
+		log_msg("start select\n");
 		//timeout.tv_sec = 10;
 		FD_SET(fd,&rdfds);
 		FD_SET(sockfd,&rdfds);
 
 		ret = select(fd_max+1,&rdfds,NULL,NULL,&timeout);
 		if(-1 == ret){
-			perror("select");
+			log_ret("select");
 			return -1;
 		}else{
 			if(FD_ISSET(sockfd,&rdfds)){
-				//printf("read socket message\n");
+				//log_msg("read socket message\n");
 				//ret = read(sockfd,rbuff,sizeof(rbuff));
 				ret = recvfrom(sockfd,rbuff,sizeof(rbuff),0,(struct sockaddr *)&client_addr,&addr_len);
 				if(0 > ret){
-					perror("recvfrom failed");
+					log_ret("recvfrom failed");
 					//清理缓冲区
 					FD_CLR(sockfd,&rdfds);
 					//break;
 				}else{
-					printf("MESSAGE from socket:%s\n",rbuff);
+					log_msg("MESSAGE from socket:%s\n",rbuff);
 					ret = write(fd,rbuff,strlen(rbuff));
 					//fsync(fd);
 					tcdrain(fd);
@@ -111,15 +111,15 @@ int UdpClient_Mode()
 				}
 			}
 			if(FD_ISSET(fd,&rdfds)){
-				//printf("read serial message\n");
+				//log_msg("read serial message\n");
 				ret = read(fd,tbuff,sizeof(tbuff));
 				if(0 == ret){
-					perror("ret = 0");
+					log_ret("ret = 0");
 				}else if(0 > ret){
-					perror("read serial failed");
+					log_ret("read serial failed");
 					//清理缓冲区
 				}else{
-					printf("MESSAGE from serial:%s\n",tbuff);
+					log_msg("MESSAGE from serial:%s\n",tbuff);
 					//错误处理
 					//ret=write(sockfd,tbuff,strlen(tbuff));
 					ret = sendto(sockfd,tbuff,strlen(tbuff),0,(struct sockaddr *)&host_addr,sizeof(struct sockaddr));
@@ -131,9 +131,9 @@ int UdpClient_Mode()
 	}
 /*
 	while(1){
-		printf("start: %s,%d\n",inet_ntop(AF_INET,&(host_addr.sin_addr.s_addr),ip_addr,sizeof(ip_addr)),ntohs(host_addr.sin_port));
+		log_msg("start: %s,%d\n",inet_ntop(AF_INET,&(host_addr.sin_addr.s_addr),ip_addr,sizeof(ip_addr)),ntohs(host_addr.sin_port));
 		ret = sendto(sockfd,"TEST",strlen("TEST"),0,(struct sockaddr *)&host_addr,sizeof(struct sockaddr));
-		printf("ret=%d\n",ret);
+		log_msg("ret=%d\n",ret);
 		sleep(2);	
 	}
 */
@@ -150,7 +150,7 @@ int main()
 
 	struct sockaddr_in host_addr;
 	
-	printf("%s\n",__FUNCTION__);
+	log_msg("%s\n",__FUNCTION__);
 
 	//getConfig("server_port",server_port,DtuConf);
 	bzero(&host_addr,sizeof(host_addr));
@@ -165,7 +165,7 @@ int main()
 	sockfd = socket(AF_INET,SOCK_DGRAM,0);
 	//sockfd = socket(AF_INET,SOCK_STREAM,0);
 	if(-1 == sockfd){
-		perror("socket create failed!");
+		log_ret("socket create failed!");
 		return -1;
 	}
 

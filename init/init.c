@@ -116,8 +116,7 @@ int main(void)
 	log_msg("\n********%s********\n",__FUNCTION__);
 
 	/*添加系统日志*/
-	log_open("suyi_kexin", LOG_CONS | LOG_PID, LOG_LOCAL2);
-	log_msg("****monkey****\n");
+	log_open("suyi_lterouter", LOG_CONS | LOG_PID, LOG_LOCAL2);
 
 	log_msg("This is lterouter log_msg!\n");
 	log_msg("*********************************************\n");

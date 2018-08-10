@@ -16,7 +16,7 @@
 
 void set_timeOut(struct termios *termptr, unsigned int min, unsigned int time)
 {
-	printf("********%s********\n",__FUNCTION__);	
+	log_msg("********%s********\n",__FUNCTION__);	
 	termptr->c_cc[VMIN] = min;
 	termptr->c_cc[VTIME] = time;
 	
@@ -24,7 +24,7 @@ void set_timeOut(struct termios *termptr, unsigned int min, unsigned int time)
 
 void set_stopBit(struct termios *termptr, unsigned int stopBit)
 {
-	printf("********%s********\n",__FUNCTION__);	
+	log_msg("********%s********\n",__FUNCTION__);	
 
 	switch(stopBit) {
 		case 2:
@@ -37,7 +37,7 @@ void set_stopBit(struct termios *termptr, unsigned int stopBit)
 }
 void set_parity(struct termios *termptr, unsigned char parity)
 {
-	printf("********%s********\n",__FUNCTION__);	
+	log_msg("********%s********\n",__FUNCTION__);	
 
 	switch(parity) {
 		case 'n':
@@ -63,7 +63,7 @@ void set_parity(struct termios *termptr, unsigned char parity)
 
 void set_data_bit(struct termios *termptr, unsigned int data_bit)
 {
-	printf("********%s********\n",__FUNCTION__);	
+	log_msg("********%s********\n",__FUNCTION__);	
 
 	termptr->c_cflag &= ~CSIZE;
 	switch(data_bit) {
@@ -88,7 +88,7 @@ void set_data_bit(struct termios *termptr, unsigned int data_bit)
 void set_baudrate(struct termios *termptr, unsigned int baudrate)
 {
 	int ret = 0;
-	printf("********%s********\n",__FUNCTION__);	
+	log_msg("********%s********\n",__FUNCTION__);	
 	switch(baudrate) {
 	case 1200:
 		cfsetispeed(termptr,B1200);
@@ -119,7 +119,7 @@ void set_baudrate(struct termios *termptr, unsigned int baudrate)
 
 void set_mode(struct termios *termptr)
 {
-	printf("********%s********\n",__FUNCTION__);	
+	log_msg("********%s********\n",__FUNCTION__);	
 
 	termptr->c_iflag  &= ~(IXON | IXOFF | IXANY); 
 	termptr->c_oflag  &= ~OPOST; 
@@ -131,7 +131,7 @@ void setTermios(struct termios *termptr,char *baudrate,char *parity,char *data_b
 {
 	 int ret = 0;
 
-	printf("********%s********\n",__FUNCTION__);	
+	log_msg("********%s********\n",__FUNCTION__);	
 /*
 	ret = getConfig("baudrate",baudrate,ConfigFile);
 	if(0 > ret){
@@ -151,7 +151,7 @@ void setTermios(struct termios *termptr,char *baudrate,char *parity,char *data_b
 	}
 	
 */
-	printf("%ld,%c,%d,%d\n",atol(baudrate),parity[0],atoi(data_bit),atoi(stop_bit));
+	log_msg("%ld,%c,%d,%d\n",atol(baudrate),parity[0],atoi(data_bit),atoi(stop_bit));
 	set_mode(termptr);
 	set_baudrate(termptr,atoi(baudrate));
 	set_data_bit(termptr, atoi(data_bit));
@@ -168,14 +168,14 @@ void serRead(int fd, char *buffer, unsigned int len)
 	int i = 0;
 	int ret = 0;
 
-	printf("********%s********\n",__FUNCTION__);	
+	log_msg("********%s********\n",__FUNCTION__);	
 
 	ret = read(fd,buffer,len);
 	if(0 > ret)	
-		printf("serRead failed!\n");
+		log_msg("serRead failed!\n");
 	else{
 		for(i;i<ret;i++){
-			printf("%c ",buffer[i]);
+			log_msg("%c ",buffer[i]);
 		}
 	}
 }
@@ -184,15 +184,15 @@ void serWrite(int fd, char *buffer, unsigned int len)
 {
 	int ret = 0;
 
-	printf("********%s********\n",__FUNCTION__);	
+	log_msg("********%s********\n",__FUNCTION__);	
 
 	if(0 >= fd){
-		perror("fd error");
+		log_ret("fd error");
 		return;
 	}
 	ret = write(fd,buffer,len);
 	if(0 > ret)	
-		printf("serWrite failed!\n");
+		log_msg("serWrite failed!\n");
 }
 
 int openSer(char *SerDev,char *baudrate,char *parity,char *data_bit,char *stop_bit)
@@ -200,22 +200,22 @@ int openSer(char *SerDev,char *baudrate,char *parity,char *data_bit,char *stop_b
 	int ret = 0;
 	int fd = 0;
 	struct termios termptr;
-	printf("********%s********\n",__FUNCTION__);	
+	log_msg("********%s********\n",__FUNCTION__);	
 	//fd = open(SerPort,O_RDWR|O_NOCTTY|O_NDELAY);//加上O_NDELAY read函数不阻塞
 	fd = open(SerDev,O_RDWR|O_NOCTTY);
 	if(-1 == fd){
-		perror("can not open dev");
+		log_ret("can not open dev");
 		return -1;
 	}
 	ret = tcgetattr(fd,&termptr);
 	if(-1 == ret){
-		perror("can not get termios attr");
+		log_ret("can not get termios attr");
 		return -1;
 	}
 	setTermios(&termptr,baudrate,parity,data_bit,stop_bit);
 	ret = tcsetattr(fd,TCSANOW,&termptr);
 	if(-1 == ret){
-		perror("can not set termios attr");
+		log_ret("can not set termios attr");
 		return -1;
 	}
 	return fd;
@@ -228,11 +228,11 @@ int main()
 	char buffer[1024] = {"monkey"};
 	struct termios termptr;
 
-	printf("********%s********\n",__FUNCTION__);
+	log_msg("********%s********\n",__FUNCTION__);
 	//fd = open(SerPort,O_RDWR|O_NOCTTY|O_NDELAY);//加上O_NDELAY read函数不阻塞
 	fd = openSer(SerPort);
 	if(0 >= fd){
-		perror("openSer failed!");
+		log_ret("openSer failed!");
 		return -1;
 	}
 

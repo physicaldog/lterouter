@@ -9,13 +9,13 @@ int getConfig(char *Config, char *buff, char *ConfigFile)
 
     fe = fopen(ConfigFile,"r+");
     if (NULL == fe){
-            printf("no netconfig file\n");
+            log_msg("no netconfig file\n");
             return -1;//未找到配置文件
     }
 	
 	if(0 == strlen(Config))
 	{
-		printf("Config is NULL\n!");
+		log_msg("Config is NULL\n!");
 	}
 
     while (fgets(rbuff,sizeof(rbuff),fe)){
@@ -44,7 +44,11 @@ int getConfig(char *Config, char *buff, char *ConfigFile)
 int get_SerialConf(char *baudrate, char *parity, char *data_bit, char *stop_bit)
 {
 	
-	printf("\n********%s********\n",__FUNCTION__);
+	log_msg("\n********%s********\n",__FUNCTION__);
+	log_open("suyi_dtu", LOG_CONS | LOG_PID, LOG_LOCAL2);
+
+	log_msg("This is dtu log_msg!\n");
+	log_msg("*********************************************\n");
 	getConfig("baudrate",baudrate,DtuConf);
 	getConfig("parity",parity,DtuConf);
 	getConfig("data_bit",data_bit,DtuConf);
@@ -57,7 +61,7 @@ int main()
 	int ret = 0;
 	char mode[8] = {0};
 
-	printf("\n********%s********\n",__FUNCTION__);
+	log_msg("\n********%s********\n",__FUNCTION__);
 	
 	getConfig("mode",mode,DtuConf);
 
@@ -75,10 +79,10 @@ int main()
 			UdpClient_Mode();
 			break;
 		default:
-			printf("mode:%s",mode);
+			log_msg("mode:%s",mode);
 			break;
 	}
 	
-	printf("\n********%s done!********\n",__FUNCTION__);
+	log_msg("\n********%s done!********\n",__FUNCTION__);
 	return 0;
 }

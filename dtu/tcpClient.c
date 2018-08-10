@@ -19,25 +19,25 @@ int set_tcpkeepAlive(int fd, int start, int interval, int count)
 	//启用心跳机制，如果您想关闭，将keepAlive置零即可  
 	if(setsockopt(fd,SOL_SOCKET,SO_KEEPALIVE,(void*)&keepAlive,sizeof(keepAlive)) == -1)  
 	{  
-		perror("setsockopt");  
+		log_ret("setsockopt");  
 		return -1;  
 	}  
 	//启用心跳机制开始到首次心跳侦测包发送之间的空闲时间  
 	if(setsockopt(fd,SOL_TCP,TCP_KEEPIDLE,(void *)&start,sizeof(start)) == -1)  
 	{  
-		perror("setsockopt");  
+		log_ret("setsockopt");  
 		return -1;  
 	}  
 	//两次心跳侦测包之间的间隔时间  
 	if(setsockopt(fd,SOL_TCP,TCP_KEEPINTVL,(void *)&interval,sizeof(interval)) == -1)  
 	{  
-		perror("setsockopt");  
+		log_ret("setsockopt");  
 		return -1;  
 	}  
 	//探测次数，即将几次探测失败判定为TCP断开  
 	if(setsockopt(fd,SOL_TCP,TCP_KEEPCNT,(void *)&count,sizeof(count)) == -1)  
 	{  
-		perror("setsockopt");  
+		log_ret("setsockopt");  
 		return -1;  
 	}  
 	return 0;  
@@ -67,25 +67,25 @@ int TcpClient_Mode()
 	int keepIdle = 3; // 如该连接在3秒内没有任何数据往来,则进行探测 
 	int keepInterval = 1; // 探测时发包的时间间隔为1秒
 	int keepCount = 3; // 探测尝试的次数.如果第1次探测包就收到响应了,则后2次的不再发.
-	printf("\n********%s*********\n",__FUNCTION__);
+	log_msg("\n********%s*********\n",__FUNCTION__);
 
 	getConfig("server_ip",server_ip,DtuConf);
 	if(0 == strlen(server_ip)){
-		printf("server_ip not config!\n");
+		log_msg("server_ip not config!\n");
 		return -1;
 	}
 	getConfig("server_port",server_port,DtuConf);
 	if(atoi(server_port))
 		host_addr.sin_port = htons(atoi(server_port));
 	else{
-		printf("server_port not config\n");
+		log_msg("server_port not config\n");
 		return -1;
 	}
 	get_SerialConf(baudrate,parity,data_bit,stop_bit);
 	/*初始化串口*/
 	fd = openSer(SerPort,baudrate,parity,data_bit,stop_bit);
 	if(0 >= fd){
-		perror("openSer failed!");
+		log_ret("openSer failed!");
 		/*串口打开失败则关闭sock*/
 		return -1;
 	}
@@ -105,10 +105,10 @@ int TcpClient_Mode()
 
 
 	while(1){
-		printf("new socket!\n");
+		log_msg("new socket!\n");
 		sockfd = socket(AF_INET,SOCK_STREAM,0);
 		if(-1 == sockfd){
-			perror("socket open failed!");
+			log_ret("socket open failed!");
 			return -1;
 		}
 		if(sockfd > fd_max)
@@ -118,13 +118,13 @@ int TcpClient_Mode()
 
 		ret = connect(sockfd,(struct sockaddr *)&host_addr,sizeof(host_addr));
 		if(-1 == ret){
-			perror("connet failed!");
+			log_ret("connet failed!");
 			close(sockfd);
 			sleep(2);
 			continue;
 		}
 
-		printf("connet host!\n");
+		log_msg("connet host!\n");
 		while(1){
 			/*初始化select 读集合*/
 			FD_ZERO(&rdfds);
@@ -134,35 +134,35 @@ int TcpClient_Mode()
 
 			ret = select(fd_max+1,&rdfds,NULL,NULL,&timeout);
 			if(-1 == ret){
-				perror("select");
+				log_ret("select");
 				return -1;
 			}else if(0 == ret){
-				printf("Timeout!\n");
+				log_msg("Timeout!\n");
 
 				ret = recv(sockfd,rbuff,sizeof(rbuff),MSG_DONTWAIT);
-				printf("ret =%d\n",ret);
+				log_msg("ret =%d\n",ret);
 				if((0 > ret)){
 					if((errno == EINTR || errno == EWOULDBLOCK || errno == EAGAIN)){
-						printf("please wait!\n");
+						log_msg("please wait!\n");
 					}else{
-						printf("网络断开\n");
+						log_msg("网络断开\n");
 						break;
 					}
 				}else if(0 == ret){
-					printf("链接关闭!\n");
+					log_msg("链接关闭!\n");
 					break;
 				}
 			}else{
 				if(FD_ISSET(sockfd,&rdfds)){
 					ret = read(sockfd,rbuff,sizeof(rbuff));
 					if(0 == ret){
-						perror("read 链接关闭！");
+						log_ret("read 链接关闭！");
 						break;
 					}else if(0 > ret){
-						perror("read failed");
+						log_ret("read failed");
 						break;
 					}else{
-						printf("MESSAGE from socket:%s\n",rbuff);
+						log_msg("MESSAGE from socket:%s\n",rbuff);
 						ret = write(fd,rbuff,strlen(rbuff));
 						tcdrain(fd);
 						memset(rbuff,0,sizeof(rbuff));
@@ -171,13 +171,13 @@ int TcpClient_Mode()
 				if(FD_ISSET(fd,&rdfds)){
 					ret = read(fd,tbuff,sizeof(tbuff));
 					if(0 == ret){
-						perror("ret = 0");
+						log_ret("ret = 0");
 						break;
 					}else if(0 > ret){
-						perror("read serial failed");
+						log_ret("read serial failed");
 						break;
 					}else{
-						printf("MESSAGE from serial:%s\n",tbuff);
+						log_msg("MESSAGE from serial:%s\n",tbuff);
 						ret=write(sockfd,tbuff,strlen(tbuff));
 						memset(tbuff,0,sizeof(tbuff));
 					}
@@ -204,23 +204,23 @@ int main()
 
 	sockfd = socket(AF_INET,SOCK_STREAM,0);
 	if(-1 == sockfd){
-		perror("socket open failed!");
+		log_ret("socket open failed!");
 		return -1;
 	}
 
 	ret = connect(sockfd,(struct sockaddr *)&host_addr,sizeof(host_addr));
 	if(-1 == ret){
-		perror("connet failed!");
+		log_ret("connet failed!");
 		return -1;
 	}
-	printf("connect host!\n");
+	log_msg("connect host!\n");
 
 
 	while(1){
 		ret = write(sockfd,"monkey",6);
 		usleep(500000);
 		ret = write(sockfd,"123456",6);
-		printf("ret= %d\n",ret);
+		log_msg("ret= %d\n",ret);
 		sleep(5);
 	}
 	close(sockfd);
