@@ -44,6 +44,7 @@ config:
 	scp -r $(config)/* $(readdr)/config
 
 init:
+	@echo $(DB);
 	$(MAKE) -C $(init)
 	cp $(init)/*.sh $(init)/$(initEXE) $(opt)/init/
 	scp -r $(init)/*.sh $(init)/$(initEXE) $(readdr)/init/

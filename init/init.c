@@ -19,10 +19,10 @@ static int openDev(char *Dev)
 	struct termios opt; 
 
 	//iFd = open(Dev, O_RDWR | O_NOCTTY | O_NONBLOCK);                        
-	printf("%s\n",__FUNCTION__);
+	log_msg("\n****%s****\n",__FUNCTION__);
 	iFd = open(Dev, O_RDWR | O_NOCTTY);                        
 	if(iFd < 0) {
-		syslog(LOG_DEBUG,"open %s failed!\n",Dev);
+		log_msg("open %s failed!\n",Dev);
 		return -1;
 	}
 
@@ -59,28 +59,28 @@ void status_read(int *fptr)
 	char* ptr = rbuff;
 	int ret=0;
 	fd = *fptr;
-	printf("%s\n",__FUNCTION__);
+	log_msg("\n****%s****\n",__FUNCTION__);
 	while (1) {
-		//printf("%s\n",__FUNCTION__);
+		//log_msg("%s\n",__FUNCTION__);
 		ret = read(*fptr, ptr, 0x01);
 		if (1 == ret) {
 			if ('\n' != *ptr) {
 				ptr++;
 			}
 			else {
-				printf("%s",rbuff);
-				//syslog(LOG_DEBUG,"Get direct: %s\n",rbuff);
+				log_msg("%s",rbuff);
+				//log_msg("Get direct: %s\n",rbuff);
 				direct_process(rbuff);
 				memset(rbuff,0,strlen(rbuff));
 				ptr = rbuff;
 			}
 		}
 		else {
-			syslog(LOG_DEBUG,"read err:\n");
+			log_msg("read err:\n");
 			return;
 		}
 	}
-	syslog(LOG_DEBUG,"read exit\n");
+	log_msg("read exit\n");
 }/*}}}*/
 
 void send_at(int *fptr)
@@ -88,10 +88,10 @@ void send_at(int *fptr)
 	int ret;
 	/*循环检测，防止主动上报信息接受失败*/
 	while(1){
-		printf("%s\n",__FUNCTION__);
+		log_msg("\n****%s****\n",__FUNCTION__);
 		ret = write(*fptr, at_arr[0], strlen(at_arr[0]));
 		if(ret < 0){
-			syslog(LOG_DEBUG,"send_at\n");
+			log_msg("send_at\n");
 			return;
 		}
 		/*时间间隔尽量大于拨号指令返回时长*/
@@ -103,7 +103,7 @@ void send_at(int *fptr)
 
 void alarm_handler()
 {
-	syslog(LOG_DEBUG,"Alarm Reboot Device!!!\n");
+	log_msg("\n********Alarm Reboot Device!!!*********\n");
 	system("echo mv messages");
 	system("cp /var/log/messages /opt/log/");
 	system("reboot");
@@ -113,11 +113,14 @@ int main(void)
 	int i=0,ret=0,fd=0;
 	pthread_t rThread, tThread;
 	
-	printf("%s\n",__FUNCTION__);
+	log_msg("\n********%s********\n",__FUNCTION__);
+
 	/*添加系统日志*/
-	openlog("lterouter", LOG_CONS | LOG_PID, LOG_LOCAL2);
-	syslog(LOG_DEBUG,"This is lterouter syslog!\n");
-	syslog(LOG_DEBUG,"*********************************************\n");
+	log_open("suyi_kexin", LOG_CONS | LOG_PID, LOG_LOCAL2);
+	log_msg("****monkey****\n");
+
+	log_msg("This is lterouter log_msg!\n");
+	log_msg("*********************************************\n");
 	
 	/*初始化lanip*/
 	lanInit();
@@ -129,7 +132,7 @@ int main(void)
 	/*打开模组串口*/
 	fd = openDev(SerPort);
 	if(0 >= fd){
-		syslog(LOG_DEBUG,"OPEN /dev/ttyem300 FAILED!\n");
+		log_msg("OPEN /dev/ttyem300 FAILED!\n");
 		return -1;
 	}
 
@@ -137,12 +140,12 @@ int main(void)
 	//        alarm(2);
 	ret = pthread_create(&rThread,NULL,(void *)status_read,(void *)&fd);
 	if(0 != ret){
-		syslog(LOG_DEBUG,"rThread create failed!\n");
+		log_msg("rThread create failed!\n");
 		return -1;
 	}
 	ret = pthread_create(&tThread,NULL,(void *)send_at,(void *)&fd);
 	if(0 != ret){
-		syslog(LOG_DEBUG,"tThread create failed!\n");
+		log_msg("tThread create failed!\n");
 		return -1;
 	}
 
