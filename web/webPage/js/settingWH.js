@@ -1,5 +1,6 @@
 //初始化加载
 $(function() {
+	getRebootTime();
 	getRebootCount();
 	checkManualTime();
 	checkRadio();
@@ -24,6 +25,42 @@ function settingTime() {
 			}
 		});
 	}
+}
+
+function getRebootTime() {
+	$.ajax({
+		type: "get",
+		url: "/goform/getRebootTime",
+		async: true,
+		success: function(data) {
+			$('#RebootTime').val(data);
+		}
+	});
+}
+
+function setRebootTime() {
+	var time = Number($('#RebootTime').val());
+	if (isNaN(time)) {
+		alert("fail");
+		return;
+	} 
+	if ( 0 == time ) {
+	} else if (30 >= time) {
+		$('#RebootTime').val("30");
+	} 
+
+	$.ajax({
+			type: "get",
+			url: "/goform/setRebootTime",
+			async: true,
+			data: {
+				time: $('#RebootTime').val(),
+			},
+			success: function(data) {
+				alert(data);
+			}
+		});
+	
 }
 
 function queryTime() {

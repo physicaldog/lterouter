@@ -76,6 +76,8 @@ void queryAPN(Webs *wp);
 void settingAPN(Webs *wp);
 
 /*settingWH*/
+void getRebootTime(Webs *wp);
+void setRebootTime(Webs *wp);
 void checkManualTime(Webs *wp);
 void setManualTime(Webs *wp);
 void setAutoTime(Webs *wp);

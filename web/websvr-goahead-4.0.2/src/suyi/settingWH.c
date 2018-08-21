@@ -1,4 +1,5 @@
 #include"suyi_common.h"
+#define RebootTime "/opt/config/RebootTime"
 
 void queryTime(Webs *wp)
 {
@@ -48,6 +49,43 @@ void settingTime(Webs *wp)
 
 		system(command);
 	}
+
+    websWrite(wp,("设置完成"));
+	websDone(wp);
+	return;
+}
+
+void getRebootTime(Webs *wp)
+{
+	int ret = 0; 
+	FILE *fp = NULL;
+	char *ptr = NULL;
+	char buff[32] = {0};
+    printf("\n********%s********\n",__FUNCTION__);
+	
+
+	websSetStatus(wp, 200);
+	websWriteHeaders(wp, -1, 0);//参数二需要未-1,否则前端收不到数据
+	websWriteEndHeaders(wp);
+
+	getConfig("RebootTime",buff,RebootTime);
+
+    websWrite(wp,("%s"),buff);
+	websDone(wp);
+	return;
+}
+
+void setRebootTime(Webs *wp)
+{
+    char *time;
+    printf("\n********%s********\n",__FUNCTION__);
+	websSetStatus(wp, 200);
+	websWriteHeaders(wp, -1, 0);//参数二需要未-1,否则前端收不到数据
+	websWriteEndHeaders(wp);
+
+	time = websGetVar(wp,("time"),(""));
+	
+	setConfig("RebootTime",time,RebootTime);
 
     websWrite(wp,("设置完成"));
 	websDone(wp);

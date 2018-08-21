@@ -51,6 +51,18 @@
 							<button style="width: 100px;height: 26px;" id="setTime" onclick="settingTime()"> 设置 </button>
 						</div>
 					</div>
+					<div class="content_item_title">重启时间设置</div>
+					<div class="content_item" id="uptime_contentitem" style="min-height:20px;padding-bottom: 10px;">
+						<div class="content_item" >当设备未能附着网络，达到限值时间设备重启</div>
+						<div class="content_item" >值为空不重启，最小时间间隔不少于30秒</div>
+						<div class="content_item"></div>
+						<div class="content_item_right">
+							<input id="RebootTime" value="" />*秒
+							</br>
+							</br>
+							<input type="button" style="width: 100px;height: 30px;" onclick="setRebootTime()" value="提交"></input>
+						</div>
+					</div>
 					<div class="content_item_title">重启设备</div>
 					<div class="content_item" id="uptime_contentitem" style="min-height:20px;padding-bottom: 10px;">
 						<div class="content_item" >请单击重启按钮进行重启</div>

@@ -400,6 +400,8 @@ PUBLIC int websOpen(cchar *documents, cchar *routeFile)
 	websDefineAction("queryAPN", queryAPN);
 
 /*settingWH*/
+	websDefineAction("getRebootTime", getRebootTime);
+	websDefineAction("setRebootTime", setRebootTime);
 	websDefineAction("checkManualTime", checkManualTime);
 	websDefineAction("setManualTime", setManualTime);
 	websDefineAction("setAutoTime", setAutoTime);

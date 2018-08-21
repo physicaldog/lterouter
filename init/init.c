@@ -111,6 +111,8 @@ void alarm_handler()
 int main(void) 
 {
 	int i=0,ret=0,fd=0;
+	int reboottime = 0;
+	char buff[64] = {0};
 	pthread_t rThread, tThread;
 	
 	log_msg("\n********%s********\n",__FUNCTION__);
@@ -125,8 +127,11 @@ int main(void)
 	lanInit();
 
 	/*当设备附着不上网络时定时重启*/
+	getConfig("RebootTime",buff,"/opt/config/RebootTime");
+	reboottime = atoi(buff);
+	log_msg("reboottime:%d\n",reboottime);
 	signal(SIGALRM,alarm_handler);
-	alarm(REBOOT_TIME);
+	alarm(reboottime);
 
 	/*打开模组串口*/
 	fd = openDev(SerPort);

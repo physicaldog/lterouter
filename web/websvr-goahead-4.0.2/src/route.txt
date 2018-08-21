@@ -79,6 +79,8 @@ route uri=/action/queryIMSI
 route uri=/action/settingAPN
 route uri=/action/queryAPN
 
+route uri=/action/getRebootTime
+route uri=/action/setRebootTime
 route uri=/action/checkManualTime
 route uri=/action/setManualTime
 route uri=/action/setAutoTime
