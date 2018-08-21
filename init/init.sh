@@ -20,10 +20,12 @@ webServer=/opt/web/webServer
 webPage=/opt/web/webPage
 
 #udhcpd /etc/udhcpd.conf &
-#关闭111端口TCP通信
 netInit(){
-	iptables -A INPUT -p tcp --dport 111 -j DROP
-	iptables -A INPUT -p tcp --dport 111 -j DROP
+	#关闭111端口TCP通信
+	/etc/init.d/S13portmap stop
+	/etc/init.d/S50dropbear stop
+	#iptables -A INPUT -p tcp --dport 111 -j DROP
+	#iptables -A INPUT -p tcp --dport 111 -j DROP
 }
 
 #导出各gpio
