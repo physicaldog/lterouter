@@ -115,7 +115,7 @@ function getRebootCount() {
 		url: "/goform/getRebootCount",
 		async: true,
 		success: function(data) {
-			alert(data);
+			//alert(data);
 			$('#rebootCount').text(data);
 		}
 	});

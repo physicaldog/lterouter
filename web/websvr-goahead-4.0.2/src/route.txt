@@ -51,6 +51,7 @@ route uri=/action/uploadTest
 
 route uri=/action/settingPW
 
+route uri=/action/start_sshd
 route uri=/action/cleanLog
 route uri=/action/getPingLog
 route uri=/action/pingTest

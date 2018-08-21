@@ -42,6 +42,7 @@ void settingPW(Webs *wp);
 
 #if 1
 /*Diagnose*/
+void start_sshd(Webs *wp);
 void cleanLog(Webs *wp);
 void getPingLog(Webs *wp);
 void pingTest(Webs *wp);

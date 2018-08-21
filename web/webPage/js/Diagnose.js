@@ -1,9 +1,47 @@
 //初始化加载
 $(function(){
-	cleanLog()
-	setInterval('getPingLog()',1000);
+	checkRadio();
+	cleanLog();
+	//setInterval('getPingLog()',1000);
 	
 });
+
+
+function start_sshd(arg) {
+	$.ajax({
+		type: "get",
+		url: "/goform/start_sshd",
+		async: true,
+		data:{
+			arg:arg,
+		},
+		success: function(data) {
+			alert(data);
+		}
+	});
+}
+
+function stop_sshd() {231
+	$.ajax({
+		type: "get",
+		url: "/gofrom/stop_sshd",
+		async: true,
+		success: function(data) {
+			alert(data);
+		}
+	});
+}
+
+function checkRadio() {
+	$(":radio").click(function() {
+		var id = $(this).attr("id");
+		if(id == "start_sshd") {
+			start_sshd("start");
+		} else {
+			start_sshd("stop");
+		}
+	});
+}
 
 function cleanLog(){
 	$.ajax({
@@ -40,6 +78,7 @@ function getPingLog(){
 
 //PING--提交
 function pingTest(){
+	var id = setInterval('getPingLog()',1000);
 	$.ajax({
 		type:"get",
 		url:"/goform/pingTest",
@@ -49,7 +88,6 @@ function pingTest(){
 			pingCount:$('#pingCount').val(),
 		},
 		success:function(data){
-			//alert(data);
 		}
 	});
 }

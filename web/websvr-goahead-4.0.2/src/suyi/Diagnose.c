@@ -19,6 +19,71 @@ void paseStr(char *rbuff, char *buffer)
 
 }
 
+void start_sshd(Webs *wp)
+{
+	char *arg = NULL;
+	char *ptr = NULL;
+    FILE *fp = NULL;
+	char rbuff[1024] = {'\0'};
+	char line[16] = {'\0'};
+
+	printf("\n********%s********\n",__FUNCTION__);
+	websSetStatus(wp, 200);
+	websWriteHeaders(wp, -1, 0);//参数二需要未-1,否则前端收不到数据
+	websWriteEndHeaders(wp);
+	
+	arg = websGetVar(wp,("arg"),("stop"));
+	if(!strcmp(arg,"start")){
+		//fp = popen(" ps | grep dropbear |wc -l","r");
+		fp = popen(" ps | grep dropbear | grep -v grep | wc -l","r");
+		if(fp){
+			fread(line,1,sizeof(line),fp);
+			fclose(fp);
+			printf("%s\n",line);
+			if('1' == line[0]){
+				websWrite(wp,("已开启！"));
+			}
+			else{
+				fp = popen("/etc/init.d/S50dropbear start" ,"r");
+				if(fp){
+					fread(rbuff,1,sizeof(rbuff),fp);
+					if(strstr(rbuff,"OK"))
+						websWrite(wp,("远程调试已开启！"));
+					else
+						websWrite(wp,("远程调试打开失败！"));
+					fclose(fp);
+				}
+			}
+		}
+	}
+	else if(!strcmp(arg,"stop")){
+		//fp = popen(" ps | grep dropbear |wc -l","r");
+		fp = popen(" ps | grep dropbear | grep -v grep | wc -l","r");
+		if(fp){
+			fread(line,1,sizeof(line),fp);
+			fclose(fp);
+			printf("%s\n",line);
+			if('0' == line[0])
+				websWrite(wp,("已关闭！"));
+			else{
+				fp = popen("/etc/init.d/S50dropbear stop" ,"r");
+				if(fp){
+					fread(rbuff,1,sizeof(rbuff),fp);
+					if(strstr(rbuff,"OK"))
+						websWrite(wp,("远程调试已关闭！"));
+					else
+						websWrite(wp,("远程调试关闭失败！"));
+					fclose(fp);
+				}
+			}
+		}
+	}
+
+	websDone(wp);
+	return;
+}
+
+
 void cleanLog(Webs *wp)
 {
 	system("echo > /opt/log/PingLog");

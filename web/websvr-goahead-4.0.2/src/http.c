@@ -366,6 +366,7 @@ PUBLIC int websOpen(cchar *documents, cchar *routeFile)
 #if 1
 
 /*Diagnose*/
+	websDefineAction("start_sshd", start_sshd);
 	websDefineAction("cleanLog", cleanLog);
 	websDefineAction("getPingLog", getPingLog);
 	websDefineAction("pingTest", pingTest);

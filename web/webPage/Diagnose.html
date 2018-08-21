@@ -16,12 +16,17 @@
 		<div class="content_right_title"> <span>诊断</span></div>
 		<div class="content_right_center" >
              <!--模块信息-->
-			<div class="content_item_title">方式</div>
+			<div class="content_item_title">ssh远程调试</div>
 			<div class="content_item" id="uptime_contentitem">
-				<div class="content_item_left">诊断方法</div>
+				<div class="content_item_left">开启</div>
 				<div class="content_item_right" id="uptime">
-					<input type="radio" name="identity" checked="checked">　Ping <br/>
-					<!--<input type="radio" name="identity" style="width: 16px;height: 16px;">　TraceRoute-->
+					<input type="radio" id="start_sshd" name="remote_debug"><br/>
+				</div>
+			</div>
+			<div class="content_item" id="uptime_contentitem">
+				<div class="content_item_left">关闭</div>
+				<div class="content_item_right" id="uptime">
+					<input type="radio" id="stop_sshd" name="remote_debug" checked="checked"><br/>
 				</div>
 			</div>
 			<div class="content_item_title">Ping</div>
