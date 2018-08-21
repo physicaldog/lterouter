@@ -20,6 +20,11 @@ webServer=/opt/web/webServer
 webPage=/opt/web/webPage
 
 #udhcpd /etc/udhcpd.conf &
+#关闭111端口TCP通信
+netInit(){
+	iptables -A INPUT -p tcp --dport 111 -j DROP
+	iptables -A INPUT -p tcp --dport 111 -j DROP
+}
 
 #导出各gpio
 InitGpio(){
@@ -231,6 +236,7 @@ InitTime(){
 }
 
 echo 1 >> /opt/config/RebootCount
+netInit;
 InitTime;
 InitGpio;
 checkSecurityLib;
