@@ -39,7 +39,6 @@ void settingLAN(Webs *wp)
 
 	setConfig("lanip",lanip,LanConf);
 	setConfig("netmask",netmask,LanConf);
-	//set_ip("eth0",lanip,"255.255.255.0");
 
     websWrite(wp,("重启后生效"));
 	websDone(wp);

@@ -246,16 +246,17 @@ int setDhcpConf(char *ip)
 	FILE *fd = NULL;
 	char *p = NULL;
 	char ip_str[32] = {'\0'};
+	int ret = 0;
 
 	fd = fopen("/opt/config/udhcpd.conf","w+");
 	if (NULL == fd){
 		printf("no udhcpd.conf file\n");
 		return -1;
 	}
-	//p[1] = itoa(atoi(p[1])+1);
 	strcpy(ip_str,ip);
 	p = strrchr(ip_str,'.');
-	p[1]++;
+	ret = atoi(++p);
+	sprintf(p,"%d",++ret);
 	setcontent(fd,"start",ip_str);
 	p = strrchr(ip_str,'.');
 	strcpy(++p,"254\n");
