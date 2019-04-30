@@ -23,9 +23,13 @@ webPage=/opt/web/webPage
 netInit(){
 	#关闭111端口TCP通信
 	/etc/init.d/S13portmap stop
-	/etc/init.d/S50dropbear stop
+	#/etc/init.d/S50dropbear stop
 	#iptables -A INPUT -p tcp --dport 111 -j DROP
 	#iptables -A INPUT -p tcp --dport 111 -j DROP
+
+	iptables -t nat -F
+	/opt/init/MASQUERADE.sh	
+	/opt/init/nat.sh	
 }
 
 #导出各gpio
@@ -97,6 +101,15 @@ InitModule(){
     else
         echo Turn on Module! >> $logFile
         TurnOn
+    fi
+
+    ret=`DetectDev`
+    if [ $ret -eq 0 ]
+    then
+        echo "Dev Ok,reboot module!" >> $logFile
+		netInit;
+	else
+		echo "Init Moudle failed!"
     fi
 }
 
@@ -198,6 +211,26 @@ runSecurity(){
 
 }
 
+runLongPing(){
+	if [ -e /opt/tmp/startLongPing ]
+	then
+		ps -fe|grep "LongPing.sh" |grep -v grep >> /dev/null
+		if [ $? -ne 0 ]
+		then
+			echo "startLongPing!!!!!!" >> $logFile 
+		#	echo "startLongPing!!!!!!"
+			ret=`cat /opt/tmp/startLongPing`
+			echo "startLongPing1!!!!!!"
+			nohup /opt/init/LongPing.sh $ret >/dev/null 2>&1 &
+			echo "startLongPing2!!!!!!"
+		fi
+	else
+		ret=`pidof LongPing.sh`
+		nohup kill -9 $ret > /dev/null 2>&1 &
+	fi
+
+}
+
 Work(){
 	while [ `DetectDev` -eq 0 ]
 	do
@@ -208,11 +241,16 @@ Work(){
 		runSecurity;
 		sleep 1;
 		runDtu;
+		sleep 1;
+		runLongPing;
 	done
 }
 
 InitWork(){
     echo "Init work" >> $logFile
+	chmod 777 /opt/config/*
+	chmod 777 /opt/log/*
+	chmod 777 /opt/tmp/*
 	for i in `seq 1 5`
 	do   
 		InitModule;
@@ -238,8 +276,8 @@ InitTime(){
 }
 
 echo 1 >> /opt/config/RebootCount
-netInit;
-InitTime;
+/opt/init/button &
+#InitTime;
 InitGpio;
 checkSecurityLib;
 InitWork;

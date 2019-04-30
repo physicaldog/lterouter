@@ -1,9 +1,9 @@
 CC = arm-linux-gnueabihf-gcc
 CFLAGS = -c
-LDFLAGS  = -lpthread
+LDFLAGS  = -lpthread -lm
 
 OBJ = suyi_web.o
-SRC = Account.c ftpUpdate.c index.c RunningStatus.c settingLTE.c suyi_common.h
+SRC = Account.c ftpUpdate.c index.c RunningStatus.c settingNetMode.c settingLTE.c suyi_common.h
 
 
 OBJ:$(SRC)

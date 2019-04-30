@@ -1,0 +1,9 @@
+#!/bin/bash
+
+. /www/tr069/common.sh
+
+if [ "$ACTION"x = "get"x ];then
+    echo 'LTE WiFi VoIP Gateway'
+fi
+
+exit 0 

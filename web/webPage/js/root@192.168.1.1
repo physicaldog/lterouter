@@ -1,0 +1,8 @@
+//初始化加载
+$(function(){
+	  if($.cookie('netstats')!=1){
+	  		  window.location.replace("login.html");
+	  }else{
+	  	window.location.reload(); //刷新当前页面
+	  }
+});

@@ -1,0 +1,11 @@
+#!/bin/bash
+
+. /www/tr069/common.sh
+
+if [ "$ACTION"x = "get"x ];then
+    echo '1.0.0.1'
+    exit 0
+    hw_ver=`uci get lte_param.parameter.hw_ver 2>/dev/null`
+    echo $hw_ver
+fi
+exit 0

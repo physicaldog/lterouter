@@ -2,10 +2,45 @@
 $(function() {
 	getRebootTime();
 	getRebootCount();
-	checkManualTime();
+	//checkManualTime();
 	checkRadio();
 	
 });
+
+function settingAddr() {
+	if(($("input:text[id='city_name']").val().length == 0) && ($("input:text[id='county_name']").val().length == 0) && ($("input:text[id='location_name']").val().length == 0)) {
+		alert("参数不能为空");
+	} else {
+		$.ajax({
+			type: "get",
+			url: "/goform/settingAddr",
+			async: true,
+			data: {
+				city_name: $('#city_name').val(),
+				county_name: $('#county_name').val(),
+				location_name: $('#location_name').val(),
+			},
+			success: function(data) {
+				alert(data);
+
+			}
+		});
+	}
+}
+
+function queryAddr() {
+	$.ajax({
+		type: "get",
+		url: "/goform/queryAddr",
+		async: true,
+		dataType: 'json',
+		success: function(data) {
+			$('#city_name').val(data.city_name);
+			$('#county_name').val(data.county_name);
+			$('#location_name').val(data.location_name);
+		}
+	});
+}
 
 function settingTime() {
 	if($("input:text[id='system_time']").val().length == 0) {
@@ -164,7 +199,8 @@ function resetDev() {
 		url: "/goform/resetDev",
 		async: true,
 		success: function(data) {
-			alert(data);
+			//alert(data);
+			window.top.restart();
 		}
 	});
 }
@@ -175,7 +211,8 @@ function sysReset() {
 		url: "/goform/sysReset",
 		async: true,
 		success: function(data) {
-			alert(data);
+			//alert(data);
+			window.top.Restoration(); 
 		}
 	});
 }

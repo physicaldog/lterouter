@@ -67,6 +67,7 @@ static bool fileHandler(Webs *wp)
                 trace(1, "From %s", wp->referrer);
             }
 #endif
+			printf("*********************monkey_test\n");
             websError(wp, HTTP_CODE_NOT_FOUND, "Cannot open document for: %s", wp->path);
             return 1;
         }
@@ -178,7 +179,8 @@ static void fileClose()
 
 PUBLIC void websFileOpen()
 {
-    websIndex = sclone("index.html");
+    //websIndex = sclone("index.html");
+    websIndex = sclone("main.html");
     websDefineHandler("file", 0, fileHandler, fileClose, 0);
 }
 

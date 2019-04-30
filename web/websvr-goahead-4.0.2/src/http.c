@@ -366,10 +366,14 @@ PUBLIC int websOpen(cchar *documents, cchar *routeFile)
 #if 1
 
 /*Diagnose*/
-	websDefineAction("start_sshd", start_sshd);
+	websDefineAction("start_LongPing", start_LongPing);
+	//websDefineAction("start_sshd", start_sshd);
+	//websDefineAction("start_sshd", start_sshd);
 	websDefineAction("cleanLog", cleanLog);
 	websDefineAction("getPingLog", getPingLog);
 	websDefineAction("pingTest", pingTest);
+	websDefineAction("stop_LongPing", stop_LongPing);
+	websDefineAction("check_LongPing", check_LongPing);
 
 /*login*/
 	websDefineAction("loginCheck", loginCheck);
@@ -394,17 +398,35 @@ PUBLIC int websOpen(cchar *documents, cchar *routeFile)
 	websDefineAction("querySecurity", querySecurity);
 	websDefineAction("getSecurityLog", getSecurityLog);
 
-/*seetingLTE*/
+/*setingLTE*/
 	websDefineAction("queryIMSI", queryIMSI);
 	websDefineAction("settingAPN", settingAPN);
 	websDefineAction("queryAPN", queryAPN);
+/*setingNetMode*/
+	websDefineAction("checkNetMode", checkNetMode);
+	websDefineAction("set_mode_1", set_mode_1);
+	websDefineAction("set_mode_2", set_mode_2);
+	websDefineAction("set_snat", set_snat);
+	websDefineAction("set_dnat", set_dnat);
+	websDefineAction("query_nat", query_nat);
+	websDefineAction("clear_nat", clear_nat);
 
+/*settingNetMode*/
+void checkNetMode(Webs *wp);
+void set_mode_1(Webs *wp);
+void set_mode_2(Webs *wp);
+void set_snat(Webs *wp);
+void set_dnat(Webs *wp);
+void clear_nat(Webs *wp);
+void query_nat(Webs *wp);
 /*settingWH*/
 	websDefineAction("getRebootTime", getRebootTime);
 	websDefineAction("setRebootTime", setRebootTime);
 	websDefineAction("checkManualTime", checkManualTime);
 	websDefineAction("setManualTime", setManualTime);
 	websDefineAction("setAutoTime", setAutoTime);
+	websDefineAction("queryAddr", queryAddr);
+	websDefineAction("settingAddr", settingAddr);
 	websDefineAction("queryTime", queryTime);
 	websDefineAction("settingTime", settingTime);
 	websDefineAction("getRebootCount", getRebootCount);
@@ -2528,13 +2550,15 @@ static int setLocalHost()
 }
 #else
 {
-#if 0
+#if 1
     struct hostent  *hp;
-    if ((hp = gethostbyname(host)) == NULL) {
+    /*if ((hp = gethostbyname(host)) == NULL) {
         error("Cannot get host address for host %s: errno %d", host, errno);
         return -1;
     }
     memcpy((char*) &intaddr, (char *) hp->h_addr_list[0], (size_t) hp->h_length);
+	*/
+	intaddr.s_addr = htonl(INADDR_ANY);
 	ipaddr = inet_ntoa(intaddr);
 #else
 	int sockfd;

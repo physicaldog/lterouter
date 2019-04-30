@@ -102,6 +102,7 @@ int TcpClient_Mode()
 	host_addr.sin_port = htons(atoi(server_port));
 
 	ret = inet_pton(AF_INET,server_ip,&(host_addr.sin_addr.s_addr));
+	log_msg("%s,%s\n",server_ip,server_port);
 
 
 	while(1){

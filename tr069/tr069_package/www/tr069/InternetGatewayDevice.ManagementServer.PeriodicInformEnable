@@ -1,0 +1,25 @@
+#!/bin/bash
+
+. /www/tr069/common.sh
+
+if [ "$ACTION"x = "set"x ];then
+            
+    if [ "$VALUE"x = "True"x ] || [ "$VALUE"x = "1"x ];then
+        uci set cwmp.cwmp.periodic_enable=1
+    else
+        uci set cwmp.cwmp.periodic_enable=0
+    fi
+    
+    uci commit cwmp
+else
+    echo 'true'
+    exit 0
+    _ret=`uci get cwmp.cwmp.periodic_enable 2>/dev/null`
+    if [ "$_ret"x = "1"x ];then
+        echo 'True'
+    else
+        echo 'False'
+    fi        
+fi
+
+exit 0

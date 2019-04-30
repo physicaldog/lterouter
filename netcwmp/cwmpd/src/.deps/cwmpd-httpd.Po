@@ -1,315 +1,285 @@
-cwmpd-httpd.o: httpd.c \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/stdc-predef.h \
+cwmpd-httpd.o: httpd.c /usr/include/stdc-predef.h \
  ../../libcwmp/include/cwmp/http.h ../../libcwmp/include/cwmp/types.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/stdlib.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/features.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/sys/cdefs.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/wordsize.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/gnu/stubs.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/gnu/stubs-hard.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/lib/gcc/arm-linux-gnueabihf/4.9.2/include/stddef.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/waitflags.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/waitstatus.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/endian.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/endian.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/byteswap.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/types.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/typesizes.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/byteswap-16.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/xlocale.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/sys/types.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/time.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/sys/select.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/select.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/sigset.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/time.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/sys/sysmacros.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/pthreadtypes.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/alloca.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/stdlib-float.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/stdio.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/libio.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/_G_config.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/wchar.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/lib/gcc/arm-linux-gnueabihf/4.9.2/include/stdarg.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/stdio_lim.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/sys_errlist.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/string.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/errno.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/errno.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/linux/errno.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/asm/errno.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/asm-generic/errno.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/asm-generic/errno-base.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/timex.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/sys/timeb.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/malloc.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/ctype.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/lib/gcc/arm-linux-gnueabihf/4.9.2/include/stdint.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/stdint.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/wchar.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/sys/socket.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/sys/uio.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/uio.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/socket.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/socket_type.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/sockaddr.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/asm/socket.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/asm/sockios.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/netinet/in.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/in.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/arpa/inet.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/syslog.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/sys/syslog.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/syslog-path.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/unistd.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/posix_opt.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/environments.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/confname.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/getopt.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/sys/ioctl.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/ioctls.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/asm/ioctls.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/asm-generic/ioctls.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/linux/ioctl.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/asm/ioctl.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/asm-generic/ioctl.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/ioctl-types.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/sys/ttydefaults.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/net/if.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/net/if_arp.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/pthread.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/sched.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/sched.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/setjmp.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/sys/stat.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/stat.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/fcntl.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/fcntl.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/fcntl-linux.h \
+ /usr/include/stdlib.h /usr/include/features.h \
+ /usr/include/i386-linux-gnu/sys/cdefs.h \
+ /usr/include/i386-linux-gnu/bits/wordsize.h \
+ /usr/include/i386-linux-gnu/gnu/stubs.h \
+ /usr/include/i386-linux-gnu/gnu/stubs-32.h \
+ /usr/lib/gcc/i686-linux-gnu/4.8/include/stddef.h \
+ /usr/include/i386-linux-gnu/bits/waitflags.h \
+ /usr/include/i386-linux-gnu/bits/waitstatus.h /usr/include/endian.h \
+ /usr/include/i386-linux-gnu/bits/endian.h \
+ /usr/include/i386-linux-gnu/bits/byteswap.h \
+ /usr/include/i386-linux-gnu/bits/types.h \
+ /usr/include/i386-linux-gnu/bits/typesizes.h \
+ /usr/include/i386-linux-gnu/bits/byteswap-16.h /usr/include/xlocale.h \
+ /usr/include/i386-linux-gnu/sys/types.h /usr/include/time.h \
+ /usr/include/i386-linux-gnu/sys/select.h \
+ /usr/include/i386-linux-gnu/bits/select.h \
+ /usr/include/i386-linux-gnu/bits/sigset.h \
+ /usr/include/i386-linux-gnu/bits/time.h \
+ /usr/include/i386-linux-gnu/sys/sysmacros.h \
+ /usr/include/i386-linux-gnu/bits/pthreadtypes.h /usr/include/alloca.h \
+ /usr/include/i386-linux-gnu/bits/stdlib-float.h /usr/include/stdio.h \
+ /usr/include/libio.h /usr/include/_G_config.h /usr/include/wchar.h \
+ /usr/lib/gcc/i686-linux-gnu/4.8/include/stdarg.h \
+ /usr/include/i386-linux-gnu/bits/stdio_lim.h \
+ /usr/include/i386-linux-gnu/bits/sys_errlist.h /usr/include/string.h \
+ /usr/include/errno.h /usr/include/i386-linux-gnu/bits/errno.h \
+ /usr/include/linux/errno.h /usr/include/i386-linux-gnu/asm/errno.h \
+ /usr/include/asm-generic/errno.h /usr/include/asm-generic/errno-base.h \
+ /usr/include/i386-linux-gnu/bits/timex.h \
+ /usr/include/i386-linux-gnu/sys/timeb.h /usr/include/malloc.h \
+ /usr/include/ctype.h /usr/lib/gcc/i686-linux-gnu/4.8/include/stdint.h \
+ /usr/include/stdint.h /usr/include/i386-linux-gnu/bits/wchar.h \
+ /usr/include/i386-linux-gnu/sys/socket.h \
+ /usr/include/i386-linux-gnu/sys/uio.h \
+ /usr/include/i386-linux-gnu/bits/uio.h \
+ /usr/include/i386-linux-gnu/bits/socket.h \
+ /usr/include/i386-linux-gnu/bits/socket_type.h \
+ /usr/include/i386-linux-gnu/bits/sockaddr.h \
+ /usr/include/i386-linux-gnu/asm/socket.h \
+ /usr/include/asm-generic/socket.h \
+ /usr/include/i386-linux-gnu/asm/sockios.h \
+ /usr/include/asm-generic/sockios.h /usr/include/netinet/in.h \
+ /usr/include/i386-linux-gnu/bits/in.h /usr/include/arpa/inet.h \
+ /usr/include/syslog.h /usr/include/i386-linux-gnu/sys/syslog.h \
+ /usr/include/i386-linux-gnu/bits/syslog-path.h /usr/include/unistd.h \
+ /usr/include/i386-linux-gnu/bits/posix_opt.h \
+ /usr/include/i386-linux-gnu/bits/environments.h \
+ /usr/include/i386-linux-gnu/bits/confname.h /usr/include/getopt.h \
+ /usr/include/i386-linux-gnu/sys/ioctl.h \
+ /usr/include/i386-linux-gnu/bits/ioctls.h \
+ /usr/include/i386-linux-gnu/asm/ioctls.h \
+ /usr/include/asm-generic/ioctls.h /usr/include/linux/ioctl.h \
+ /usr/include/i386-linux-gnu/asm/ioctl.h /usr/include/asm-generic/ioctl.h \
+ /usr/include/i386-linux-gnu/bits/ioctl-types.h \
+ /usr/include/i386-linux-gnu/sys/ttydefaults.h /usr/include/net/if.h \
+ /usr/include/net/if_arp.h /usr/include/pthread.h /usr/include/sched.h \
+ /usr/include/i386-linux-gnu/bits/sched.h \
+ /usr/include/i386-linux-gnu/bits/setjmp.h \
+ /usr/include/i386-linux-gnu/sys/stat.h \
+ /usr/include/i386-linux-gnu/bits/stat.h /usr/include/fcntl.h \
+ /usr/include/i386-linux-gnu/bits/fcntl.h \
+ /usr/include/i386-linux-gnu/bits/fcntl-linux.h \
  ../../libcwmp/include/cwmp/error.h ../../libpool/include/cwmp/pool.h \
  ../../libcwmp/include/cwmp/cwmp.h ../../libxmlet/include/cwmp/xmlet.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/assert.h \
- ../../libcwmp/include/cwmp/util.h ../../libcwmp/include/cwmp/md5.h \
- ../../libcwmp/include/cwmp/memory.h ../../libcwmp/include/cwmp/envment.h \
- ../../libcwmp/include/cwmp/buffer.h ../../libcwmp/include/cwmp/event.h \
- ../../libcwmp/include/cwmp/queue.h ../../cwmpd/include/cwmp_httpd.h \
- ../../cwmpd/include/cwmp_module.h ../../libcwmp/include/cwmp/cfg.h \
- ../../libcwmp/include/cwmp/session.h ../../libcwmp/include/cwmp/log.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/lib/gcc/arm-linux-gnueabihf/4.9.2/include-fixed/limits.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/lib/gcc/arm-linux-gnueabihf/4.9.2/include-fixed/syslimits.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/limits.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/posix1_lim.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/local_lim.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/linux/limits.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/posix2_lim.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/xopen_lim.h \
- ../../cwmpd/include/cwmp_type.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/sys/param.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/signal.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/signum.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/siginfo.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/sigaction.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/sigcontext.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/asm/sigcontext.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/sigstack.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/sys/ucontext.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/sigthread.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/param.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/linux/param.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/asm/param.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/sys/time.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/sys/utsname.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/utsname.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/sys/wait.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/sys/fcntl.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/sys/mman.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/mman.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/mman-linux.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/dirent.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/dirent.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/netdb.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/rpc/netdb.h \
- /home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/netdb.h \
+ /usr/include/assert.h ../../libcwmp/include/cwmp/util.h \
+ ../../libcwmp/include/cwmp/md5.h ../../libcwmp/include/cwmp/memory.h \
+ ../../libcwmp/include/cwmp/envment.h ../../libcwmp/include/cwmp/buffer.h \
+ ../../libcwmp/include/cwmp/event.h ../../libcwmp/include/cwmp/queue.h \
+ ../../cwmpd/include/cwmp_httpd.h ../../cwmpd/include/cwmp_module.h \
+ ../../libcwmp/include/cwmp/cfg.h ../../libcwmp/include/cwmp/session.h \
+ ../../libcwmp/include/cwmp/log.h \
+ /usr/lib/gcc/i686-linux-gnu/4.8/include-fixed/limits.h \
+ /usr/lib/gcc/i686-linux-gnu/4.8/include-fixed/syslimits.h \
+ /usr/include/limits.h /usr/include/i386-linux-gnu/bits/posix1_lim.h \
+ /usr/include/i386-linux-gnu/bits/local_lim.h /usr/include/linux/limits.h \
+ /usr/include/i386-linux-gnu/bits/posix2_lim.h \
+ /usr/include/i386-linux-gnu/bits/xopen_lim.h \
+ ../../cwmpd/include/cwmp_type.h /usr/include/i386-linux-gnu/sys/param.h \
+ /usr/include/signal.h /usr/include/i386-linux-gnu/bits/signum.h \
+ /usr/include/i386-linux-gnu/bits/siginfo.h \
+ /usr/include/i386-linux-gnu/bits/sigaction.h \
+ /usr/include/i386-linux-gnu/bits/sigcontext.h \
+ /usr/include/i386-linux-gnu/bits/sigstack.h \
+ /usr/include/i386-linux-gnu/sys/ucontext.h \
+ /usr/include/i386-linux-gnu/bits/sigthread.h \
+ /usr/include/i386-linux-gnu/bits/param.h /usr/include/linux/param.h \
+ /usr/include/i386-linux-gnu/asm/param.h /usr/include/asm-generic/param.h \
+ /usr/include/i386-linux-gnu/sys/time.h \
+ /usr/include/i386-linux-gnu/sys/utsname.h \
+ /usr/include/i386-linux-gnu/bits/utsname.h \
+ /usr/include/i386-linux-gnu/sys/wait.h \
+ /usr/include/i386-linux-gnu/sys/fcntl.h \
+ /usr/include/i386-linux-gnu/sys/mman.h \
+ /usr/include/i386-linux-gnu/bits/mman.h \
+ /usr/include/i386-linux-gnu/bits/mman-linux.h /usr/include/dirent.h \
+ /usr/include/i386-linux-gnu/bits/dirent.h /usr/include/netdb.h \
+ /usr/include/rpc/netdb.h /usr/include/i386-linux-gnu/bits/netdb.h \
  ../../cwmpd/include/cwmp_conf.h
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/stdc-predef.h:
+/usr/include/stdc-predef.h:
 
 ../../libcwmp/include/cwmp/http.h:
 
 ../../libcwmp/include/cwmp/types.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/stdlib.h:
+/usr/include/stdlib.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/features.h:
+/usr/include/features.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/sys/cdefs.h:
+/usr/include/i386-linux-gnu/sys/cdefs.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/wordsize.h:
+/usr/include/i386-linux-gnu/bits/wordsize.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/gnu/stubs.h:
+/usr/include/i386-linux-gnu/gnu/stubs.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/gnu/stubs-hard.h:
+/usr/include/i386-linux-gnu/gnu/stubs-32.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/lib/gcc/arm-linux-gnueabihf/4.9.2/include/stddef.h:
+/usr/lib/gcc/i686-linux-gnu/4.8/include/stddef.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/waitflags.h:
+/usr/include/i386-linux-gnu/bits/waitflags.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/waitstatus.h:
+/usr/include/i386-linux-gnu/bits/waitstatus.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/endian.h:
+/usr/include/endian.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/endian.h:
+/usr/include/i386-linux-gnu/bits/endian.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/byteswap.h:
+/usr/include/i386-linux-gnu/bits/byteswap.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/types.h:
+/usr/include/i386-linux-gnu/bits/types.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/typesizes.h:
+/usr/include/i386-linux-gnu/bits/typesizes.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/byteswap-16.h:
+/usr/include/i386-linux-gnu/bits/byteswap-16.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/xlocale.h:
+/usr/include/xlocale.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/sys/types.h:
+/usr/include/i386-linux-gnu/sys/types.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/time.h:
+/usr/include/time.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/sys/select.h:
+/usr/include/i386-linux-gnu/sys/select.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/select.h:
+/usr/include/i386-linux-gnu/bits/select.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/sigset.h:
+/usr/include/i386-linux-gnu/bits/sigset.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/time.h:
+/usr/include/i386-linux-gnu/bits/time.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/sys/sysmacros.h:
+/usr/include/i386-linux-gnu/sys/sysmacros.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/pthreadtypes.h:
+/usr/include/i386-linux-gnu/bits/pthreadtypes.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/alloca.h:
+/usr/include/alloca.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/stdlib-float.h:
+/usr/include/i386-linux-gnu/bits/stdlib-float.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/stdio.h:
+/usr/include/stdio.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/libio.h:
+/usr/include/libio.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/_G_config.h:
+/usr/include/_G_config.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/wchar.h:
+/usr/include/wchar.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/lib/gcc/arm-linux-gnueabihf/4.9.2/include/stdarg.h:
+/usr/lib/gcc/i686-linux-gnu/4.8/include/stdarg.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/stdio_lim.h:
+/usr/include/i386-linux-gnu/bits/stdio_lim.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/sys_errlist.h:
+/usr/include/i386-linux-gnu/bits/sys_errlist.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/string.h:
+/usr/include/string.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/errno.h:
+/usr/include/errno.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/errno.h:
+/usr/include/i386-linux-gnu/bits/errno.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/linux/errno.h:
+/usr/include/linux/errno.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/asm/errno.h:
+/usr/include/i386-linux-gnu/asm/errno.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/asm-generic/errno.h:
+/usr/include/asm-generic/errno.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/asm-generic/errno-base.h:
+/usr/include/asm-generic/errno-base.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/timex.h:
+/usr/include/i386-linux-gnu/bits/timex.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/sys/timeb.h:
+/usr/include/i386-linux-gnu/sys/timeb.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/malloc.h:
+/usr/include/malloc.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/ctype.h:
+/usr/include/ctype.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/lib/gcc/arm-linux-gnueabihf/4.9.2/include/stdint.h:
+/usr/lib/gcc/i686-linux-gnu/4.8/include/stdint.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/stdint.h:
+/usr/include/stdint.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/wchar.h:
+/usr/include/i386-linux-gnu/bits/wchar.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/sys/socket.h:
+/usr/include/i386-linux-gnu/sys/socket.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/sys/uio.h:
+/usr/include/i386-linux-gnu/sys/uio.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/uio.h:
+/usr/include/i386-linux-gnu/bits/uio.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/socket.h:
+/usr/include/i386-linux-gnu/bits/socket.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/socket_type.h:
+/usr/include/i386-linux-gnu/bits/socket_type.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/sockaddr.h:
+/usr/include/i386-linux-gnu/bits/sockaddr.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/asm/socket.h:
+/usr/include/i386-linux-gnu/asm/socket.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/asm/sockios.h:
+/usr/include/asm-generic/socket.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/netinet/in.h:
+/usr/include/i386-linux-gnu/asm/sockios.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/in.h:
+/usr/include/asm-generic/sockios.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/arpa/inet.h:
+/usr/include/netinet/in.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/syslog.h:
+/usr/include/i386-linux-gnu/bits/in.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/sys/syslog.h:
+/usr/include/arpa/inet.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/syslog-path.h:
+/usr/include/syslog.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/unistd.h:
+/usr/include/i386-linux-gnu/sys/syslog.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/posix_opt.h:
+/usr/include/i386-linux-gnu/bits/syslog-path.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/environments.h:
+/usr/include/unistd.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/confname.h:
+/usr/include/i386-linux-gnu/bits/posix_opt.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/getopt.h:
+/usr/include/i386-linux-gnu/bits/environments.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/sys/ioctl.h:
+/usr/include/i386-linux-gnu/bits/confname.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/ioctls.h:
+/usr/include/getopt.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/asm/ioctls.h:
+/usr/include/i386-linux-gnu/sys/ioctl.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/asm-generic/ioctls.h:
+/usr/include/i386-linux-gnu/bits/ioctls.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/linux/ioctl.h:
+/usr/include/i386-linux-gnu/asm/ioctls.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/asm/ioctl.h:
+/usr/include/asm-generic/ioctls.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/asm-generic/ioctl.h:
+/usr/include/linux/ioctl.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/ioctl-types.h:
+/usr/include/i386-linux-gnu/asm/ioctl.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/sys/ttydefaults.h:
+/usr/include/asm-generic/ioctl.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/net/if.h:
+/usr/include/i386-linux-gnu/bits/ioctl-types.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/net/if_arp.h:
+/usr/include/i386-linux-gnu/sys/ttydefaults.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/pthread.h:
+/usr/include/net/if.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/sched.h:
+/usr/include/net/if_arp.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/sched.h:
+/usr/include/pthread.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/setjmp.h:
+/usr/include/sched.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/sys/stat.h:
+/usr/include/i386-linux-gnu/bits/sched.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/stat.h:
+/usr/include/i386-linux-gnu/bits/setjmp.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/fcntl.h:
+/usr/include/i386-linux-gnu/sys/stat.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/fcntl.h:
+/usr/include/i386-linux-gnu/bits/stat.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/fcntl-linux.h:
+/usr/include/fcntl.h:
+
+/usr/include/i386-linux-gnu/bits/fcntl.h:
+
+/usr/include/i386-linux-gnu/bits/fcntl-linux.h:
 
 ../../libcwmp/include/cwmp/error.h:
 
@@ -319,7 +289,7 @@ cwmpd-httpd.o: httpd.c \
 
 ../../libxmlet/include/cwmp/xmlet.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/assert.h:
+/usr/include/assert.h:
 
 ../../libcwmp/include/cwmp/util.h:
 
@@ -345,74 +315,74 @@ cwmpd-httpd.o: httpd.c \
 
 ../../libcwmp/include/cwmp/log.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/lib/gcc/arm-linux-gnueabihf/4.9.2/include-fixed/limits.h:
+/usr/lib/gcc/i686-linux-gnu/4.8/include-fixed/limits.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/lib/gcc/arm-linux-gnueabihf/4.9.2/include-fixed/syslimits.h:
+/usr/lib/gcc/i686-linux-gnu/4.8/include-fixed/syslimits.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/limits.h:
+/usr/include/limits.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/posix1_lim.h:
+/usr/include/i386-linux-gnu/bits/posix1_lim.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/local_lim.h:
+/usr/include/i386-linux-gnu/bits/local_lim.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/linux/limits.h:
+/usr/include/linux/limits.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/posix2_lim.h:
+/usr/include/i386-linux-gnu/bits/posix2_lim.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/xopen_lim.h:
+/usr/include/i386-linux-gnu/bits/xopen_lim.h:
 
 ../../cwmpd/include/cwmp_type.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/sys/param.h:
+/usr/include/i386-linux-gnu/sys/param.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/signal.h:
+/usr/include/signal.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/signum.h:
+/usr/include/i386-linux-gnu/bits/signum.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/siginfo.h:
+/usr/include/i386-linux-gnu/bits/siginfo.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/sigaction.h:
+/usr/include/i386-linux-gnu/bits/sigaction.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/sigcontext.h:
+/usr/include/i386-linux-gnu/bits/sigcontext.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/asm/sigcontext.h:
+/usr/include/i386-linux-gnu/bits/sigstack.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/sigstack.h:
+/usr/include/i386-linux-gnu/sys/ucontext.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/sys/ucontext.h:
+/usr/include/i386-linux-gnu/bits/sigthread.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/sigthread.h:
+/usr/include/i386-linux-gnu/bits/param.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/param.h:
+/usr/include/linux/param.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/linux/param.h:
+/usr/include/i386-linux-gnu/asm/param.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/asm/param.h:
+/usr/include/asm-generic/param.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/sys/time.h:
+/usr/include/i386-linux-gnu/sys/time.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/sys/utsname.h:
+/usr/include/i386-linux-gnu/sys/utsname.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/utsname.h:
+/usr/include/i386-linux-gnu/bits/utsname.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/sys/wait.h:
+/usr/include/i386-linux-gnu/sys/wait.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/sys/fcntl.h:
+/usr/include/i386-linux-gnu/sys/fcntl.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/sys/mman.h:
+/usr/include/i386-linux-gnu/sys/mman.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/mman.h:
+/usr/include/i386-linux-gnu/bits/mman.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/mman-linux.h:
+/usr/include/i386-linux-gnu/bits/mman-linux.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/dirent.h:
+/usr/include/dirent.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/dirent.h:
+/usr/include/i386-linux-gnu/bits/dirent.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/netdb.h:
+/usr/include/netdb.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/rpc/netdb.h:
+/usr/include/rpc/netdb.h:
 
-/home/xueqian/ctools/gcc-linaro-arm-linux-gnueabihf-4.9-2014.09_linux/arm-linux-gnueabihf/libc/usr/include/bits/netdb.h:
+/usr/include/i386-linux-gnu/bits/netdb.h:
 
 ../../cwmpd/include/cwmp_conf.h:

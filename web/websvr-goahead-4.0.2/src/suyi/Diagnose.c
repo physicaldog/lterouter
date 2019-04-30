@@ -1,5 +1,6 @@
 #include"suyi_common.h"
 #define PingLog "/opt/log/PingLog"
+#define startLongPing "/opt/tmp/startLongPing"
 
 void paseStr(char *rbuff, char *buffer)
 {
@@ -16,8 +17,136 @@ void paseStr(char *rbuff, char *buffer)
 		qtr = otr;
 	}
 	printf("buffer = %s\n",buffer);
-
 }
+
+void start_LongPing(Webs *wp)
+{
+	char *IpAddr = NULL;
+    FILE *fp = NULL;
+
+	printf("\n********%s********\n",__FUNCTION__);
+	websSetStatus(wp, 200);
+	websWriteHeaders(wp, -1, 0);//参数二需要未-1,否则前端收不到数据
+	websWriteEndHeaders(wp);
+	
+	IpAddr = websGetVar(wp,("IpAddr"),(""));
+	fp = fopen(startLongPing,"w+");
+	if(NULL == fp){
+		websWrite(wp,("开启失败！"));
+	}else{
+		fwrite(IpAddr,1,strlen(IpAddr),fp);
+		fclose(fp);
+		websWrite(wp,("开启成功！"));
+	}
+	websDone(wp);
+	return;
+}
+
+void stop_LongPing(Webs *wp)
+{
+	char *IpAddr = NULL;
+    FILE *fp = NULL;
+
+	printf("\n********%s********\n",__FUNCTION__);
+	websSetStatus(wp, 200);
+	websWriteHeaders(wp, -1, 0);//参数二需要未-1,否则前端收不到数据
+	websWriteEndHeaders(wp);
+	
+	system("rm /opt/tmp/startLongPing");
+	websWrite(wp,("已关闭！"));
+	/*
+	IpAddr = websGetVar(wp,("IpAddr"),(""));
+	fp = fopen(starLongPing,"w+");
+	if(NULL == fp){
+		websWrite(wp,("开启失败！"));
+	}else{
+		fwrite(IpAddr,1,strlen(IpAddr),fp);
+		fclose(fp);
+		websWrite(wp,("开启成功！"));
+	}
+	*/
+	websDone(wp);
+	return;
+}
+
+void check_LongPing(Webs *wp)
+{
+	FILE *fp = NULL;
+	char buff[128] = {0};
+	int ret = 0;
+
+	printf("\n********%s********\n",__FUNCTION__);
+	websSetStatus(wp, 200);
+	websWriteHeaders(wp, -1, 0);//参数二需要未-1,否则前端收不到数据
+	websWriteEndHeaders(wp);
+
+	fp = fopen(startLongPing,"r");
+	if(NULL == fp){
+		websWrite(wp,("no"));
+	}else{
+		ret = fread(buff,1,sizeof(buff),fp);
+		fclose(fp);
+		if(ret > 0)
+			websWrite(wp,(buff));
+		else
+			websWrite(wp,("no"));
+	}
+/*	
+	IpAddr = websGetVar(wp,("IpAddr"),(""));
+	fp = fopen("starLongPing","w+");
+	if(NULL == fp){
+		websWrite(wp,("开启失败！"));
+	}else{
+		fwrite(IpAddr,1,strlen(IpAddr),fp);
+		fclose(fp);
+		websWrite(wp,("开启成功！"));
+	}
+*/
+	websDone(wp);
+	return;
+}
+
+
+/*
+void stop_LongPing(Webs *wp)
+{
+	printf("\n********%s********\n",__FUNCTION__);
+	websSetStatus(wp, 200);
+	websWriteHeaders(wp, -1, 0);//参数二需要未-1,否则前端收不到数据
+	websWriteEndHeaders(wp);
+
+	system("rm /opt/tmp/startLongPing");
+	websWrite(wp,("已关闭！"));
+	
+	websDone(wp);
+	return;
+}
+void checkLongPing(Webs *wp)
+{
+	FILE *fp = NULL;
+	char buff[128] = {0};
+	int ret = 0;
+	printf("\n********%s********\n",__FUNCTION__);
+	websSetStatus(wp, 200);
+	websWriteHeaders(wp, -1, 0);//参数二需要未-1,否则前端收不到数据
+	websWriteEndHeaders(wp);
+
+	fp = fopen("starLongPing","w+");
+	if(NULL == fp){
+		websWrite(wp,("0"));
+	}else{
+		ret = fwrite(buff,1,sizeof(buff),fp);
+		fclose(fp);
+		if(ret > 0)
+			websWrite(wp,(buff));
+		else
+			websWrite(wp,("0"));
+	}
+
+	websDone(wp);
+	return;
+}
+*/
 
 void start_sshd(Webs *wp)
 {

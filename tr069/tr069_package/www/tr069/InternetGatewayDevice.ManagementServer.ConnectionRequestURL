@@ -1,0 +1,13 @@
+#!/bin/bash
+. /www/tr069/common.sh
+
+if [ "$ACTION"x = "get"x ];then
+    if [ -f /etc/tr069_lan ];then
+        str=`ifconfig $LAN_IF`
+        ip=`expr "$str" : '.*inet addr:[[:space:]]*\([0-9.]*\).*'`
+        echo http://${ip}:8082/
+        exit 0
+    fi
+    echo http://${ip}:8082/
+fi
+exit 0

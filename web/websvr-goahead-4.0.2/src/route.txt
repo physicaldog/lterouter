@@ -51,10 +51,13 @@ route uri=/action/uploadTest
 
 route uri=/action/settingPW
 
+route uri=/action/start_LongPing
 route uri=/action/start_sshd
 route uri=/action/cleanLog
 route uri=/action/getPingLog
 route uri=/action/pingTest
+route uri=/action/stop_LongPing
+route uri=/action/check_LongPing
 
 route uri=/action/loginCheck
 
@@ -79,11 +82,21 @@ route uri=/action/queryIMSI
 route uri=/action/settingAPN
 route uri=/action/queryAPN
 
+route uri=/action/checkNetMode
+route uri=/action/set_mode_1
+route uri=/action/srt_mode_2
+route uri=/action/set_snat
+route uri=/action/set_dnat
+route uri=/action/query_nat
+route uri=/action/clear_nat
+
 route uri=/action/getRebootTime
 route uri=/action/setRebootTime
 route uri=/action/checkManualTime
 route uri=/action/setManualTime
 route uri=/action/setAutoTime
+route uri=/action/queryAddr
+route uri=/action/settingAddr
 route uri=/action/queryTime
 route uri=/action/settingTime
 route uri=/action/getRebootCount

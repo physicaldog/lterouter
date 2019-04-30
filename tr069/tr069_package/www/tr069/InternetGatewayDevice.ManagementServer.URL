@@ -1,0 +1,15 @@
+#!/bin/bash
+
+. ./www/tr069/common.sh
+
+if [ "$ACTION"x = "set"x ];then
+    uci set cwmp.cwmp.acs="$VALUE"
+    uci commit cwmp
+else
+    echo 'http://192.168.1.100:8080/openacs/acs'
+    exit 0
+    _ret=`uci get cwmp.cwmp.acs 2>/dev/null`
+    echo $_ret
+fi
+
+exit 0

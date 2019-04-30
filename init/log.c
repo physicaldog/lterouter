@@ -17,6 +17,7 @@ int debug = 0;
 
 void log_open(const char *ident, int option, int facility)
 {
+	printf("LOG_OPEN %d\n",debug);
 	if(debug==0)
 		openlog(ident, option, facility);
 }

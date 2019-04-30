@@ -127,11 +127,13 @@ clean:
 	rm -f "$(BUILD)/obj/settingDtu.o"
 	rm -f "$(BUILD)/obj/settingLAN.o"
 	rm -f "$(BUILD)/obj/settingLTE.o"
+	rm -f "$(BUILD)/obj/settingNetMode.o"
 	rm -f "$(BUILD)/obj/settingSecurity.o"
 	rm -f "$(BUILD)/obj/settingWH.o"
 	rm -f "$(BUILD)/obj/Version.o"
 	rm -f "$(BUILD)/obj/RunningStatus.o"
 	rm -f "$(BUILD)/obj/suyi_common.o"
+	rm -f "$(BUILD)/obj/cJSON.o"
 	rm -f "$(BUILD)/obj/js.o"
 	rm -f "$(BUILD)/obj/jst.o"
 	rm -f "$(BUILD)/obj/mbedtls.o"
@@ -340,6 +342,7 @@ $(BUILD)/obj/gopass.o: \
 #
 DEPS_19 += $(BUILD)/inc/goahead.h
 DEPS_19 += src/suyi/suyi_common.h
+DEPS_19 += src/suyi/cJSON.h
 
 $(BUILD)/obj/http.o: \
     src/http.c $(DEPS_19)
@@ -376,6 +379,11 @@ $(BUILD)/obj/settingLTE.o: \
 	@echo '   [Compile] $(BUILD)/obj/settingLTE.o'
 	$(CC) -c -o $(BUILD)/obj/settingLTE.o $(CFLAGS) $(DFLAGS) -D_FILE_OFFSET_BITS=64 -D_FILE_OFFSET_BITS=64 -DMBEDTLS_USER_CONFIG_FILE=\"embedtls.h\" $(IFLAGS) src/suyi/settingLTE.c
 
+$(BUILD)/obj/settingNetMode.o: \
+    src/suyi/settingNetMode.c $(DEPS_19)
+	@echo '   [Compile] $(BUILD)/obj/settingNetMode.o'
+	$(CC) -c -o $(BUILD)/obj/settingNetMode.o $(CFLAGS) $(DFLAGS) -D_FILE_OFFSET_BITS=64 -D_FILE_OFFSET_BITS=64 -DMBEDTLS_USER_CONFIG_FILE=\"embedtls.h\" $(IFLAGS) src/suyi/settingNetMode.c
+
 $(BUILD)/obj/settingSecurity.o: \
     src/suyi/settingSecurity.c $(DEPS_19)
 	@echo '   [Compile] $(BUILD)/obj/settingSecurity.o'
@@ -400,6 +408,11 @@ $(BUILD)/obj/suyi_common.o: \
     src/suyi/suyi_common.c $(DEPS_19)
 	@echo '   [Compile] $(BUILD)/obj/suyi_common.o'
 	$(CC) -c -o $(BUILD)/obj/suyi_common.o $(CFLAGS) $(DFLAGS) -D_FILE_OFFSET_BITS=64 -D_FILE_OFFSET_BITS=64 -DMBEDTLS_USER_CONFIG_FILE=\"embedtls.h\" $(IFLAGS) src/suyi/suyi_common.c
+
+$(BUILD)/obj/cJSON.o: \
+    src/suyi/cJSON.c $(DEPS_19)
+	@echo '   [Compile] $(BUILD)/obj/cJSON.o'
+	$(CC) -c -o $(BUILD)/obj/cJSON.o $(CFLAGS) $(DFLAGS) -D_FILE_OFFSET_BITS=64 -D_FILE_OFFSET_BITS=64 -DMBEDTLS_USER_CONFIG_FILE=\"embedtls.h\" $(IFLAGS) -lm src/suyi/cJSON.c
 
 #
 #   js.o
@@ -592,11 +605,13 @@ DEPS_36 += $(BUILD)/obj/login.o
 DEPS_36 += $(BUILD)/obj/settingDtu.o
 DEPS_36 += $(BUILD)/obj/settingLAN.o
 DEPS_36 += $(BUILD)/obj/settingLTE.o
+DEPS_36 += $(BUILD)/obj/settingNetMode.o
 DEPS_36 += $(BUILD)/obj/settingSecurity.o
 DEPS_36 += $(BUILD)/obj/settingWH.o
 DEPS_36 += $(BUILD)/obj/Version.o
 DEPS_36 += $(BUILD)/obj/RunningStatus.o
 DEPS_36 += $(BUILD)/obj/suyi_common.o
+DEPS_36 += $(BUILD)/obj/cJSON.o
 
 DEPS_36 += $(BUILD)/obj/js.o
 DEPS_36 += $(BUILD)/obj/jst.o
@@ -627,7 +642,7 @@ endif
 
 $(BUILD)/bin/libgo.so: $(DEPS_36)
 	@echo '      [Link] $(BUILD)/bin/libgo.so'
-	$(CC) -shared -o $(BUILD)/bin/libgo.so $(LDFLAGS) $(LIBPATHS) "$(BUILD)/obj/action.o" "$(BUILD)/obj/alloc.o" "$(BUILD)/obj/auth.o" "$(BUILD)/obj/cgi.o" "$(BUILD)/obj/crypt.o" "$(BUILD)/obj/file.o" "$(BUILD)/obj/fs.o" "$(BUILD)/obj/http.o" "$(BUILD)/obj/js.o" "$(BUILD)/obj/jst.o" "$(BUILD)/obj/options.o" "$(BUILD)/obj/osdep.o" "$(BUILD)/obj/rom.o" "$(BUILD)/obj/route.o" "$(BUILD)/obj/runtime.o" "$(BUILD)/obj/socket.o" "$(BUILD)/obj/time.o" "$(BUILD)/obj/upload.o" $(LIBPATHS_36) $(LIBS_36) $(LIBS_36) $(LIBS)  "$(BUILD)/obj/Account.o" "$(BUILD)/obj/Diagnose.o" "$(BUILD)/obj/login.o" "$(BUILD)/obj/settingDtu.o" "$(BUILD)/obj/settingLAN.o" "$(BUILD)/obj/settingLTE.o" "$(BUILD)/obj/settingSecurity.o" "$(BUILD)/obj/settingWH.o" "$(BUILD)/obj/Version.o" "$(BUILD)/obj/RunningStatus.o" "$(BUILD)/obj/suyi_common.o"  
+	$(CC) -shared -o $(BUILD)/bin/libgo.so $(LDFLAGS) $(LIBPATHS) "$(BUILD)/obj/action.o" "$(BUILD)/obj/alloc.o" "$(BUILD)/obj/auth.o" "$(BUILD)/obj/cgi.o" "$(BUILD)/obj/crypt.o" "$(BUILD)/obj/file.o" "$(BUILD)/obj/fs.o" "$(BUILD)/obj/http.o" "$(BUILD)/obj/js.o" "$(BUILD)/obj/jst.o" "$(BUILD)/obj/options.o" "$(BUILD)/obj/osdep.o" "$(BUILD)/obj/rom.o" "$(BUILD)/obj/route.o" "$(BUILD)/obj/runtime.o" "$(BUILD)/obj/socket.o" "$(BUILD)/obj/time.o" "$(BUILD)/obj/upload.o" $(LIBPATHS_36) $(LIBS_36) $(LIBS_36) $(LIBS)  "$(BUILD)/obj/Account.o" "$(BUILD)/obj/Diagnose.o" "$(BUILD)/obj/login.o" "$(BUILD)/obj/settingDtu.o" "$(BUILD)/obj/settingLAN.o" "$(BUILD)/obj/settingLTE.o" "$(BUILD)/obj/settingNetMode.o" "$(BUILD)/obj/settingSecurity.o" "$(BUILD)/obj/settingWH.o" "$(BUILD)/obj/Version.o" "$(BUILD)/obj/RunningStatus.o" "$(BUILD)/obj/suyi_common.o" "$(BUILD)/obj/cJSON.o" 
 
 #
 #   install-certs

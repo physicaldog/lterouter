@@ -16,9 +16,12 @@ SRC += log.c
 
 EXE:$(OBJ)
 	$(CC) $(LDFLAGS) -o $(initEXE) $^
+	$(CC) $(CFLAGS) -o button.o button.c
+	$(CC) $(LDFLAGS) -o button log.o button.o
 
 OBJ:$(SRC)
 	$(CC) $(CFLAGS) -o $(OBJ) $^
 
+
 clean:
-	-rm *.o $(initEXE)
+	-rm *.o $(initEXE) button

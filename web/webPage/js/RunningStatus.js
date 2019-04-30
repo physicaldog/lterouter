@@ -21,8 +21,8 @@ function sysInfo(){
 		async:true,
 		dataType:'json',
 		success:function(data){
-			//alert(data.system_date);
 			
+			$('#system_addr').text(data.system_addr);
 			totalTime = parseInt(data.uptime);
 			setInterval('jisuan()',1000);
 			
@@ -96,12 +96,12 @@ function WANStatus(){
 			$('#simStatus').text(data.simStatus);
 			$('#ecmStatus').text(data.ecmStatus);
 
-			//$('#rssi').text(data.rssi);
+			$('#rssi').text(data.rssi);
 			$('#rsrp').text(data.rsrp);
 			$('#sinr').text(data.sinr);
-			//$('#rsrq').text(data.rsrq);
-			
+			$('#rsrq').text(data.rsrq);
 			$('#APN').text(data.apn);
+			$('#imei').text(data.imei);
 			$('#wanip').text(data.wanip);
 			$('#wanmask').text(data.wanmask);
 			$('#wanmac').text(data.wanmac);

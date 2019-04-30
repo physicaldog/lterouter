@@ -24,6 +24,7 @@
 #include <sys/reboot.h>
 
 #include "goahead.h"
+#include "cJSON.h"
 
 
 #define SerPort "/dev/ttyem300"
@@ -42,10 +43,13 @@ void settingPW(Webs *wp);
 
 #if 1
 /*Diagnose*/
+void start_LongPing(Webs *wp);
 void start_sshd(Webs *wp);
 void cleanLog(Webs *wp);
 void getPingLog(Webs *wp);
 void pingTest(Webs *wp);
+void stop_LongPing(Webs *wp);
+void check_LongPing(Webs *wp);
 
 /*login*/
 void loginCheck(Webs *wp);
@@ -62,6 +66,19 @@ void cancelDtu(Webs *wp);
 void settingDtu(Webs *wp);
 void queryDtu(Webs *wp);
 
+/*settingLTE*/
+void queryIMSI(Webs *wp);
+void queryAPN(Webs *wp);
+void settingAPN(Webs *wp);
+/*settingNetMode*/
+void checkNetMode(Webs *wp);
+void set_mode_1(Webs *wp);
+void set_mode_2(Webs *wp);
+void set_snat(Webs *wp);
+void set_dnat(Webs *wp);
+void clear_nat(Webs *wp);
+void query_nat(Webs *wp);
+
 /*settingSecurity*/
 void checkSecurityEnable(Webs *wp);
 void startSecurity(Webs *wp);
@@ -69,18 +86,14 @@ void cancelSecurity(Webs *wp);
 void getSecurityLog(Webs *wp);
 void querySecurity(Webs *wp);
 void settingSecurity(Webs *wp);
-
-/*settingLTE*/
-void queryIMSI(Webs *wp);
-void queryAPN(Webs *wp);
-void settingAPN(Webs *wp);
-
 /*settingWH*/
 void getRebootTime(Webs *wp);
 void setRebootTime(Webs *wp);
 void checkManualTime(Webs *wp);
 void setManualTime(Webs *wp);
 void setAutoTime(Webs *wp);
+void queryAddr(Webs *wp);
+void settingAddr(Webs *wp);
 void queryTime(Webs *wp);
 void settingTime(Webs *wp);
 void getRebootCount(Webs *wp);

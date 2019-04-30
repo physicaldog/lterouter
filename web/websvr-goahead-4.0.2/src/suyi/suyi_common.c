@@ -8,6 +8,7 @@ extern int rssi;
 extern int  rsrp;
 extern int  sinr;
 extern int  rsrq;
+extern char  imei[];
 int setTime_done = 0;
 
 
@@ -305,6 +306,27 @@ int get_hcsq(char *buff)
 	return 0;
 }
 
+int get_cgsn(char *buff)
+{
+	int i=0;
+	char *ptr = NULL;
+	char *qtr = NULL;
+	printf("cgsn buff:%s\n",buff);
+	ptr = strchr(buff,'\"');
+	if(ptr){
+		printf("imei:%s\n",imei);
+		sprintf(imei,"%s",ptr+1);
+		ptr = NULL;
+		ptr = strchr(imei,'\"');
+		if(ptr)
+			*ptr = '\0';
+	}else
+		printf("no imei\n");
+		
+	printf("imei:%s\n",imei);
+	return 0;
+}
+
 int get_csq(char *buff)
 {
 	int i=0;
@@ -417,11 +439,11 @@ int direct_process(char *buff)
 
 	if(strstr(buff,"ERROR"))
 		return 0;
-	/*
-	if (strstr(buff,"CSQ")) {
-		get_csq(buff);
+	
+	if (strstr(buff,"+CGSN:")) {
+		get_cgsn(buff);
 		return 0;
-	}*/
+	}
 	if (strstr(buff,"HCSQ")) {
 		get_hcsq(buff);
 		return 0;

@@ -6,6 +6,12 @@
 
 CC = arm-linux-gnueabihf-gcc
 
+productName = "productName:LTE-ROUTER"
+productModle = "productModle:P17/0156_CPE_V2.2"
+softVersion = "softVersion:P17/0156_cpe_2.5.0_"
+kernel_dir = /home/xueqian/cpe_FileSystem/A7-linux-src/
+rootfs_dir = /home/xueqian/cpe_FileSystem/rootfs/
+cpe_flash_dir = /home/xueqian/ubuntushare/cpe_flash_dir
 config = $(PWD)/config
 log = $(PWD)/log
 tmp = $(PWD)/tmp
@@ -19,7 +25,7 @@ webBin = $(webServer)/build/linux-arm-default/bin
 webPage = $(web)/webPage
 webserver = $(web)/websvr-goahead-2.18/LINUX
 webpage = ~/ubuntushare/staticPage
-opt = ~/cpe_FileSystem/opt
+opt = $(rootfs_dir)/../opt
 package=/home/xueqian/ubuntushare/package
 
 initEXE = lterouter
@@ -38,6 +44,9 @@ all:
 	cd $(webServer) && $(MAKE) CC=arm-linux-gnueabihf-gcc ARCH=arm  
 
 config:
+	echo $(productName) > $(config)/Version
+	echo $(productModle) >> $(config)/Version
+	echo "$(softVersion)`date +%Y%m%d`" >> $(config)/Version
 	cp $(config)/* $(opt)/config/
 	cp $(log)/* $(opt)/log/
 	-cp $(tmp)/* $(opt)/tmp/
@@ -46,8 +55,8 @@ config:
 init:
 	@echo $(DB);
 	$(MAKE) -C $(init)
-	cp $(init)/*.sh $(init)/$(initEXE) $(opt)/init/
-	scp -r $(init)/*.sh $(init)/$(initEXE) $(readdr)/init/
+	cp $(init)/*.sh $(init)/button $(init)/$(initEXE) $(opt)/init/
+	scp -r $(init)/*.sh $(init)/button $(init)/$(initEXE) $(readdr)/init/
 	#cd $(init) && $(MAKE)
 dtu:
 	$(MAKE) -C $(dtu)
@@ -87,10 +96,13 @@ clean:
 opt:
 	rm $(opt)/* -rf
 	-mkdir $(opt) $(opt)/config $(opt)/init $(opt)/security $(opt)/dtu $(opt)/web $(opt)/web/webServer $(opt)/web/webPage $(opt)/tmp $(opt)/log $(opt)/upgrade
+	echo $(productName) > $(config)/Version
+	echo $(productModle) >> $(config)/Version
+	echo "$(softVersion)`date +%Y%m%d`" >> $(config)/Version
 	cp $(config)/* $(opt)/config/
 	cp $(log)/* $(opt)/log/
 	-cp $(tmp)/* $(opt)/tmp/
-	cp $(init)/*.sh $(init)/$(initEXE) $(opt)/init/
+	cp $(init)/*.sh $(init)/button $(init)/$(initEXE) $(opt)/init/
 	cp $(dtu)/$(dtuEXE) $(opt)/dtu/
 	cp $(security)/* $(opt)/security/
 	cp $(webServer)/src/auth.txt $(webServer)/src/route.txt $(webBin);
@@ -107,6 +119,12 @@ package:
 	cd ~/ubuntushare/package/system/;md5sum cpe.tar > cpe.md5;
 	cd $(package);tar -cf - system|openssl des3 -salt -k monkey | dd of=system.tar
 	#dd if=system.tar |openssl des3 -d -k monkey|tar xf -
+#make flash_file
+	rm -rf $(cpe_flash_dir)/*;
+	cd $(rootfs_dir)/;tar -zcf $(cpe_flash_dir)/rootfs.tar.gz ./*;
+	cd $(kernel_dir)/arch/arm/boot/;tar -zcf $(cpe_flash_dir)/kernel.tar.gz ./zImage;
+	cp $(kernel_dir)/arch/arm/boot/dts/imx6g2c-128m.dtb $(cpe_flash_dir);
+	cp $(package)/system/cpe.tar $(cpe_flash_dir);
 
 install:
 	scp -r $(opt)/* $(readdr)

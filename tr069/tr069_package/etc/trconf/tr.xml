@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node name='InternetGatewayDevice' rw='0' type='node'>
+    <node name='LANDeviceNumberOfEntries' rw='0' getc='0' noc='0' nocc='' acl='' type='unsignedInt' get='(null)' set='(null)'>1</node>
+    <node name='WANDeviceNumberOfEntries' rw='0' getc='0' noc='0' nocc='' acl='' type='unsignedInt' get='(null)' set='(null)'>1</node>
+    <node name='DeviceSummary' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='(null)' set='(null)'>WAN ROUTER BASE LTE</node>
+    <node name='DeviceInfo' rw='0' type='node'>
+        <node name='ModelName' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+        <node name='SerialNumber' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+        <node name='HardwareVersion' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'>1.0</node>
+        <node name='SoftwareVersion' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+        <node name='ModemFirmwareVersion' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+        <node name='SpecVersion' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='(null)' set='(null)'>1.0</node>
+        <node name='ProvisioningCode' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='(null)' set='(null)'>WKSS</node>
+        <node name='UpTime' rw='0' getc='0' noc='0' nocc='' acl='' type='unsignedInt' get='get_Device_DeviceInfo_UpTime' set='(null)'></node>
+        <node name='FirstUseDate' rw='0' getc='0' noc='0' nocc='' acl='' type='dateTime' get='(null)' set='(null)'></node>
+        <node name='VendorConfigFileNumberOfEntries' rw='0' getc='0' noc='0' nocc='' acl='' type='unsignedInt' get='(null)' set='(null)'>1</node>
+		<node name='DeviceLog' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='(null)' set='(null)'>log</node>
+		<node name='Manufacturer' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='(null)' set='(null)'>LTE</node>
+        <node name='ManufacturerOUI' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'>001261</node>
+        <node name='Description' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='(null)' set='(null)'>LTE</node>
+        <node name='ProductClass' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='(null)' set='(null)'>LTE WiFi VoIP Gateway</node>
+    </node>
+    <node name='ManagementServer' rw='0' type='node'>
+        <node name='EnableCWMP' rw='1' getc='0' noc='0' nocc='' acl='' type='boolean' get='(null)' set='(null)'>True</node>
+        <node name='URL' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='set_2_tr069_sh'></node>
+        <node name='Username' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='set_2_tr069_sh'></node>
+        <node name='Password' rw='1' getc='1' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='set_2_tr069_sh'></node>
+        <node name='PeriodicInformEnable' rw='1' getc='0' noc='0' nocc='' acl='' type='boolean' get='get_from_tr069_sh' set='set_2_tr069_sh'>True</node>
+        <node name='PeriodicInformInterval' rw='1' getc='0' noc='0' nocc='' acl='' type='unsignedInt' get='get_from_tr069_sh' set='set_2_tr069_sh'>1800</node>
+        <node name='PeriodicInformTime' rw='1' getc='0' noc='0' nocc='' acl='' type='dateTime' get='(null)' set='(null)'>0000-00-00T00:00:00Z</node>
+        <node name='ParameterKey' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='(null)' set='(null)'>unsetCommandKey</node>
+        <node name='ConnectionRequestURL' rw='0' getc='0' noc='2' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'>http://192.168.1.1:8080/</node>
+        <node name='ConnectionRequestUsername' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='set_2_tr069_sh'></node>
+        <node name='ConnectionRequestPassword' rw='1' getc='1' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='set_2_tr069_sh'></node>
+    </node>
+    <node name='Time' rw='0' type='node'>
+        <node name='NTPServer1' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='set_2_tr069_sh'>172.16.34.52</node>
+        <node name='NTPServer2' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='set_2_tr069_sh'>10.0.0.4</node>
+    </node>
+    <node name='DownloadDiagnostics' rw='0' type='node'>
+        <node name='DiagnosticsState' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='(null)' set='(null)'></node>
+        <node name='Interface' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='(null)' set='(null)'></node>
+        <node name='DownloadURL' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='(null)' set='(null)'></node>
+        <node name='DSCP' rw='1' getc='0' noc='0' nocc='' acl='' type='unsignedInt' get='(null)' set='(null)'></node>
+        <node name='EthernetPriority' rw='1' getc='0' noc='0' nocc='' acl='' type='unsignedInt' get='(null)' set='(null)'></node>
+        <node name='ROMTime' rw='0' getc='0' noc='0' nocc='' acl='' type='dateTime' get='(null)' set='(null)'></node>
+        <node name='BOMTime' rw='0' getc='0' noc='0' nocc='' acl='' type='dateTime' get='(null)' set='(null)'></node>
+        <node name='EOMTime' rw='0' getc='0' noc='0' nocc='' acl='' type='dateTime' get='(null)' set='(null)'></node>
+        <node name='TestBytesReceived' rw='0' getc='0' noc='0' nocc='' acl='' type='unsignedInt' get='(null)' set='(null)'></node>
+        <node name='TotalBytesReceived' rw='0' getc='0' noc='0' nocc='' acl='' type='unsignedInt' get='(null)' set='(null)'></node>
+        <node name='TCPOpenRequestTime' rw='0' getc='0' noc='0' nocc='' acl='' type='dateTime' get='(null)' set='(null)'></node>
+        <node name='TCPOpenResponseTime' rw='0' getc='0' noc='0' nocc='' acl='' type='dateTime' get='(null)' set='(null)'></node>
+    </node>
+    <node name='UploadDiagnostics' rw='0' type='node'>
+        <node name='DiagnosticsState' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='(null)' set='(null)'></node>
+        <node name='Interface' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='(null)' set='(null)'></node>
+        <node name='UploadURL' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='(null)' set='(null)'></node>
+        <node name='DSCP' rw='1' getc='0' noc='0' nocc='' acl='' type='unsignedInt' get='(null)' set='(null)'></node>
+        <node name='EthernetPriority' rw='1' getc='0' noc='0' nocc='' acl='' type='unsignedInt' get='(null)' set='(null)'></node>
+        <node name='TestFileLength' rw='1' getc='0' noc='0' nocc='' acl='' type='unsignedInt' get='(null)' set='(null)'></node>
+        <node name='ROMTime' rw='0' getc='0' noc='0' nocc='' acl='' type='dateTime' get='(null)' set='(null)'></node>
+        <node name='BOMTime' rw='0' getc='0' noc='0' nocc='' acl='' type='dateTime' get='(null)' set='(null)'></node>
+        <node name='EOMTime' rw='0' getc='0' noc='0' nocc='' acl='' type='dateTime' get='(null)' set='(null)'></node>
+        <node name='TotalBytesSent' rw='0' getc='0' noc='0' nocc='' acl='' type='unsignedInt' get='(null)' set='(null)'></node>
+        <node name='TCPOpenRequestTime' rw='0' getc='0' noc='0' nocc='' acl='' type='dateTime' get='(null)' set='(null)'></node>
+        <node name='TCPOpenResponseTime' rw='0' getc='0' noc='0' nocc='' acl='' type='dateTime' get='(null)' set='(null)'></node>
+    </node>    
+    <node name='IPPingDiagnostics' rw='0' type='node'>
+        <node name='DiagnosticsState' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='(null)' set='(null)'>Complete</node>
+        <node name='Interface' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='(null)' set='(null)'></node>
+        <node name='Host' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='(null)' set='(null)'>www.google.com</node>
+        <node name='NumberOfRepetitions' rw='1' getc='0' noc='0' nocc='' acl='' type='unsignedInt' get='(null)' set='(null)'>4</node>
+        <node name='Timeout' rw='1' getc='0' noc='0' nocc='' acl='' type='unsignedInt' get='(null)' set='(null)'>10000</node>
+        <node name='DataBlockSize' rw='1' getc='0' noc='0' nocc='' acl='' type='unsignedInt' get='(null)' set='(null)'>56</node>
+        <node name='DSCP' rw='1' getc='0' noc='0' nocc='' acl='' type='unsignedInt' get='(null)' set='(null)'>0</node>
+        <node name='SuccessCount' rw='0' getc='0' noc='0' nocc='' acl='' type='unsignedInt' get='get_Device_LAN_IPPingDiagnostics_SuccessCount' set='(null)'></node>
+        <node name='FailureCount' rw='0' getc='0' noc='0' nocc='' acl='' type='unsignedInt' get='get_Device_LAN_IPPingDiagnostics_FailureCount' set='(null)'></node>
+        <node name='AverageResponseTime' rw='0' getc='0' noc='0' nocc='' acl='' type='unsignedInt' get='get_Device_LAN_IPPingDiagnostics_AverageResponseTime' set='(null)'></node>
+        <node name='MinimumResponseTime' rw='0' getc='0' noc='0' nocc='' acl='' type='unsignedInt' get='get_Device_LAN_IPPingDiagnostics_MinimumResponseTime' set='(null)'></node>
+        <node name='MaximumResponseTime' rw='0' getc='0' noc='0' nocc='' acl='' type='unsignedInt' get='get_Device_LAN_IPPingDiagnostics_MaximumResponseTime' set='(null)'></node>
+    </node>
+    <node name='TraceRouteDiagnostics' rw='0' type='node'>
+        <node name='DiagnosticsState' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='(null)' set='(null)'></node>
+        <node name='Interface' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='(null)' set='(null)'></node>
+        <node name='Host' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='(null)' set='(null)'>www.google.com</node>
+        <node name='NumberOfTries' rw='1' getc='0' noc='0' nocc='' acl='' type='unsignedInt' get='(null)' set='(null)'>3</node>
+        <node name='Timeout' rw='1' getc='0' noc='0' nocc='' acl='' type='unsignedInt' get='(null)' set='(null)'>5000</node>
+        <node name='DataBlockSize' rw='1' getc='0' noc='0' nocc='' acl='' type='unsignedInt' get='(null)' set='(null)'>38</node>
+        <node name='DSCP' rw='1' getc='0' noc='0' nocc='' acl='' type='unsignedInt' get='(null)' set='(null)'>0</node>
+        <node name='MaxHopCount' rw='1' getc='0' noc='0' nocc='' acl='' type='unsignedInt' get='(null)' set='(null)'>30</node>
+        <node name='ResponseTime' rw='0' getc='0' noc='0' nocc='' acl='' type='unsignedInt' get='(null)' set='(null)'></node>
+        <node name='RouteHopsNumberOfEntries' rw='0' getc='0' noc='0' nocc='' acl='' type='unsignedInt' get='(null)' set='(null)'></node>
+        <node name='RouteHops' rw='0' type='node'>
+            <node name='template' rw='0' type='node'>
+                <node name='HopHost' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='(null)' set='(null)'></node>
+                <node name='HopHostAddress' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='(null)' set='(null)'></node>
+                <node name='HopErrorCode' rw='0' getc='0' noc='0' nocc='' acl='' type='unsignedInt' get='(null)' set='(null)'></node>
+                <node name='HopRTTimes' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='(null)' set='(null)'></node>
+            </node>
+        </node>
+    </node>
+    <node name='LANDevice' rw='1' type='node'>
+        <node name='1' rw='1' type='node'>
+            <node name='LANHostConfigManagement' rw='0' type='node'>
+                <node name='IPInterface' rw='1' type='node'>
+                    <node name='1' rw='1' type='node'>
+                        <node name='IPInterfaceIPAddress' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='set_2_tr069_sh'></node>
+                        <node name='IPInterfaceSubnetMask' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>                      
+                    </node>
+                </node>
+            </node>
+            <node name='LANEthernetInterfaceConfig' rw='0' type='node'>
+                <node name='1' rw='0' type='node'>
+                    <node name='MACAddress' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                </node>
+            </node>
+        </node>
+    </node>
+    <node name='WANDevice' rw='0' type='node'>
+        <node name='1' rw='0' type='node'>
+            <node name='WANCommonInterfaceConfig' rw='0' type='node'>
+                <node name='WANAccessType' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+            </node>
+            <node name='WANConnectionDevice' rw='1' type='node' il='4' nin='2' add='(null)' del='(null)'>
+                <node name='1' rw='1' type='node'>
+                    <node name='WANIPConnection' rw='1' type='node'>
+                        <node name='1' rw='1' type='node'>
+                            <node name='AddressingType' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                            <node name='ExternalIPAddress' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                            <node name='SubnetMask' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                            <node name='DefaultGateway' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                            <node name='DNSServers' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                            <node name='MACAddress' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                        </node>
+                    </node>
+                </node>
+            </node>
+        </node>
+    </node>
+</node>

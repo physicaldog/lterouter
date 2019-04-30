@@ -1,0 +1,15 @@
+#!/bin/bash
+
+. /www/tr069/common.sh
+
+if [ "$ACTION"x = "set"x ];then
+    uci set cwmp.cwmp.user="$VALUE"
+    uci commit cwmp
+else
+    echo 'admin'
+    exit 0
+    _ret=`uci get cwmp.cwmp.user 2>/dev/null`
+    echo $_ret
+fi
+
+exit 0

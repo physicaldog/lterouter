@@ -1,0 +1,103 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Cache-Control" CONTENT="no-cache">
+<meta http-equiv="Pragma" CONTENT="no-cache">
+<link href="css/subpage.css" type="text/css" rel="stylesheet">
+<script language="JavaScript" src="js/jquery-1.10.1.min.js" type="text/JavaScript"></script>
+<script language="JavaScript" src="js/NetMode.js" type="text/JavaScript"></script>
+</head>
+<body>
+
+<form id="logout" name="details" method="post" action="/action/logout">
+</form>
+
+<div id="target" method="post">
+	<input id="localparam" name="localparam" value="" type="hidden">
+	<input id="localurl" name="localurl" value="/overview.asp" type="hidden">
+	<div class="main_content">
+		<div class="content_right_title"> <span>网络模式设置</span></div>
+		<div class="content_right_center">
+             <!--主机配置-->
+             
+            <div class="content_item_title">工作模式</div>
+			<div class="content_item" id="uptime_contentitem" >
+				<div class="content_item_left">模式</div>
+				<div class="content_item_right" id="uptime">
+					<select id="netmode" class="selector">
+					    <option value="1">后路由模式</option>
+					    <option value="2">普通模式</option>
+					</select>
+				</div>
+			</div>
+			<div style="float: right;margin-right: 10%;">
+				<button style="width: 100px;height: 30px;" onclick="settingNetMode()"> 提交 </button>
+			    <!--<button style="width: 100px;height: 30px;" onclick="queryNetMode()"> 查询 </button>-->
+			</div>
+		</div>
+
+		
+		<br>
+		<br>
+		<div class="content_right_center">
+			<div class="content_item_title">源地址转换</div>
+			<div class="content_item" id="uptime_contentitem" >
+				<div class="content_item_left">通信协议</div>
+				<div class="content_item_right" id="uptime">
+					<select id="snat_opt" >
+						<option value="1">不指定</option>
+					    <option value="tcp">TCP</option>
+					    <option value="udp">UDP</option>
+					    
+					</select>
+				</div>
+				<div class="content_item_left">输入地址:端口</div>
+				<div class="content_item_right" id="uptime"><input id="source_ip" value=""/> : <input id="source_port" value=""/></div>
+				<div class="content_item_left">输出地主:端口</div>
+				<div class="content_item_right" id="uptime"><input id="snat_ip" value=""/> : <input id="snat_port" value=""/></div>
+			</div>
+			<div style="float: right;margin-right: 10%;">
+				<button style="width: 100px;height: 30px;" onclick="settingSNAT()"> 提交 </button>
+			</div>
+			<br>
+			<br>
+			<div class="content_item_title">目的地址转换</div>
+			<div class="content_item" id="uptime_contentitem" >
+				<div class="content_item_left">通信协议</div>
+				<div class="content_item_right" id="uptime">
+					<select id="dnat_opt">
+						<option value="1">不指定</option>
+					    <option value="tcp">TCP</option>
+					    <option value="udp">UDP</option>
+					</select>
+				</div>
+				<div class="content_item_left">输入地址:端口</div>
+				<div class="content_item_right" id="uptime"><input id="destination_ip" value=""/> : <input id="destination_port" value=""/></div>
+				<div class="content_item_left">输出地主:端口</div>
+				<div class="content_item_right" id="uptime"><input id="dnat_ip" value=""/> : <input id="dnat_port" value=""/></div>
+			</div>
+			<div style="float: right;margin-right: 10%;">
+				<button style="width: 100px;height: 30px;" onclick="settingDNAT()"> 提交 </button>
+			    
+			</div>
+			<br>
+			<br>
+			<br>
+			<br>
+			<div class="content_item_title">规则查看</div>
+			<div style="float: right;margin-right: 10%;">
+			    <button style="width: 100px;height: 30px;" onclick="query_nat()"> 查询 </button>
+			    <button style="width: 100px;height: 30px;" onclick="clear_nat()"> 清空</button>
+			</div>
+			<div class="reset security_reset">
+						<textarea class="securityLog" id="logText">当前规则
+						</textarea>
+			</div>
+		
+	</div>
+	
+	
+</div>
+
+</body></html>

@@ -1,6 +1,7 @@
 #include"suyi_common.h"
 #define ApnConf "/opt/config/ApnConfig"
 #define Version "/opt/config/Version"
+#define ADDRESS "/opt/config/ADDRESS"
 char netmode;
 char netStatus;
 char simStatus;
@@ -10,6 +11,7 @@ int  rssi = 0;
 int  rsrp = 0;
 int  sinr = 0;
 int  rsrq = 0;
+char  imei[128] = {'\0'};
 int  AutoTime = 0;
 
 
@@ -18,6 +20,14 @@ void sysInfo(Webs *wp)
 	char timeStr[64] = {0};
 	//websWrite(wp,("%s"),buff);
 	struct timeval uptime;
+	char *ptr = NULL;
+    char *city_name;
+    char *county_name;
+    char *location_name;
+	FILE *fp = NULL;
+	char buff[128] = {0};
+	cJSON *Addr = NULL;
+
 	printf("\n********%s********\n",__FUNCTION__);
 	websSetStatus(wp, 200);
 	websWriteHeaders(wp, -1, 0);//参数二需要未-1,否则前端收不到数据
@@ -26,13 +36,33 @@ void sysInfo(Webs *wp)
 
 	uptime = get_uptime();
 	
-	printf("uptime = %lu\n", uptime.tv_sec);
+	//printf("uptime = %lu\n", uptime.tv_sec);
 	//get_timeStr(uptime.tv_sec,timeStr);
 	//printf("timeStr:%s\n",timeStr);
-	websWrite(wp,("{"));
-	websWrite(wp,("\"uptime\":\"%lu\""),uptime.tv_sec);
+	fp = fopen(ADDRESS,"r");
+	if(NULL == fp){
+		printf("文件打开失败\n");
+	}else{
+		fread(buff,1,sizeof(buff),fp);
+		fclose(fp);
+		Addr = cJSON_Parse(buff);
+		if(NULL == Addr){
+			cJSON_GetErrorPtr();
+			websWrite(wp,("查询失败"));
+		}else{
+			city_name = cJSON_GetObjectItem(Addr,"city_name")->valuestring;
+			county_name = cJSON_GetObjectItem(Addr,"county_name")->valuestring;
+			location_name = cJSON_GetObjectItem(Addr,"location_name")->valuestring;
 
-	websWrite(wp,("}"));
+			websWrite(wp,("{"));
+			websWrite(wp,("\"system_addr\":\"%s.%s.%s\","),city_name,county_name,location_name);
+			websWrite(wp,("\"uptime\":\"%lu\""),uptime.tv_sec);
+			websWrite(wp,("}"));
+
+			cJSON_Delete(Addr);
+		}
+	}
+
 	websDone(wp);
 	return;
 }
@@ -113,11 +143,15 @@ void WANStatus(Webs *wp)
 	printf("ndis\n");
 
 	tcflush(fd,TCIOFLUSH);
+	at_send(fd,"at+cgsn\r\n");
+	at_read(fd);
+	printf("cgsn\n");
+
+	tcflush(fd,TCIOFLUSH);
 	//at_send(fd,"at+csq\r\n");
 	at_send(fd,"at^hcsq?\r\n");
-	printf("send_csq\n");
 	at_read(fd);
-	printf("csq\n");
+	printf("hcsq\n");
 
 	getConfig("apn",buff,ApnConf);
 	printf("apn:%s\n",buff);
@@ -170,6 +204,7 @@ void WANStatus(Webs *wp)
 	}
 	websWrite(wp,("\"system_date\":\"%s\","),system_date);
 	websWrite(wp,("\"apn\":\"%s\","),buff);
+	websWrite(wp,("\"imei\":\"%s\","),imei);
 	websWrite(wp,("\"wanip\":\"%s\","),ip);
 	websWrite(wp,("\"wanmask\":\"%s\","),netmask);
 	websWrite(wp,("\"wanmac\":\"%s\""),macaddr);

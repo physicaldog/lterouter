@@ -14,7 +14,7 @@
 #define BUILD_VENDOR pc
 
 /* Define to 1 if the `closedir' function returns void instead of `int'. */
-#define CLOSEDIR_VOID 1
+/* #undef CLOSEDIR_VOID */
 
 /* Define to one of `_getb67', `GETB67', `getb67' for Cray-2 and Cray-YMP
    systems. This function is required for `alloca.c' support on those systems.
@@ -41,7 +41,7 @@
 #define HAVE_BZERO 1
 
 /* Define to 1 if your system has a working `chown' function. */
-/* #undef HAVE_CHOWN */
+#define HAVE_CHOWN 1
 
 /* Define to 1 if you have the <dirent.h> header file, and it defines `DIR'.
    */
@@ -115,7 +115,7 @@
 
 /* Define to 1 if `stat' has the bug that it succeeds when given the
    zero-length file name argument. */
-#define HAVE_STAT_EMPTY_STRING_BUG 1
+/* #undef HAVE_STAT_EMPTY_STRING_BUG */
 
 /* Define to 1 if stdbool.h conforms to C99. */
 #define HAVE_STDBOOL_H 1
@@ -213,13 +213,13 @@
 #define HAVE__BOOL 1
 
 /* cpu type of host environment */
-#define HOST_CPU arm
+#define HOST_CPU i686
 
 /* os of host environment */
 #define HOST_OS linux-gnu
 
 /* cpu vendor of host environment */
-#define HOST_VENDOR unknown
+#define HOST_VENDOR pc
 
 /* Define to 1 if `lstat' dereferences a symlink specified with a trailing
    slash. */

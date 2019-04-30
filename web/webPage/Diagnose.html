@@ -16,7 +16,7 @@
 		<div class="content_right_title"> <span>诊断</span></div>
 		<div class="content_right_center" >
              <!--模块信息-->
-			<div class="content_item_title">ssh远程调试</div>
+	<!--		<div class="content_item_title">ssh远程调试</div>
 			<div class="content_item" id="uptime_contentitem">
 				<div class="content_item_left">开启</div>
 				<div class="content_item_right" id="uptime">
@@ -28,12 +28,33 @@
 				<div class="content_item_right" id="uptime">
 					<input type="radio" id="stop_sshd" name="remote_debug" checked="checked"><br/>
 				</div>
+			</div>-->
+			<div class="content_item_title">业务主站长ping测试</div>
+			<div class="content_item" id="uptime_contentitem">
+				<div class="content_item_left">开启</div>
+				<div class="content_item_right" id="uptime">
+					<input type="radio" id="start_LongPing" name="remote_debug"><br/>
+				</div>
 			</div>
+			<div class="content_item" id="uptime_contentitem">
+				<div class="content_item_left">关闭</div>
+				<div class="content_item_right" id="uptime">
+					<input type="radio" id="stop_LongPing" name="remote_debug"><br/>
+				</div>
+			</div>
+			<div class="content_item" id="uptime_contentitem">
+			<div class="content_item_left">主站IP地址</div>
+				<div class="content_item_right" id="uptime">
+					<input type="text" id="IpAddr"/>一分钟不通自动重启
+				</div>
+			</div>
+			
 			<div class="content_item_title">Ping</div>
 			<div class="content_item" id="uptime_contentitem" >
-				<div class="content_item_left">目的IP地址或域</div>
+				<div class="content_item_left">目的IP地址</div>
 				<div class="content_item_right" id="uptime">
-					<input type="text" id="pingAddr"/></div>
+					<input type="text" id="pingAddr"/>
+				</div>
 			</div>
 <!--			<div class="content_item" id="uptime_contentitem" >
 				<div class="content_item_left">包大小</div>
@@ -68,14 +89,4 @@
 		</div>
 	</div>
 </div>
-
-
-
-
-
-
-
-
-
-
 </body></html>
