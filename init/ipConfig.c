@@ -6,13 +6,68 @@
 #include <net/if.h>
 #include <sys/ioctl.h>
 #include <unistd.h>
+#include "uci.h"
 
 #define LanConf "/opt/config/LanConfig"
 #define ApnConf "/opt/config/ApnConfig"
 #define LAN "eth0"
 #define LANIP "192.168.1.1"
 #define WAN "usb0"
+int get_config(char *package,char *section,char *option,char *buff) 
+{ 
+	struct uci_context *c; 
+	struct uci_ptr p; 
+	char path[64] = {0};
 
+	sprintf(path,"%s.%s.%s",package,section,option); 
+
+	c = uci_alloc_context(); 
+	uci_set_confdir(c, "/opt/config");
+
+	if((UCI_OK == uci_lookup_ptr(c, &p, path, true)) && (p.flags & UCI_LOOKUP_COMPLETE)) { 
+
+		strcpy(buff,p.o->v.string);
+	} 
+	else{
+		printf("%s not found! ",path);
+		uci_perror(c, "\n"); 
+		return -1; 
+	}
+
+	uci_free_context(c); 
+	return(0); 
+}
+
+int set_config(char *package,char *section,char *option,char *value,int commit) 
+{ 
+	struct uci_context *c; 
+	struct uci_ptr p; 
+	char path[64] = {0};
+	int ret = 0;
+
+	sprintf(path,"%s.%s.%s",package,section,option); 
+
+	c = uci_alloc_context(); 
+	uci_set_confdir(c, "/opt/config");
+
+	printf("%s\n",path);
+	if((UCI_OK == uci_lookup_ptr(c, &p, path, true)) && (p.flags & UCI_LOOKUP_COMPLETE)) { 
+		p.value = value;
+		ret = uci_set(c,&p);
+		uci_save(c,p.p);
+		if(commit){
+			uci_commit(c,&p.p,false);
+		}
+	} 
+	else{
+		printf("%s not found!\n",path);
+		uci_perror(c, "\n"); 
+		return -1; 
+	}
+
+	uci_free_context(c); 
+	return(0); 
+}
 int getConfig(char *Config, char *buff, char *ConfigFile)
 {
     FILE *fe = NULL;
@@ -209,21 +264,23 @@ int set_ip(char * ifname, char * ip, char * netmask)
 	//设置ip netmask
 	ret = inet_aton(ip,&((struct sockaddr_in*)&(ifr.ifr_addr))->sin_addr);
 	if(ret == 0){
-		printf("SET IP FAILED!\n");
+		log_msg("SET IP FAILED!\n");
 		return -1;
 	}
 	if(0 != ioctl(inet_sock, SIOCSIFADDR, &ifr)) 
 	{   
-		perror("ioctl error ip");
+		log_msg("ioctl error ip");
+		close(inet_sock);
 		return -1;
 	}
 
 	ret = inet_aton(netmask,&((struct sockaddr_in*)&(ifr.ifr_addr))->sin_addr);
 	if(ret == 0)
-		printf("SET NETMASK FAILED!\n");
+		log_msg("SET NETMASK FAILED!\n");
 	if(0 != ioctl(inet_sock, SIOCSIFNETMASK, &ifr)) 
 	{   
-		perror("ioctl error netmask");
+		log_msg("ioctl error netmask");
+		close(inet_sock);
 		return -1;
 	}
 
@@ -275,13 +332,17 @@ int lanInit()
 	int ret = 0;
 	char* p = NULL;
 	char lanip[32] = {'\0'};
+	char netmask[32] = {'\0'};
 	char lanip_end[32] = {'\0'};
 	char ip[32] = {'\0'};
 
-	ret = getConfig("lanip",lanip,LanConf);
+	//ret = getConfig("lanip",lanip,LanConf);
+	ret = get_config("config","lan","netmask",netmask);
+	ret = get_config("config","lan","ip",lanip);
+	//printf("%s:%s\n",lanip,netmask);
 	
 	if(0 == ret){
-		ret = set_ip(LAN,lanip,"255.255.255.0");
+		ret = set_ip(LAN,lanip,netmask);
 		if(0 != ret){
 			set_ip(LAN,LANIP,"255.255.255.0");
 		}

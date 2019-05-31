@@ -1,0 +1,121 @@
+#!/bin/bash
+
+. /opt/tr069/common.sh
+. /opt/tr069_check.sh
+
+if [ "$ACTION"x = "set"x ];then
+    str=${VALUE},
+    __mode=`echo $str|cut -f 1 -s -d ','`
+
+    if [ "$__mode"x != "router"x ] && [ "$__mode"x != "bridge"x ] && [ "$__mode"x != "nat"x ];then
+        exit 1;
+    fi
+    
+    if [ "$__mode"x = "router"x ];then
+        connection_mode=`echo $str|cut -f 2 -s -d ','`
+        if [ "$connection_mode"x != "static"x ] && [ "$connection_mode"x != "dhcp"x ];then
+            exit 1;
+        fi        
+        
+        if [ "$connection_mode"x = "static"x ];then    
+            wan_ip=`echo $str|cut -f 3 -s -d ','`
+            wan_mask=`echo $str|cut -f 4 -s -d ','`
+            wan_gw=`echo $str|cut -f 5 -s -d ','`
+            dns1=`echo $str|cut -f 6 -s -d ','`
+            dns2=`echo $str|cut -f 7 -s -d ','`
+            
+            if [ "$wan_ip"x = ""x ] || [ "$wan_mask"x = ""x ] || [ "$wan_gw"x = ""x ] || [ "$dns1"x = ""x ] || [ "$dns2"x = ""x ];then
+                exit 1;
+            fi                
+            
+            check_ip $wan_ip
+            if [ $? -ne 0 ];then
+                exit 1;
+            fi            
+            
+            check_ip $wan_gw
+            if [ $? -ne 0 ];then
+                exit 1;
+            fi            
+            
+            check_ip $dns1
+            if [ $? -ne 0 ];then
+                exit 1;
+            fi            
+            
+            check_ip $dns2
+            if [ $? -ne 0 ];then
+                exit 1;
+            fi            
+            
+            check_mask $wan_mask
+            if [ $? -ne 0 ];then
+                exit 1;
+            fi            
+        fi
+    fi
+    
+    uci set lte_param.parameter.network_mode="$__mode"
+    for((i=2;i<=4;i++));do 
+        uci set lte_param.apn${i}.enable=0 2>/dev/null
+    done
+    uci set lte_param.apn1.enable=1 2>/dev/null
+    uci set lte_param.apn1.mntintf=1 2>/dev/null
+    
+    uci set lte_param.apn.gw=1
+    uci set lte_param.apn.display=1
+
+    
+    for((i=1;i<=4;i++));do 
+        uci set network.wan${i}.proto=dhcp
+    done       
+    
+    if [ "$__mode"x != "router"x ];then
+        if [ "$__mode"x = "nat"x ];then
+            uci delete dhcp.lan.ignore 2>/dev/null
+        else
+            uci set dhcp.lan.ignore=1 2>/dev/null
+        fi    
+        
+        uci set zmfw.setting.disabled=0
+        /etc/init.d/firewall enable
+    else
+        uci set dhcp.lan.ignore=1 2>/dev/null
+        uci set network.wan1.mtu="$wan_mtu"        
+        uci set lte_param.parameter.connection_mode="$connection_mode"
+        
+        if [ "$connection_mode"x = "dhcp"x ];then
+            uci set network.wan1.proto=dhcp        
+
+            uci set network.wan1.ipaddr=0.0.0.0
+            uci set network.wan1.netmask=255.255.255.255
+            
+            uci delete network.wan1.gateway
+            uci delete network.wan1.dns
+        else
+            uci set network.wan1.proto=static
+            
+            uci set network.wan1.ipaddr="$wan_ip"
+            uci set network.wan1.netmask="$wan_mask"
+            uci set network.wan1.gateway="$wan_gw"
+            
+            uci delete network.wan1.dns 2>/dev/null
+            uci add_list network.wan1.dns="${dns1}"
+            uci add_list network.wan1.dns="${dns2}"            
+        fi
+        
+        uci set zmfw.setting.disabled=1
+        /etc/init.d/firewall disable
+    fi
+
+    uci commit dhcp
+    uci commit network            
+    uci commit system
+    uci commit lte_param        
+    uci commit zmfw         
+elif [ "$ACTION"x = "get"x ];then
+    mode=`uci get lte_param.parameter.network_mode 2>/dev/null`; 
+    echo $mode;
+fi
+
+exit 0

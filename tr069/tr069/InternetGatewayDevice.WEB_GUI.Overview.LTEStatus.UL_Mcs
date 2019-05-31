@@ -1,0 +1,16 @@
+#!/bin/bash
+
+. /opt/tr069/common.sh
+
+if [ "$ACTION"x = "get"x ];then
+    cpin=`uci get sqns.simcard.state 2>/dev/null`    
+    if [ "$cpin"x != "Ready"x ];then
+        echo '--'
+        exit 0
+    fi      
+        
+    ul_mcs=`uci get sqns.radio.ulMcs 2>/dev/null`
+    echo $ul_mcs
+fi
+
+exit 0

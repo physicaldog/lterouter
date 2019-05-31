@@ -1,0 +1,50 @@
+#!/bin/bash
+
+. /opt/tr069/common.sh
+
+if [ "$ACTION"x = "get"x ];then
+    NETWORK_AVAILABLE=`uci get lte_stat.status.NETWORK_AVAILABLE 2>/dev/null`
+    cpin=`uci get sqns.simcard.state 2>/dev/null`
+    if [ "$cpin"x = "Ready"x ];then
+        cpin=ready
+    elif  [ "$cpin"x = "PIN_needed"x ];then
+        echo 'need pin'            
+        exit 0
+    elif  [ "$cpin"x = "PUK_needed"x ];then
+        echo 'need puk'     
+        exit 0
+    elif  [ "$cpin"x = "Ready_lock"x ];then
+        echo 'sim locked'     
+        exit 0
+    else
+        echo 'USIM not ready'         
+        exit 0      
+    fi
+
+    sysinfo=`uci get sqns.connection.sysinfo 2>/dev/null`
+    if [ "$sysinfo"x = "0"x ] || [ "$sysinfo"x = "2"x ];then
+        sysinfo=$NETWORK_AVAILABLE
+    else
+        sysinfo=`echo $NETWORK_AVAILABLE | sed 's/2,/0,/g'`
+    fi
+
+    if [ "$cpin"x != "ready"x ];then
+        sysinfo=`echo $sysinfo | sed 's/,1,/,255,/g'`
+    fi
+    
+    if [ "$sysinfo"x != "$NETWORK_AVAILABLE"x ];then
+        echo 'no service'         
+        exit 0   
+    fi        
+    
+    cereg=`uci get sqns.connection.mediaState 2>/dev/null`
+    if [ "$cereg"x = "ATTACHED"x ];then
+        echo 'connected'         
+        exit 0   
+    else
+        echo 'disconnected'         
+        exit 0   
+    fi    
+fi
+
+exit 0

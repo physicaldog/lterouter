@@ -17,7 +17,7 @@ void queryDtu(Webs *wp)
 	websSetStatus(wp, 200);
 	websWriteHeaders(wp, -1, 0);//参数二需要未-1,否则前端收不到数据
 	websWriteEndHeaders(wp);
-	
+/*	
     getConfig("mode",mode,DtuConf);
     getConfig("server_ip",server_ip,DtuConf);
     getConfig("server_port",server_port,DtuConf);
@@ -26,6 +26,15 @@ void queryDtu(Webs *wp)
     getConfig("parity",parity,DtuConf);
     getConfig("data_bit",data_bit,DtuConf);
     getConfig("stop_bit",stop_bit,DtuConf);
+	*/
+    get_config("config","dtu","mode",mode);
+    get_config("config","dtu","server_ip",server_ip);
+    get_config("config","dtu","server_port",server_port);
+    get_config("config","dtu","local_port",local_port);
+    get_config("config","dtu","baudrate",baudrate);
+    get_config("config","dtu","parity",parity);
+    get_config("config","dtu","data_bit",data_bit);
+    get_config("config","dtu","stop_bit",stop_bit);
 	printf("mode:%s,server_ip:%s,server_port:%s,local_port:%s,baudrate:%s,parity:%s,data_bit:%s,stop_bit:%s\n",mode,server_ip,server_port,local_port,baudrate,parity,data_bit,stop_bit);
 
     websWrite(wp,("{"));
@@ -68,7 +77,7 @@ void settingDtu(Webs *wp)
 	data_bit = websGetVar(wp,("data_bit"),("8"));
 	stop_bit = websGetVar(wp,("stop_bit"),("1"));
 
-
+/*
 	setConfig("mode",mode,DtuConf);
 	setConfig("server_ip",server_ip,DtuConf);
 	setConfig("server_port",server_port,DtuConf);
@@ -77,6 +86,15 @@ void settingDtu(Webs *wp)
 	setConfig("parity",parity,DtuConf);
 	setConfig("data_bit",data_bit,DtuConf);
 	setConfig("stop_bit",stop_bit,DtuConf);
+	*/
+    set_config("config","dtu","mode",mode,TRUE);
+    set_config("config","dtu","server_ip",server_ip,TRUE);
+    set_config("config","dtu","server_port",server_port,TRUE);
+    set_config("config","dtu","local_port",local_port,TRUE);
+    set_config("config","dtu","baudrate",baudrate,TRUE);
+    set_config("config","dtu","parity",parity,TRUE);
+    set_config("config","dtu","data_bit",data_bit,TRUE);
+    set_config("config","dtu","stop_bit",stop_bit,TRUE);
 
 	printf("mode:%s,server_ip:%s,server_port:%s,local_port:%s,baudrate:%s,parity:%s,data_bit:%s,stop_bit:%s\n",mode,server_ip,server_port,local_port,baudrate,parity,data_bit,stop_bit);
 
@@ -116,7 +134,7 @@ void startDtu(Webs *wp)
 	data_bit = websGetVar(wp,("data_bit"),("8"));
 	stop_bit = websGetVar(wp,("stop_bit"),("1"));
 
-
+/*
 	setConfig("mode",mode,DtuConf);
 	setConfig("server_ip",server_ip,DtuConf);
 	setConfig("server_port",server_port,DtuConf);
@@ -125,7 +143,15 @@ void startDtu(Webs *wp)
 	setConfig("parity",parity,DtuConf);
 	setConfig("data_bit",data_bit,DtuConf);
 	setConfig("stop_bit",stop_bit,DtuConf);
-
+*/
+    set_config("config","dtu","mode",mode,TRUE);
+    set_config("config","dtu","server_ip",server_ip,TRUE);
+    set_config("config","dtu","server_port",server_port,TRUE);
+    set_config("config","dtu","local_port",local_port,TRUE);
+    set_config("config","dtu","baudrate",baudrate,TRUE);
+    set_config("config","dtu","parity",parity,TRUE);
+    set_config("config","dtu","data_bit",data_bit,TRUE);
+    set_config("config","dtu","stop_bit",stop_bit,TRUE);
 	printf("mode:%s,server_ip:%s,server_port:%s,local_port:%s,baudrate:%s,parity:%s,data_bit:%s,stop_bit:%s\n",mode,server_ip,server_port,local_port,baudrate,parity,data_bit,stop_bit);
 
     websWrite(wp,("串口服务已启动"));
@@ -171,7 +197,7 @@ void checkDtuEnable(Webs *wp)
 	}else{
 		websWrite(wp,("\"start\":\"1\","));
 	}
-
+/*
     getConfig("mode",mode,DtuConf);
     getConfig("server_ip",server_ip,DtuConf);
     getConfig("server_port",server_port,DtuConf);
@@ -180,6 +206,15 @@ void checkDtuEnable(Webs *wp)
     getConfig("parity",parity,DtuConf);
     getConfig("data_bit",data_bit,DtuConf);
     getConfig("stop_bit",stop_bit,DtuConf);
+	*/
+    get_config("config","dtu","mode",mode);
+    get_config("config","dtu","server_ip",server_ip);
+    get_config("config","dtu","server_port",server_port);
+    get_config("config","dtu","local_port",local_port);
+    get_config("config","dtu","baudrate",baudrate);
+    get_config("config","dtu","parity",parity);
+    get_config("config","dtu","data_bit",data_bit);
+    get_config("config","dtu","stop_bit",stop_bit);
 	printf("mode:%s,server_ip:%s,server_port:%s,local_port:%s,baudrate:%s,parity:%s,data_bit:%s,stop_bit:%s\n",mode,server_ip,server_port,local_port,baudrate,parity,data_bit,stop_bit);
 
     websWrite(wp,("\"mode\":\"%s\","),mode);

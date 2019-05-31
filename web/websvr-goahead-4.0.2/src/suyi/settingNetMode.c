@@ -166,7 +166,7 @@ void set_dnat(Webs *wp)
 		sprintf(sport,"--dport %s",destination_port);
 	if(*dnat_port != '\0')
 		sprintf(dport,":%s",dnat_port);
-	sprintf(cmd,"iptables -t nat -A PREROUTING -i usb0 %s -s %s %s -j DNAT --to %s%s\n",opt,destination_ip,sport,dnat_ip,dport);
+	sprintf(cmd,"iptables -t nat -A PREROUTING -i usb0 %s -d %s %s -j DNAT --to %s%s\n",opt,destination_ip,sport,dnat_ip,dport);
 
 	fp = fopen("/opt/init/nat.sh","a+");
 	if(fp){

@@ -1,0 +1,10 @@
+#!/bin/bash
+
+. /opt/tr069/common.sh
+
+if [ "$ACTION"x = "get"x ];then
+        time='123455'   
+    echo $time
+fi
+
+exit 0

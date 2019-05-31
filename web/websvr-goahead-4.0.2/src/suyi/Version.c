@@ -10,9 +10,12 @@ void queryVer(Webs *wp)
 	websSetStatus(wp, 200);
 	websWriteHeaders(wp, -1, 0);//参数二需要未-1,否则前端收不到数据
 	websWriteEndHeaders(wp);
-    getConfig("productName",pName,Version);
-    getConfig("productModle",pModle,Version);
-    getConfig("softVersion",sVer,Version);
+    //getConfig("productName",pName,Version);
+    //getConfig("productModle",pModle,Version);
+    //getConfig("softVersion",sVer,Version);
+    get_config(pName,"productName","system","config");
+    get_config(pModle,"productModle","system","config");
+    get_config(sVer,"softVersion","system","config");
     printf("pName:%s,pModle:%s,sVer:%s\n",pName,pModle,sVer);
 
     websWrite(wp,("{"));

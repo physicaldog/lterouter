@@ -1,16 +1,24 @@
 //初始化加载
 $(function(){
-	sysInfo();
+//	alert(getCookie2('-goahead-session-').length);
+//	alert("::webs.session::031b14c74203c539b59ccfa10142bfda".length);
+    if(getCookie2('-goahead-session-').length>10){
+    sysInfo();
 	doWork();
 	deviceInfo();
-
 	setInterval('doWork()',3000);
+    }else{
+    parent.location.reload();
+    }
+	
 });
 function doWork(){
 	//sysInfo();
 	WANStatus();
 	LANStatus();
 }
+
+
 //系统信息
 var totalTime = 0;
 function sysInfo(){
@@ -35,7 +43,6 @@ function jisuan(){
 	siteTime(totalTime)
 }
 function siteTime(diff){
-//      window.setTimeout("siteTime()", 1000);
         var seconds = 1;
         var minutes = seconds * 60;
         var hours = minutes * 60;
@@ -57,7 +64,6 @@ function deviceInfo(){
 		async:true,
 		dataType:'json',
 		success:function(data){
-			
 			$('#productName').text(data.pName);
 			$('#productModle').text(data.pModle);
 			$('#softVersion').text(data.sVer);

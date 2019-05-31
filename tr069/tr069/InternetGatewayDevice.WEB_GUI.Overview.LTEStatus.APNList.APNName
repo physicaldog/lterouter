@@ -1,0 +1,15 @@
+#!/bin/bash
+
+. /opt/tr069/common.sh
+
+if [ "$INSTANCE"x = ""x ];then
+    exit 1
+fi
+
+INSTANCE=`expr $INSTANCE + 1`
+if [ "$ACTION"x = "get"x ];then
+    name=`uci get lte_param.apn${INSTANCE}.name 2>/dev/null` 
+    echo $name;
+fi
+
+exit 0

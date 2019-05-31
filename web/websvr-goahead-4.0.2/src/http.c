@@ -402,6 +402,11 @@ PUBLIC int websOpen(cchar *documents, cchar *routeFile)
 	websDefineAction("queryIMSI", queryIMSI);
 	websDefineAction("settingAPN", settingAPN);
 	websDefineAction("queryAPN", queryAPN);
+	websDefineAction("settingAcs_url", settingAcs_url);
+	websDefineAction("checkAcsEnable", checkAcsEnable);
+	websDefineAction("acs_enable", acs_enable);
+	websDefineAction("acs_disable", acs_disable);
+	websDefineAction("queryAcs_url", queryAcs_url);
 /*setingNetMode*/
 	websDefineAction("checkNetMode", checkNetMode);
 	websDefineAction("set_mode_1", set_mode_1);

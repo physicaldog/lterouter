@@ -1,0 +1,11 @@
+#!/bin/bash
+
+. /opt/tr069/common.sh
+
+if [ "$ACTION"x = "set"x ];then
+    exit 1
+elif [ "$ACTION"x = "get"x ];then
+    version=M-V-1001
+    echo $version
+fi
+exit 0

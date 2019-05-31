@@ -164,7 +164,8 @@ void getRebootTime(Webs *wp)
 	websWriteHeaders(wp, -1, 0);//参数二需要未-1,否则前端收不到数据
 	websWriteEndHeaders(wp);
 
-	getConfig("RebootTime",buff,RebootTime);
+	//getConfig("RebootTime",buff,RebootTime);
+	get_config("config","system","reboot_interval",buff);
 
     websWrite(wp,("%s"),buff);
 	websDone(wp);
@@ -181,7 +182,8 @@ void setRebootTime(Webs *wp)
 
 	time = websGetVar(wp,("time"),(""));
 	
-	setConfig("RebootTime",time,RebootTime);
+	//setConfig("RebootTime",time,RebootTime);
+	set_config("config","system","reboot_interval",time,TRUE);
 
     websWrite(wp,("设置完成"));
 	websDone(wp);

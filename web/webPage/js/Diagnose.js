@@ -1,13 +1,17 @@
+
 //初始化加载
 $(function(){
-	check_LongPing();
+    if(getCookie2('-goahead-session-').length<10){
+    parent.location.reload()
+    }else{
+    	check_LongPing();
 	checkRadio();
 	cleanLog();
 	//stop_LongPing();
 	//start_LongPing();
 	
 	//setInterval('getPingLog()',1000);
-	
+    }
 });
 
 

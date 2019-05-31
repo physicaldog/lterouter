@@ -1,0 +1,10 @@
+#!/bin/bash
+
+. /opt/tr069/common.sh
+
+if [ "$ACTION"x = "get"x ];then
+    cinr1=`uci -c /opt/config get tr069.radio.CINR1 2>/dev/null`;
+    echo $cinr1
+fi
+
+exit 0

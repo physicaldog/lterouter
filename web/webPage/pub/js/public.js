@@ -59,3 +59,7 @@ $(function(){
 	});
 })
 // left.html 的切换节点  JS end
+
+function gotoPage(obj){
+	$.
+}

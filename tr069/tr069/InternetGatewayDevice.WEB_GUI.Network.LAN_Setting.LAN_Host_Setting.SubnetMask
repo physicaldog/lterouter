@@ -1,0 +1,30 @@
+#!/bin/bash
+
+. /opt/tr069/common.sh
+
+if [ "$ACTION"x = "set"x ];then
+    check_mask $VALUE
+    if [ $? -ne 0 ];then
+        exit 1;
+    fi
+    
+    lanIp=`uci get network.lan.ipaddr 2>/dev/null`
+    str=`ifconfig $WAN_IF`
+    wanIp=`expr "$str" : '.*inet addr:[[:space:]]*\([0-9.]*\).*'`
+    wanMask=`expr "$str" : '.*Mask:[[:space:]]*\([0-9.]*\).*'`
+    
+    if [ "$wanIp"x != ""x ] && [ "$wanMask"x != ""x ] ; then
+        in_samenetsegment $lanIp $VALUE $wanIp $wanMask
+        if [ $? -eq 0 ];then
+            exit 1;
+        fi
+    fi
+    
+    uci set network.lan.netmask="$VALUE"
+    uci commit network
+else
+    mask='255.255.255.0'
+    echo $mask
+fi
+
+exit 0

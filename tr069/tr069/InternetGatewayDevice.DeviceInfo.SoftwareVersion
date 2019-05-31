@@ -1,0 +1,12 @@
+#!/bin/bash
+
+. /opt/tr069/common.sh 
+
+if [ "$ACTION"x = "get"x ];then
+	str=`sed -n 3p /opt/config/Version`
+	softVersion=`expr "$str" : '.*softVersion:[[:space:]]*\([a-zA-Z0-9/_.]*\).*'`
+	echo $softVersion
+	
+fi
+    
+exit 0

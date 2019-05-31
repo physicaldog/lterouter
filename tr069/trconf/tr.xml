@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node name='InternetGatewayDevice' rw='0' type='node'>
+    <node name='LANDeviceNumberOfEntries' rw='0' getc='0' noc='0' nocc='' acl='' type='unsignedInt' get='(null)' set='(null)'>1</node>
+    <node name='WANDeviceNumberOfEntries' rw='0' getc='0' noc='0' nocc='' acl='' type='unsignedInt' get='(null)' set='(null)'>1</node>
+    <node name='DeviceSummary' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='(null)' set='(null)'>WAN ROUTER BASE LTE</node>
+    <node name='DeviceInfo' rw='0' type='node'>
+        <node name='ModelName' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+        <node name='SerialNumber' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+        <node name='HardwareVersion' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'>1.0</node>
+        <node name='SoftwareVersion' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+        <node name='ModemFirmwareVersion' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+        <node name='SpecVersion' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='(null)' set='(null)'>1.0</node>
+        <node name='ProvisioningCode' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='(null)' set='(null)'>WKSS</node>
+        <node name='UpTime' rw='0' getc='0' noc='0' nocc='' acl='' type='unsignedInt' get='get_from_tr069_sh' set='(null)'></node>
+        <node name='FirstUseDate' rw='0' getc='0' noc='0' nocc='' acl='' type='dateTime' get='(null)' set='(null)'></node>
+        <node name='VendorConfigFileNumberOfEntries' rw='0' getc='0' noc='0' nocc='' acl='' type='unsignedInt' get='(null)' set='(null)'>1</node>
+	<node name='DeviceLog' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='(null)' set='(null)'>log</node>
+	<node name='Manufacturer' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='(null)' set='(null)'>LTE</node>
+        <node name='ManufacturerOUI' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'>001261</node>
+        <node name='Description' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='(null)' set='(null)'>LTE</node>
+        <node name='ProductClass' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'>LTE Gateway</node>
+        <node name='NickName' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='set_2_tr069_sh'></node>
+    </node>
+    <node name='ManagementServer' rw='0' type='node'>
+        <node name='EnableCWMP' rw='1' getc='0' noc='0' nocc='' acl='' type='boolean' get='(null)' set='(null)'>True</node>
+        <node name='URL' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='set_2_tr069_sh'></node>
+        <node name='Username' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='set_2_tr069_sh'></node>
+        <node name='Password' rw='1' getc='1' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='set_2_tr069_sh'></node>
+        <node name='PeriodicInformEnable' rw='1' getc='0' noc='0' nocc='' acl='' type='boolean' get='get_from_tr069_sh' set='set_2_tr069_sh'>True</node>
+        <node name='PeriodicInformInterval' rw='1' getc='0' noc='0' nocc='' acl='' type='unsignedInt' get='get_from_tr069_sh' set='set_2_tr069_sh'>1800</node>
+        <node name='PeriodicInformTime' rw='1' getc='0' noc='0' nocc='' acl='' type='dateTime' get='(null)' set='(null)'>0000-00-00T00:00:00Z</node>
+        <node name='ParameterKey' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='(null)' set='(null)'>unsetCommandKey</node>
+        <node name='ConnectionRequestURL' rw='0' getc='0' noc='2' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'>http://192.168.1.1:8080/</node>
+        <node name='ConnectionRequestUsername' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='set_2_tr069_sh'></node>
+        <node name='ConnectionRequestPassword' rw='1' getc='1' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='set_2_tr069_sh'></node>
+    </node>
+    <node name='Time' rw='0' type='node'>
+        <node name='NTPServer1' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='set_2_tr069_sh'>172.16.34.52</node>
+        <node name='NTPServer2' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='set_2_tr069_sh'>10.0.0.4</node>
+    </node>
+    <node name='DownloadDiagnostics' rw='0' type='node'>
+        <node name='DiagnosticsState' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='(null)' set='(null)'></node>
+        <node name='Interface' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='(null)' set='(null)'></node>
+        <node name='DownloadURL' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='(null)' set='(null)'></node>
+        <node name='DSCP' rw='1' getc='0' noc='0' nocc='' acl='' type='unsignedInt' get='(null)' set='(null)'></node>
+        <node name='EthernetPriority' rw='1' getc='0' noc='0' nocc='' acl='' type='unsignedInt' get='(null)' set='(null)'></node>
+        <node name='ROMTime' rw='0' getc='0' noc='0' nocc='' acl='' type='dateTime' get='(null)' set='(null)'></node>
+        <node name='BOMTime' rw='0' getc='0' noc='0' nocc='' acl='' type='dateTime' get='(null)' set='(null)'></node>
+        <node name='EOMTime' rw='0' getc='0' noc='0' nocc='' acl='' type='dateTime' get='(null)' set='(null)'></node>
+        <node name='TestBytesReceived' rw='0' getc='0' noc='0' nocc='' acl='' type='unsignedInt' get='(null)' set='(null)'></node>
+        <node name='TotalBytesReceived' rw='0' getc='0' noc='0' nocc='' acl='' type='unsignedInt' get='(null)' set='(null)'></node>
+        <node name='TCPOpenRequestTime' rw='0' getc='0' noc='0' nocc='' acl='' type='dateTime' get='(null)' set='(null)'></node>
+        <node name='TCPOpenResponseTime' rw='0' getc='0' noc='0' nocc='' acl='' type='dateTime' get='(null)' set='(null)'></node>
+    </node>
+    <node name='UploadDiagnostics' rw='0' type='node'>
+        <node name='DiagnosticsState' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='(null)' set='(null)'></node>
+        <node name='Interface' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='(null)' set='(null)'></node>
+        <node name='UploadURL' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='(null)' set='(null)'></node>
+        <node name='DSCP' rw='1' getc='0' noc='0' nocc='' acl='' type='unsignedInt' get='(null)' set='(null)'></node>
+        <node name='EthernetPriority' rw='1' getc='0' noc='0' nocc='' acl='' type='unsignedInt' get='(null)' set='(null)'></node>
+        <node name='TestFileLength' rw='1' getc='0' noc='0' nocc='' acl='' type='unsignedInt' get='(null)' set='(null)'></node>
+        <node name='ROMTime' rw='0' getc='0' noc='0' nocc='' acl='' type='dateTime' get='(null)' set='(null)'></node>
+        <node name='BOMTime' rw='0' getc='0' noc='0' nocc='' acl='' type='dateTime' get='(null)' set='(null)'></node>
+        <node name='EOMTime' rw='0' getc='0' noc='0' nocc='' acl='' type='dateTime' get='(null)' set='(null)'></node>
+        <node name='TotalBytesSent' rw='0' getc='0' noc='0' nocc='' acl='' type='unsignedInt' get='(null)' set='(null)'></node>
+        <node name='TCPOpenRequestTime' rw='0' getc='0' noc='0' nocc='' acl='' type='dateTime' get='(null)' set='(null)'></node>
+        <node name='TCPOpenResponseTime' rw='0' getc='0' noc='0' nocc='' acl='' type='dateTime' get='(null)' set='(null)'></node>
+    </node>    
+    <node name='IPPingDiagnostics' rw='0' type='node'>
+        <node name='DiagnosticsState' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='(null)' set='(null)'>Complete</node>
+        <node name='Interface' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='(null)' set='(null)'></node>
+        <node name='Host' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='(null)' set='(null)'>www.google.com</node>
+        <node name='NumberOfRepetitions' rw='1' getc='0' noc='0' nocc='' acl='' type='unsignedInt' get='(null)' set='(null)'>4</node>
+        <node name='Timeout' rw='1' getc='0' noc='0' nocc='' acl='' type='unsignedInt' get='(null)' set='(null)'>10000</node>
+        <node name='DataBlockSize' rw='1' getc='0' noc='0' nocc='' acl='' type='unsignedInt' get='(null)' set='(null)'>56</node>
+        <node name='DSCP' rw='1' getc='0' noc='0' nocc='' acl='' type='unsignedInt' get='(null)' set='(null)'>0</node>
+        <node name='SuccessCount' rw='0' getc='0' noc='0' nocc='' acl='' type='unsignedInt' get='get_Device_LAN_IPPingDiagnostics_SuccessCount' set='(null)'></node>
+        <node name='FailureCount' rw='0' getc='0' noc='0' nocc='' acl='' type='unsignedInt' get='get_Device_LAN_IPPingDiagnostics_FailureCount' set='(null)'></node>
+        <node name='AverageResponseTime' rw='0' getc='0' noc='0' nocc='' acl='' type='unsignedInt' get='get_Device_LAN_IPPingDiagnostics_AverageResponseTime' set='(null)'></node>
+        <node name='MinimumResponseTime' rw='0' getc='0' noc='0' nocc='' acl='' type='unsignedInt' get='get_Device_LAN_IPPingDiagnostics_MinimumResponseTime' set='(null)'></node>
+        <node name='MaximumResponseTime' rw='0' getc='0' noc='0' nocc='' acl='' type='unsignedInt' get='get_Device_LAN_IPPingDiagnostics_MaximumResponseTime' set='(null)'></node>
+    </node>
+    <node name='TraceRouteDiagnostics' rw='0' type='node'>
+        <node name='DiagnosticsState' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='(null)' set='(null)'></node>
+        <node name='Interface' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='(null)' set='(null)'></node>
+        <node name='Host' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='(null)' set='(null)'>www.google.com</node>
+        <node name='NumberOfTries' rw='1' getc='0' noc='0' nocc='' acl='' type='unsignedInt' get='(null)' set='(null)'>3</node>
+        <node name='Timeout' rw='1' getc='0' noc='0' nocc='' acl='' type='unsignedInt' get='(null)' set='(null)'>5000</node>
+        <node name='DataBlockSize' rw='1' getc='0' noc='0' nocc='' acl='' type='unsignedInt' get='(null)' set='(null)'>38</node>
+        <node name='DSCP' rw='1' getc='0' noc='0' nocc='' acl='' type='unsignedInt' get='(null)' set='(null)'>0</node>
+        <node name='MaxHopCount' rw='1' getc='0' noc='0' nocc='' acl='' type='unsignedInt' get='(null)' set='(null)'>30</node>
+        <node name='ResponseTime' rw='0' getc='0' noc='0' nocc='' acl='' type='unsignedInt' get='(null)' set='(null)'></node>
+        <node name='RouteHopsNumberOfEntries' rw='0' getc='0' noc='0' nocc='' acl='' type='unsignedInt' get='(null)' set='(null)'></node>
+        <node name='RouteHops' rw='0' type='node'>
+            <node name='template' rw='0' type='node'>
+                <node name='HopHost' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='(null)' set='(null)'></node>
+                <node name='HopHostAddress' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='(null)' set='(null)'></node>
+                <node name='HopErrorCode' rw='0' getc='0' noc='0' nocc='' acl='' type='unsignedInt' get='(null)' set='(null)'></node>
+                <node name='HopRTTimes' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='(null)' set='(null)'></node>
+            </node>
+        </node>
+    </node>
+    <node name='LANDevice' rw='1' type='node'>
+        <node name='1' rw='1' type='node'>
+            <node name='LANHostConfigManagement' rw='0' type='node'>
+                <node name='IPInterface' rw='1' type='node'>
+                    <node name='1' rw='1' type='node'>
+                        <node name='IPInterfaceIPAddress' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='set_2_tr069_sh'></node>
+                        <node name='IPInterfaceSubnetMask' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>                      
+                    </node>
+                </node>
+            </node>
+            <node name='LANEthernetInterfaceConfig' rw='0' type='node'>
+                <node name='1' rw='0' type='node'>
+                    <node name='MACAddress' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                </node>
+            </node>
+        </node>
+    </node>
+    <node name='WANDevice' rw='0' type='node'>
+        <node name='1' rw='0' type='node'>
+            <node name='WANCommonInterfaceConfig' rw='0' type='node'>
+                <node name='WANAccessType' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+            </node>
+            <node name='WANConnectionDevice' rw='1' type='node' il='4' nin='2' add='(null)' del='(null)'>
+                <node name='1' rw='1' type='node'>
+                    <node name='WANIPConnection' rw='1' type='node'>
+                        <node name='1' rw='1' type='node'>
+                            <node name='AddressingType' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                            <node name='ExternalIPAddress' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                            <node name='SubnetMask' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                            <node name='DefaultGateway' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                            <node name='DNSServers' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                            <node name='MACAddress' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                        </node>
+                    </node>
+                </node>
+            </node>
+        </node>
+    </node>
+	<node name='WEB_GUI' rw='0' type='node'>
+		<node name='Overview' rw='0' type='node'>
+			<node name='SystemInfo' rw='0' type='node'>
+   			<node name='RunTime' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+				<node name='ConnectionTime' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+				<node name='DeviceUpTime' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+    		</node>
+			<node name='DeviceInfo' rw='0' type='node'>
+				<node name='Cloudkey' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='set_2_tr069_sh'></node>  
+                <node name='NickName' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='set_2_tr069_sh'></node>
+				<node name='IMEI' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>  
+                <node name='IMSI' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+			</node>
+			<node name='VersionInfo' rw='0' type='node'>
+    			<node name='SoftwareVersion' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+    		</node>
+			<node name='4GStatus' rw='0' type='node'>
+				<node name='USIMCardStatus' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+				<node name='Status' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+				<node name='RSSI' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+				<node name='RSRP' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+				<node name='RSRQ' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+				<node name='Operator' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+				<node name='Duplex' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+			</node>
+    		<node name='LANStatus' rw='0' type='node'>
+    			<node name='MacAddress' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+    			<node name='IpAddress' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+    			<node name='SubnetMask' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+    		</node>
+			<node name='ThoughputStatistics' rw='0' type='node'>
+              <node name='apn' rw='0' type='node'>
+                <node name='4' rw='0' type='node'>
+                  <node name='recvTotTpt' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                  <node name='recvPktNo' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                  <node name='recvErrNo' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                  <node name='recvDropPktNo' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                  <node name='sendTotTpt' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                  <node name='sendPktNo' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                  <node name='sendErrNo' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                  <node name='sendDropPktNo' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                </node>
+                <node name='3' rw='0' type='node'>
+                  <node name='recvTotTpt' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                  <node name='recvPktNo' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                  <node name='recvErrNo' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                  <node name='recvDropPktNo' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                  <node name='sendTotTpt' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                  <node name='sendPktNo' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                  <node name='sendErrNo' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                  <node name='sendDropPktNo' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                </node>
+                <node name='2' rw='0' type='node'>
+                  <node name='recvTotTpt' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                  <node name='recvPktNo' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                  <node name='recvErrNo' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                  <node name='recvDropPktNo' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                  <node name='sendTotTpt' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                  <node name='sendPktNo' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                  <node name='sendErrNo' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                  <node name='sendDropPktNo' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                </node>
+                <node name='1' rw='0' type='node'>
+                  <node name='recvTotTpt' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                  <node name='recvPktNo' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                  <node name='recvErrNo' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                  <node name='recvDropPktNo' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                  <node name='sendTotTpt' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                  <node name='sendPktNo' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                  <node name='sendErrNo' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                  <node name='sendDropPktNo' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                </node>                 
+              </node>
+			</node>
+			<node name='LTEStatus' rw='0' type='node'>
+				<node name='Operator' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+				<node name='Mode' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+				<node name='Status' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+				<node name='DL_Mcs' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>  
+                <node name='UL_Mcs' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node> 
+                <node name='DnsServer' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>                             
+				<node name='SignalStrength' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                <node name='DL_DataRate_Current' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                <node name='DL_DataRate_Max' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                <node name='DL_DataRate_Min' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                <node name='UL_DataRate_Current' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                <node name='UL_DataRate_Max' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                <node name='UL_DataRate_Min' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                <node name='APNList' rw='0' type='node'>
+                    <node name='4' rw='0' type='node'>
+                        <node name='SubnetMask' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                        <node name='IPAddress' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                        <node name='Status' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                        <node name='APNName' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                    </node>
+                    <node name='3' rw='0' type='node'>
+                        <node name='SubnetMask' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                        <node name='IPAddress' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                        <node name='Status' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                        <node name='APNName' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                    </node>
+                    <node name='2' rw='0' type='node'>
+                        <node name='SubnetMask' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                        <node name='IPAddress' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                        <node name='Status' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                        <node name='APNName' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                    </node>
+                    <node name='1' rw='0' type='node'>
+                        <node name='SubnetMask' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                        <node name='IPAddress' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                        <node name='Status' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                        <node name='APNName' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                    </node>
+                </node>
+            </node>					
+		</node>
+		<node name='System' rw='0' type='node'>
+				<node name='WebSetting' rw='0' type='node'>
+					<node name='RefreshTime' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='set_2_tr069_sh'></node>
+					<node name='SessionTimeOut' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='set_2_tr069_sh'></node>
+					<node name='HttpEnable' rw='1' getc='0' noc='0' nocc='' acl='' type='boolean' get='get_from_tr069_sh' set='set_2_tr069_sh'></node>
+					<node name='HttpsEnable' rw='1' getc='0' noc='0' nocc='' acl='' type='boolean' get='get_from_tr069_sh' set='set_2_tr069_sh'></node>
+					<node name='HttpPort' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='set_2_tr069_sh'></node>
+					<node name='HttpsPort' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='set_2_tr069_sh'></node>
+					<node name='HttpsWanEnable' rw='1' getc='0' noc='0' nocc='' acl='' type='boolean' get='get_from_tr069_sh' set='set_2_tr069_sh'></node>
+            </node>
+		</node>
+		<node name='Network' rw='0' type='node'>			
+			<node name='Network_Mode' rw='0' type='node'>
+              <node name='Mode' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='set_2_tr069_sh'></node>
+			  <node name='WANIPAddress' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='set_2_tr069_sh'></node> 			  
+			</node>
+			<node name='ScanMode' rw='0' type='node'>
+                <node name='Settings' rw='0' type='node'>
+                    <node name='ScanMode' rw='1' getc='0' noc='0' nocc='' acl='' type='string[1:32]' get='get_from_tr069_sh' set='set_2_tr069_sh'></node>
+                    <node name='FreqPreferred' rw='1' getc='0' noc='0' nocc='' acl='' type='string[1:2048]' get='get_from_tr069_sh' set='set_2_tr069_sh'></node>
+                    <node name='PCILock' rw='1' getc='0' noc='0' nocc='' acl='' type='string[1:2048]' get='get_from_tr069_sh' set='set_2_tr069_sh'></node>
+                </node>
+            </node>
+			<node name='LAN_Setting' rw='0' type='node'>
+                <node name='LAN_Host_Setting' rw='0' type='node'>
+                    <node name='IPAddress' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='set_2_tr069_sh'></node>
+                </node>
+            </node>
+            <node name='LTE_Setting' rw='0' type='node'>
+		<node name='Setting' rw='0' type='node'>
+                    <node name='Status' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                    <node name='Scan_Mode' rw='1' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='set_2_tr069_sh'></node>
+		</node>	
+		<node name='ModuleInfo' rw='0' type='node'>
+                    <node name='Version' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                    <node name='Model' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                    <node name='Imsi' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                    <node name='Imei' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                </node>
+                <node name='Status' rw='0' type='node'>
+                    <node name='DL_Frequency' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                    <node name='UL_Frequency' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                    <node name='RSRP0' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+		    <node name='RSRP' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                    <node name='RSRP1' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                    <node name='RSRQ' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                    <node name='SINR' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                    <node name='CINR0' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                    <node name='CINR1' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                    <node name='Cell_ID' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                    <node name='RSSI' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+		    <node name='DL_Mcs' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                    <node name='UL_Mcs' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+	            <node name='SINR0' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+	            <node name='SINR1' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                    <node name='Bandwidth' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                    <node name='TX_Power' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                    <node name='PCI' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                    <node name='eNB_ID' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                    <node name='MCC' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                    <node name='MNC' rw='0' getc='0' noc='0' nocc='' acl='' type='string' get='get_from_tr069_sh' set='(null)'></node>
+                </node>
+            </node>
+	</node>
+    </node>
+</node>

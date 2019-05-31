@@ -6,7 +6,7 @@ else
 CFLAGS = -c
 endif
 
-LDFLAGS  = -lpthread
+LDFLAGS  = -lpthread -lubox -luci
 
 EXE = lteRouter
 OBJ = init.o at.o ipConfig.o log.o

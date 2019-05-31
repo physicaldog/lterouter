@@ -1,7 +1,12 @@
 //初始化加载
 $(function(){
-	VersionInfo();
+	if(getCookie2('-goahead-session-').length<10){
+    parent.location.reload()
+    }else{
+    	VersionInfo();
+    }
 });
+
 
 
 //版本信息--获取

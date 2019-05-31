@@ -1,4 +1,5 @@
 #include "suyi_common.h"
+#include "./uci.h" 
 extern char netmode;
 extern char netStatus;
 extern char simStatus;
@@ -175,6 +176,61 @@ int set_ip(char * ifname, char * ip, char * netmask)
         close(inet_sock);
 
         return 0;
+}
+int get_config(char *package,char *section,char *option,char *buff) 
+{ 
+	struct uci_context *c; 
+	struct uci_ptr p; 
+	char path[64] = {0};
+
+	sprintf(path,"%s.%s.%s",package,section,option); 
+
+	c = uci_alloc_context(); 
+	uci_set_confdir(c, "/opt/config");
+
+	if((UCI_OK == uci_lookup_ptr(c, &p, path, true)) && (p.flags & UCI_LOOKUP_COMPLETE)) { 
+
+		strcpy(buff,p.o->v.string);
+	} 
+	else{
+		printf("%s not found! ",path);
+		uci_perror(c, "\n"); 
+		return -1; 
+	}
+
+	uci_free_context(c); 
+	return(0); 
+}
+
+int set_config(char *package,char *section,char *option,char *value,int commit) 
+{ 
+	struct uci_context *c; 
+	struct uci_ptr p; 
+	char path[64] = {0};
+	int ret = 0;
+
+	sprintf(path,"%s.%s.%s",package,section,option); 
+
+	c = uci_alloc_context(); 
+	uci_set_confdir(c, "/opt/config");
+
+	//printf("%s\n",path);
+	if((UCI_OK == uci_lookup_ptr(c, &p, path, true))) { 
+		p.value = value;
+		ret = uci_set(c,&p);
+		uci_save(c,p.p);
+		if(commit){
+			uci_commit(c,&p.p,false);
+		}
+	} 
+	else{
+		printf("%s not found!\n",path);
+		uci_perror(c, "\n"); 
+		return -1; 
+	}
+
+	uci_free_context(c); 
+	return(0); 
 }
 
 int getConfig(char *Config, char *buff, char *ConfigFile)

@@ -1,8 +1,12 @@
 //初始化加载
 $(function() {
-	checkSecurityEnable();
+	if(getCookie2('-goahead-session-').length<10){
+    parent.location.reload()
+    }else{
+    	checkSecurityEnable();
 	checkRadio();
 	setInterval("getSecurityLog()", 3000);
+    }
 });
 
 function checkSecurityEnable() {

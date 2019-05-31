@@ -1,0 +1,18 @@
+#!/bin/bash
+
+. /opt/tr069/common.sh
+
+NETWORK_MODE=`uci -c /opt/config get tr069.parameter.network_mode 2>/dev/null`
+if [ "$NETWORK_MODE"x = "bridge"x ] || [ "$NETWORK_MODE"x = "nat"x ];then
+    exit 0
+fi
+
+if [ "$ACTION"x = "get"x ];then
+        str=`ifconfig $WAN_USB`
+        ip=`expr "$str" : '.*inet addr:[[:space:]]*\([0-9.]*\).*'`
+    
+    echo $ip
+
+fi
+
+exit 0

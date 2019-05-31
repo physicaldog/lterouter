@@ -1,7 +1,11 @@
 //初始化加载
 $(function() {
-	checkNetMode();
+	if(getCookie2('-goahead-session-').length<10){
+    parent.location.reload()
+    }else{
+    	checkNetMode();
 	//setInterval('getDtuLog()',3000);
+    }
 });
 
 function checkNetMode() {

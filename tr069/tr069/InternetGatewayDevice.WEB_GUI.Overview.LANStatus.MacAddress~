@@ -1,0 +1,12 @@
+#!/bin/bash
+
+. /opt/tr069/common.sh
+
+if [ "$ACTION"x = "set"x ];then
+    exit 1
+else
+    str=`ifconfig $LAN_IF`
+    mac=`expr "$str" : '.*HWaddr[[:space:]]*\([a-zA-Z0-9:]*\).*'`
+    echo $mac 
+fi
+exit 0

@@ -1,0 +1,8 @@
+#!/bin/bash
+
+. /opt/tr069/common.sh
+
+if [ "$ACTION"x = "get"x ];then
+	echo '02:1E:10:1F:00:00'
+fi
+exit 0

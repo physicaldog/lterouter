@@ -1,0 +1,11 @@
+#!/bin/bash
+
+. /opt/tr069/common.sh
+
+if [ "$ACTION"x = "set"x ];then
+    exit 1
+else
+    _ret='192.168.1.1'
+    echo $_ret
+fi
+exit 0

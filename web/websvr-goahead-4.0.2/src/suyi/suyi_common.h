@@ -11,6 +11,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <stdio.h>
+//#include <stdbool.h>
 #include <string.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
@@ -37,6 +38,8 @@
 #define DAY 24*3600
 #define HOUR 3600
 #define MIN 60
+#define TRUE 1
+#define FALSE 0
 
 /*Account*/
 void settingPW(Webs *wp);
@@ -70,6 +73,12 @@ void queryDtu(Webs *wp);
 void queryIMSI(Webs *wp);
 void queryAPN(Webs *wp);
 void settingAPN(Webs *wp);
+void queryAcs_url(Webs *wp);
+void settingAcs_url(Webs *wp);
+void checkAcsEnable(Webs *wp);
+void acs_enable(Webs *wp);
+void acs_disable(Webs *wp);
+
 /*settingNetMode*/
 void checkNetMode(Webs *wp);
 void set_mode_1(Webs *wp);
@@ -119,5 +128,7 @@ int set_ip(char * ifname, char * ip, char * netmask);
 int getConfig(char *Config, char *buff,char *ConfigFile);
 int setConfig(char *Config, char *content,char *ConfigFile);
 int openDev(char *Dev);
+int get_config(char *package,char *section,char *option,char *buff); 
+int set_config(char *package,char *section,char *option,char *value,int commit); 
 #endif
 #endif

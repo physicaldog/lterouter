@@ -5,6 +5,7 @@
 <meta http-equiv="Pragma" CONTENT="no-cache">
 <link href="css/subpage.css" type="text/css" rel="stylesheet">
 <script language="JavaScript" src="js/jquery-1.10.1.min.js" type="text/JavaScript"></script>
+<script language="JavaScript" src="js/getCookies.js" type="text/JavaScript"></script>
 <script language="JavaScript" src="js/settingLTE.js" type="text/JavaScript"></script>
 </head>
 <body>
@@ -35,21 +36,40 @@
 					<input type="button" style="width: 100px;height: 30px;"onclick="SettingAPN()" value="提交"/> 
 			        <input type="button" style="width: 100px;height: 30px;"onclick="QueryAPN()" value="查询"/>
 			    </div>
+			    
 			   
 	        </div>
-	        <div class="content_item_title"> <span>软卡号设置</span></div>
+	        <div class="content_item" id="uptime_contentitem" >
+			<div class="content_item_title">网管系统</div>
+			<div class="content_item_left" id="uptime">
+					开启：
+				<input type="radio" id="acs_enable" name="switch" value="enable" />
+				<br />
+					关闭：
+				<input type="radio" id="acs_disable" name="switch" value="disable" />
+			</div>
+			</br>
+			<div class="content_item_left">网管地址设置*192.168.1.10:8080*</div>
+				<div class="content_item_right" id="uptime">
+					<input class="inputContent" id="acs_addr" value="" style=""/>
+					<input type="button" style="width: 100px;height: 30px;"id="set" onclick="SettingAcs_addr()" value="提交"/> 
+			        <input type="button" style="width: 100px;height: 30px;"id="query" onclick="QueryAcs_addr()" value="查询"/>
+			    </div>
+		</div>
+	     <!--   <div class="content_item_title"> <span>软卡号设置</span></div>"
             <div class="content_item" id="uptime_contentitem" style="min-height:20px;">
 				<div class="content_item_left">软卡设置</div>
 				<div class="content_item_right" id="uptime">
-					<input class="inputContent" id="imsi" value="" style=""/>
+					<input class="inputContent" id="imsi" value="" style=""/>*IMSI*
 					</br>
-					<input class="inputContent" id="KI" value="" style=""/>
+					<input class="inputContent" id="KI" value="" style=""/>*KI*
 					</br>
-					<input class="inputContent" id="OP" value="" style=""/>
+					<input class="inputContent" id="OP" value="" style=""/>"OP/OPC"
+					</br>
 					<input type="button" style="width: 100px;height: 30px;"onclick="SettingAPN()" value="提交"/> 
 			        <input type="button" style="width: 100px;height: 30px;"onclick="QueryAPN()" value="查询"/>
 			    </div>
 			   
-	        </div>
+	        </div>-->
 </div>
 </body></html>

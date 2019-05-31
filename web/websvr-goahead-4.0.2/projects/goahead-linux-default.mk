@@ -42,7 +42,7 @@ DFLAGS                += -DME_DEBUG=1 -D_REENTRANT -DPIC $(patsubst %,-D%,$(filt
 IFLAGS                += "-I$(BUILD)/inc"
 LDFLAGS               += '-rdynamic' '-Wl,--enable-new-dtags' '-Wl,-rpath,$$ORIGIN/'
 LIBPATHS              += -L$(BUILD)/bin
-LIBS                  += -lrt -ldl -lpthread -lm
+LIBS                  += -lrt -ldl -lpthread -lm -luci -lubox
 
 DEBUG                 ?= debug
 CFLAGS-debug          ?= -g
@@ -407,7 +407,7 @@ $(BUILD)/obj/RunningStatus.o: \
 $(BUILD)/obj/suyi_common.o: \
     src/suyi/suyi_common.c $(DEPS_19)
 	@echo '   [Compile] $(BUILD)/obj/suyi_common.o'
-	$(CC) -c -o $(BUILD)/obj/suyi_common.o $(CFLAGS) $(DFLAGS) -D_FILE_OFFSET_BITS=64 -D_FILE_OFFSET_BITS=64 -DMBEDTLS_USER_CONFIG_FILE=\"embedtls.h\" $(IFLAGS) src/suyi/suyi_common.c
+	$(CC) -c -o $(BUILD)/obj/suyi_common.o $(CFLAGS) $(DFLAGS) -D_FILE_OFFSET_BITS=64 -D_FILE_OFFSET_BITS=64 -DMBEDTLS_USER_CONFIG_FILE=\"embedtls.h\" $(IFLAGS) src/suyi/suyi_common.c 
 
 $(BUILD)/obj/cJSON.o: \
     src/suyi/cJSON.c $(DEPS_19)

@@ -10,8 +10,10 @@ void queryLAN(Webs *wp)
 	websSetStatus(wp, 200);
 	websWriteHeaders(wp, -1, 0);//参数二需要未-1,否则前端收不到数据
 	websWriteEndHeaders(wp);
-    getConfig("lanip",lanip,LanConf);
-    getConfig("netmask",netmask,LanConf);
+    //getConfig("lanip",lanip,LanConf);
+    //getConfig("netmask",netmask,LanConf);
+    get_config("config","lan","ip",lanip);
+    get_config("config","lan","netmask",netmask);
     printf("lanip = %s\n",lanip);
     printf("netmask = %s\n",netmask);
 
@@ -37,8 +39,10 @@ void settingLAN(Webs *wp)
 	printf("lanip=%s\n",lanip);
 	printf("netmask=%s\n",netmask);
 
-	setConfig("lanip",lanip,LanConf);
-	setConfig("netmask",netmask,LanConf);
+	//setConfig("lanip",lanip,LanConf);
+	//setConfig("netmask",netmask,LanConf);
+    set_config("config","lan","ip",lanip,TRUE);
+    set_config("config","lan","netmask",netmask,TRUE);
 
     websWrite(wp,("重启后生效"));
 	websDone(wp);

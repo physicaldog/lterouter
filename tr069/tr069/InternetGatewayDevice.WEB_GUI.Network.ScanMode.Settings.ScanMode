@@ -1,0 +1,17 @@
+#!/bin/bash
+
+. /opt/tr069/common.sh
+
+band=''
+
+if [ "$ACTION"x = "set"x ];then
+
+    exit 0
+else
+    scanmode=pcilock
+#    scanmode=freqpreferred
+#    scanmode=fullband
+    echo $scanmode
+fi
+
+exit 0

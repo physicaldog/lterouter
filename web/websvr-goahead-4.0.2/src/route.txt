@@ -81,6 +81,12 @@ route uri=/action/getSecurityLog
 route uri=/action/queryIMSI
 route uri=/action/settingAPN
 route uri=/action/queryAPN
+route uri=/action/settingAcs_url
+route uri=/action/queryAcs_url
+route uri=/action/checkAcsEnable
+route uri=/action/acs_enable
+route uri=/action/ace_disable
+
 
 route uri=/action/checkNetMode
 route uri=/action/set_mode_1

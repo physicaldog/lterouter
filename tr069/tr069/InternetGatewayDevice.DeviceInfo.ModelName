@@ -1,0 +1,9 @@
+#!/bin/bash
+
+. /opt/tr069/common.sh
+
+if [ "$ACTION"x = "get"x ];then
+	_ret=`uci -c /opt/config get tr069.identity.product_model 2>/dev/null`
+	echo $_ret
+fi
+exit 0

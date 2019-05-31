@@ -1,0 +1,10 @@
+#!/bin/bash
+
+. /opt/tr069/common.sh
+
+if [ "$ACTION"x = "get"x ];then
+    rsrq="-6"
+    echo $rsrq
+fi
+
+exit 0

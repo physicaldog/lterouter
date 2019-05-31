@@ -1,0 +1,10 @@
+#!/bin/bash
+
+. /opt/tr069/common.sh
+
+if [ "$ACTION"x = "get"x ];then
+    tx_power=`uci -c /opt/config get tr069.radio.TxPower 2>/dev/null`;
+    echo $tx_power
+fi
+
+exit 0

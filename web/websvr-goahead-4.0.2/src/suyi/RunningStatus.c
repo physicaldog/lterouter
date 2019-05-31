@@ -76,9 +76,12 @@ void deviceInfo(Webs *wp)
 	websSetStatus(wp, 200);
 	websWriteHeaders(wp, -1, 0);//参数二需要未-1,否则前端收不到数据
 	websWriteEndHeaders(wp);
-    getConfig("productName",pName,Version);
-    getConfig("productModle",pModle,Version);
-    getConfig("softVersion",sVer,Version);
+    //getConfig("productName",pName,Version);
+    //getConfig("productModle",pModle,Version);
+    //getConfig("softVersion",sVer,Version);
+    get_config("config","system","productName",pName);
+    get_config("config","system","productModle",pModle);
+    get_config("config","system","sVersion",sVer);
     printf("pName:%s,pModle:%s,sVer:%s\n",pName,pModle,sVer);
 
     websWrite(wp,("{"));
@@ -153,7 +156,8 @@ void WANStatus(Webs *wp)
 	at_read(fd);
 	printf("hcsq\n");
 
-	getConfig("apn",buff,ApnConf);
+	//getConfig("apn",buff,ApnConf);
+	get_config("config","apn","apn",buff);
 	printf("apn:%s\n",buff);
 	get_local_ip(WAN_NAME,ip,netmask,macaddr);
 	printf("wanip:%s,netmask:%s,macaddr:%s\n",ip,netmask,macaddr);

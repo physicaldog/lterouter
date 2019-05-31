@@ -1,0 +1,10 @@
+#!/bin/bash
+
+. /opt/tr069/common.sh
+
+if [ "$ACTION"x = "get"x ];then
+    enb_id=00534
+    echo $enb_id
+fi
+
+exit 0

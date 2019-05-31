@@ -1,0 +1,54 @@
+#!/bin/bash
+
+. /opt/tr069/common.sh
+
+if [ "$ACTION"x = "set"x ];then 
+    uci_band=`uci get lte_param.earfcn.bandSet 2>/dev/null`
+    if [ "$uci_band"x = ""x ] || [ "$uci_band"x = "-"x ];then
+        uci_band=fullband
+    else
+        uci_band=`expr "$uci_band" : '\([0-9]*\).*'`
+    fi    
+    
+    if [ "$uci_band"x = "$VALUE"x ];then    
+        exit 0
+    fi    
+    
+    at_loading_wait
+    if [ $? -ne 0 ];then
+        exit 1;
+    fi
+        
+    uci set lte_stat.status.cmd_status='loading'
+    if [ "$VALUE"x = "fullband"x ];then
+        uci delete lte_param.earfcn.bandSet
+    else
+        uci set lte_param.earfcn.bandSet="${band}"
+    fi
+    uci add_list lte_stat.status.cmd=band
+    uci set lte_stat.status.cmd_status='ready'
+
+    at_exec_wait
+    if [ $? -ne 0 ];then
+        uci revert lte_param
+        exit 1;
+    fi
+    
+    if [ "$cmd_status"x = "error"x ];then
+        uci revert lte_param
+        exit 1
+    else
+        uci commit lte_param
+    fi    
+else
+    band=`uci get lte_param.earfcn.bandSet 2>/dev/null`
+    if [ "$band"x = ""x ] || [ "$band"x = "-"x ];then
+        band=fullband
+    else
+        band=`expr "$band" : '\([0-9]*\).*'`
+    fi    
+    
+    echo $band
+fi
+
+exit 0

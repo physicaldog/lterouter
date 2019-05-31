@@ -1,0 +1,10 @@
+#!/bin/bash
+
+. /opt/tr069/common.sh
+
+if [ "$ACTION"x = "get"x ];then
+    sinr="35dB"
+    echo $sinr
+fi
+
+exit 0

@@ -27,3 +27,4 @@ int ecm_done;
 int setTime_done;
 
 int getConfig(char *Config, char *buff, char *ConfigFile);
+int get_config(char *package,char *section,char *option,char *buff);

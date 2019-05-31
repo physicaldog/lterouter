@@ -1,0 +1,12 @@
+#!/bin/bash
+
+. /opt/tr069/common.sh
+
+if [ "$ACTION"x = "set"x ];then
+    exit 0
+else
+    pcilock='5,37500'
+    echo $pcilock
+fi
+
+exit 0

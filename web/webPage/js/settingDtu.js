@@ -1,9 +1,12 @@
 //初始化加载
 $(function() {
-	checkDtuEnable();
-	checkRadio();
+if(getCookie2('-goahead-session-').length<10){
+    parent.location.reload()
+    }else{
+    	checkDtuEnable();
+		checkRadio();
 	//setInterval('getDtuLog()',3000);
-
+    }
 });
 
 function addAttr() {
