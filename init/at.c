@@ -26,7 +26,7 @@ void direct_process(char *buff)
 	log_msg("buff:%s\n",buff);
 	if ('^' == buff[0]) {
 		if(strstr(buff,"AT^"))
-			return;
+			return ;
 		if ((strstr(buff,at_arr[0])) || (strstr(buff,at_arr[2]))) {
 			get_sysinfoex(buff);
 			return;
@@ -91,7 +91,7 @@ void get_cgsn(char *buff)
 	memset(uci_cmd, 0x0, sizeof(uci_cmd));
 	snprintf(uci_cmd, sizeof(uci_cmd)-1, "uci -c /opt/config set tr069.parameter.serial_number=%s", IMEI);
 	system(uci_cmd);
-	log_msg("\n**%s**\n", uci_cmd);
+	//log_msg("\n**%s**\n", uci_cmd);
 /*	
 	memset(uci_cmd, 0x0, sizeof(uci_cmd));
 	snprint(uci_cmd, sizeof(uci_cmd)-1, "uci -c /opt/config commit tr069");
@@ -121,7 +121,7 @@ void get_cpin(char *buff)
 	memset(uci_cmd, 0x0, sizeof(uci_cmd));
 	snprintf(uci_cmd, sizeof(uci_cmd)-1, "uci -c /opt/config set tr069.simcard.state=%s", simcard_state);
 	system(uci_cmd);
-	log_msg("\n**%s**\n", uci_cmd);		
+	//log_msg("\n**%s**\n", uci_cmd);		
 }
 
 void get_hcsq(char * buff)
@@ -176,7 +176,7 @@ void get_hcsq(char * buff)
 		memset(uci_cmd, 0x0, sizeof(uci_cmd));
 		snprintf(uci_cmd, sizeof(uci_cmd)-1, "uci -c /opt/config set tr069.radio.SINR=%.1f", (-20.2+0.2*sinr));
 		system(uci_cmd);
-		log_msg("\n**%s**\n", uci_cmd);
+		//log_msg("\n**%s**\n", uci_cmd);
 	}
 
 }
@@ -205,7 +205,7 @@ void get_cimi(char *buff)
 	memset(uci_cmd, 0x0, sizeof(uci_cmd));
 	snprintf(uci_cmd, sizeof(uci_cmd)-1, "uci -c /opt/config set tr069.identity.imsi=%s", IMSI);
 	system(uci_cmd);
-	log_msg("\n**%s**\n", uci_cmd);	
+	//log_msg("\n**%s**\n", uci_cmd);	
 	
 }
 
@@ -293,27 +293,27 @@ void get_monsc(char *buff)
 		memset(uci_cmd, 0x0, sizeof(uci_cmd));
 		snprintf(uci_cmd, sizeof(uci_cmd)-1, "uci -c /opt/config set tr069.radio.MCC=%s", MCC);
 		system(uci_cmd);
-		log_msg("\n**%s**\n", uci_cmd);
+	//	log_msg("\n**%s**\n", uci_cmd);
 
 		memset(uci_cmd, 0x0, sizeof(uci_cmd));
 		snprintf(uci_cmd, sizeof(uci_cmd)-1, "uci -c /opt/config set tr069.radio.MNC=%s", MNC);
 		system(uci_cmd);
-		log_msg("\n**%s**\n", uci_cmd);
+	//	log_msg("\n**%s**\n", uci_cmd);
 
 		memset(uci_cmd, 0x0, sizeof(uci_cmd));
 		snprintf(uci_cmd, sizeof(uci_cmd)-1, "uci -c /opt/config set tr069.radio.CellID=%s", CellID);
 		system(uci_cmd);
-		log_msg("\n**%s**\n", uci_cmd);
+	//	log_msg("\n**%s**\n", uci_cmd);
 
 		memset(uci_cmd, 0x0, sizeof(uci_cmd));
 		snprintf(uci_cmd, sizeof(uci_cmd)-1, "uci -c /opt/config set tr069.radio.PCI=%s", PCI);
 		system(uci_cmd);
-		log_msg("\n**%s**\n", uci_cmd);
+	//	log_msg("\n**%s**\n", uci_cmd);
 
 		memset(uci_cmd, 0x0, sizeof(uci_cmd));
 		snprintf(uci_cmd, sizeof(uci_cmd)-1, "uci -c /opt/config set tr069.radio.RSRP0=%s", RSRP);
 		system(uci_cmd);
-		log_msg("\n**%s**\n", uci_cmd);
+	//	log_msg("\n**%s**\n", uci_cmd);
 
 	}
 
@@ -398,7 +398,7 @@ void get_sysinfoex(char *buff)
 		}
 		else{
 			log_msg("网络无效\n");
-			log_msg("无效网络\n");
+	//		log_msg("无效网络\n");
 			log_msg("\n");
 			net_sta = 0;
 			system("kill `cat /opt/udhcpc.pid`");

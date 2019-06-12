@@ -125,8 +125,6 @@ char * get_timeStr(unsigned long uptime,char *timeStr);
 struct timeval get_uptime(void);
 int get_local_ip(char *ifname, char *ip, char *netmask, char *macaddr);
 int set_ip(char * ifname, char * ip, char * netmask);
-int getConfig(char *Config, char *buff,char *ConfigFile);
-int setConfig(char *Config, char *content,char *ConfigFile);
 int openDev(char *Dev);
 int get_config(char *package,char *section,char *option,char *buff); 
 int set_config(char *package,char *section,char *option,char *value,int commit); 

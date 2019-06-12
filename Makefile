@@ -6,13 +6,16 @@
 
 CC = arm-linux-gnueabihf-gcc
 
-productName = "productName:LTE-ROUTER"
-productModle = "productModle:P17/0156_CPE_V2.2"
-softVersion = "softVersion:P17/0156_cpe_2.5.0_"
-kernel_dir = /home/xueqian/cpe_FileSystem/A7-linux-src/
-rootfs_dir = /home/xueqian/cpe_FileSystem/rootfs/
+productName = LTE-ROUTER
+productModle = P17/0156_CPE_V2.2
+softVersion = P17/0156_cpe_2.5.0_
+kernel_dir = /home/xueqian/cpe_FileSystem/A7-linux-src
+rootfs_dir = /home/xueqian/cpe_FileSystem/rootfs
 cpe_flash_dir = /home/xueqian/ubuntushare/cpe_flash_dir
 config = $(PWD)/config
+tr069_dir = $(PWD)/tr069
+bin = $(PWD)/bin
+lib = $(PWD)/lib
 log = $(PWD)/log
 tmp = $(PWD)/tmp
 init = $(PWD)/init
@@ -24,7 +27,7 @@ webServer = $(web)/websvr-goahead-4.0.2
 webBin = $(webServer)/build/linux-arm-default/bin
 webPage = $(web)/webPage
 webserver = $(web)/websvr-goahead-2.18/LINUX
-webpage = ~/ubuntushare/staticPage
+#webpage = ~/ubuntushare/staticPage
 opt = $(rootfs_dir)/../opt
 package=/home/xueqian/ubuntushare/package
 
@@ -44,9 +47,10 @@ all:
 	cd $(webServer) && $(MAKE) CC=arm-linux-gnueabihf-gcc ARCH=arm  
 
 config:
-	echo $(productName) > $(config)/Version
-	echo $(productModle) >> $(config)/Version
-	echo "$(softVersion)`date +%Y%m%d`" >> $(config)/Version
+	uci -c ./config set config.system.productName=$(productName)
+	uci -c ./config set config.system.productModle=$(productModle)
+	uci -c ./config set config.system.sVersion=$(softVersion)`date +%Y%m%d`
+	uci -c ./config commit config.system
 	cp $(config)/* $(opt)/config/
 	cp $(log)/* $(opt)/log/
 	-cp $(tmp)/* $(opt)/tmp/
@@ -58,6 +62,7 @@ init:
 	cp $(init)/*.sh $(init)/button $(init)/$(initEXE) $(opt)/init/
 	scp -r $(init)/*.sh $(init)/button $(init)/$(initEXE) $(readdr)/init/
 	#cd $(init) && $(MAKE)
+
 dtu:
 	$(MAKE) -C $(dtu)
 	cp $(dtu)/$(dtuEXE) $(opt)/dtu/
@@ -95,36 +100,47 @@ clean:
 
 opt:
 	rm $(opt)/* -rf
-	-mkdir $(opt) $(opt)/config $(opt)/init $(opt)/security $(opt)/dtu $(opt)/web $(opt)/web/webServer $(opt)/web/webPage $(opt)/tmp $(opt)/log $(opt)/upgrade
-	echo $(productName) > $(config)/Version
-	echo $(productModle) >> $(config)/Version
-	echo "$(softVersion)`date +%Y%m%d`" >> $(config)/Version
+	-mkdir $(opt) $(opt)/config $(opt)/init $(opt)/security $(opt)/dtu $(opt)/web $(opt)/web/webServer $(opt)/web/webPage $(opt)/tmp $(opt)/log $(opt)/upgrade $(opt)/tr069 $(opt)/trconf $(opt)/bin $(opt)/lib
+	uci -c ./config set config.system.productName=$(productName)
+	uci -c ./config set config.system.productModle=$(productModle)
+	uci -c ./config set config.system.sVersion=$(softVersion)`date +%Y%m%d`
+	uci -c ./config commit config.system
 	cp $(config)/* $(opt)/config/
 	cp $(log)/* $(opt)/log/
 	-cp $(tmp)/* $(opt)/tmp/
 	cp $(init)/*.sh $(init)/button $(init)/$(initEXE) $(opt)/init/
 	cp $(dtu)/$(dtuEXE) $(opt)/dtu/
-	cp $(security)/* $(opt)/security/
+	#cp $(security)/* $(opt)/security/
 	cp $(webServer)/src/auth.txt $(webServer)/src/route.txt $(webBin);
 	cp -r $(webBin)/* $(opt)/web/webServer/
 	cp -r $(webPage)/* $(opt)/web/webPage/
+	cp $(tr069_dir)/tr069.sh $(opt)/
+	cp -r $(tr069_dir)/tr069/* $(opt)/tr069/
+	cp -r $(tr069_dir)/trconf/* $(opt)/trconf/
+	cp -r $(bin)/* $(opt)/bin/
+	cp -r $(lib)/* $(opt)/lib/
 #system.tar 恢复出厂设置使用 解压时必须进入对应的目录
 	cd $(opt);tar -cf upgrade/config.tar ./config
 
 #网页升级包，升级后删除
 package:
-	-rm  ~/ubuntushare/package/system/*
-	-rm ~/ubuntushare/package/system.tar;
+	-rm $(package)/system/*
+	-rm $(package)/system/system.tar;
 	tar -cf $(package)/system/cpe.tar -C $(opt) .;
-	cd ~/ubuntushare/package/system/;md5sum cpe.tar > cpe.md5;
+	cd $(package)/system/;md5sum cpe.tar > cpe.md5;
 	cd $(package);tar -cf - system|openssl des3 -salt -k monkey | dd of=system.tar
 	#dd if=system.tar |openssl des3 -d -k monkey|tar xf -
 #make flash_file
+image:
 	rm -rf $(cpe_flash_dir)/*;
 	cd $(rootfs_dir)/;tar -zcf $(cpe_flash_dir)/rootfs.tar.gz ./*;
+	cd $(rootfs_dir)/../; sudo mkfs.ubifs -r rootfs -m 2KiB -e 124KiB -c 540 -o rootfs.ubifs.img;cp rootfs.ubifs.img $(cpe_flash_dir);
+	cp $(kernel_dir)/arch/arm/boot/zImage $(cpe_flash_dir);
 	cd $(kernel_dir)/arch/arm/boot/;tar -zcf $(cpe_flash_dir)/kernel.tar.gz ./zImage;
 	cp $(kernel_dir)/arch/arm/boot/dts/imx6g2c-128m.dtb $(cpe_flash_dir);
+	cp $(kernel_dir)/arch/arm/boot/dts/imx6g2c-256m.dtb $(cpe_flash_dir);
 	cp $(package)/system/cpe.tar $(cpe_flash_dir);
+	cp $(package)/system.tar $(cpe_flash_dir);
 
 install:
 	scp -r $(opt)/* $(readdr)

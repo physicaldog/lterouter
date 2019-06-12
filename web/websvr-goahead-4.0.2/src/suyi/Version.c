@@ -15,7 +15,7 @@ void queryVer(Webs *wp)
     //getConfig("softVersion",sVer,Version);
     get_config(pName,"productName","system","config");
     get_config(pModle,"productModle","system","config");
-    get_config(sVer,"softVersion","system","config");
+    get_config(sVer,"sVersion","system","config");
     printf("pName:%s,pModle:%s,sVer:%s\n",pName,pModle,sVer);
 
     websWrite(wp,("{"));
@@ -46,7 +46,7 @@ int checkUploadFile()
 	fgets(md5,sizeof(md5),fe);
 	if (strstr(md5,"OK")){
 		printf("Check OK!\n");
-		system("mv /tmp/system/cpe.tar /opt/;rm -r /tmp/system");
+		system("rm -rf /opt/*;mv /tmp/system/cpe.tar /opt/;rm -r /tmp/system");
 	}
 	else{
 		printf("Check failed!\n");

@@ -16,7 +16,7 @@ void loginCheck(Webs *wp)
 	password = websGetVar(wp,("password"),(""));
 	strcat(name,username);
 	//strcat(name,":");
-	getConfig(name,PW,UserPW);
+	//getConfig(name,PW,UserPW);
 	printf("uname:%s,uPW:%s,PW:%s\n",username,password,PW);
 	if(0 == strcmp(PW,password))
 	{

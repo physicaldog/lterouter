@@ -233,88 +233,6 @@ int set_config(char *package,char *section,char *option,char *value,int commit)
 	return(0); 
 }
 
-int getConfig(char *Config, char *buff, char *ConfigFile)
-{
-    FILE *fe = NULL;
-    int fexist = 0;
-	char *ptr = NULL;
-    char rbuff[64] = {'\0'};//读取文件缓存
-
-    fe = fopen(ConfigFile,"r+");
-    if (NULL == fe){
-            printf("no netconfig file\n");
-            return -1;//未找到配置文件
-    }
-	
-	if(0 == strlen(Config))
-	{
-		printf("Config is NULL\n!");
-	}
-
-    while (fgets(rbuff,sizeof(rbuff),fe)){
-            if (strstr(rbuff,Config)){
-                    fexist = 1;
-                    break;
-                    }
-            else
-                    memset(rbuff,'\0',sizeof(rbuff));
-    }
-    fclose(fe);
-    if(fexist)
-	{
-		ptr = strchr(rbuff,':');
-		
-        strcat(buff,(++ptr));
-		while(ptr=strchr(buff,'\n'))
-			*ptr = '\0';
-	}
-    else
-        return -2;//未配置
-    
-    return 0;
-}
-
-int setConfig(char *Config, char *content, char *ConfigFile)
-{
-	FILE *fe = NULL;
-	FILE *tmp = NULL;
-	char tmpfile[64] = {'\0'};
-	char rbuff[64] = {'\0'};//读取文件缓存
-
-	printf("setConfig : %s\n",Config);
-	fe = fopen(ConfigFile,"r+");
-	if (NULL == fe){
-		printf("no netconfig file\n");
-		return -1;
-	}
-	strcpy(tmpfile,ConfigFile);
-	strcat(tmpfile,".bak");
-	tmp = fopen(tmpfile,"w+");
-	if (NULL == tmp){
-		printf("tmpfile create failed\n");
-		return -1;
-	}
-
-	while (fgets(rbuff,sizeof(rbuff),fe)){
-		if (strstr(rbuff,Config)){
-			continue;
-		}
-		else
-			fwrite(rbuff,sizeof(char),strlen(rbuff),tmp);
-		memset(rbuff,'\0',sizeof(rbuff));
-	}
-
-	fwrite(Config,sizeof(char),strlen(Config),tmp);
-	//printf("setting 1\n");
-	fwrite(":",sizeof(char),strlen(":"),tmp);
-	fwrite(content,sizeof(char),strlen(content),tmp);
-	fwrite("\n",sizeof(char),1,tmp);
-	fclose(fe);
-	fclose(tmp);
-
-	//remove(ConfigFile);
-	rename(tmpfile,ConfigFile);
-}
 #if 1
 int get_hcsq(char *buff)
 {
@@ -367,6 +285,7 @@ int get_cgsn(char *buff)
 	int i=0;
 	char *ptr = NULL;
 	char *qtr = NULL;
+	printf("\n********%s********\n",__FUNCTION__);
 	printf("cgsn buff:%s\n",buff);
 	ptr = strchr(buff,'\"');
 	if(ptr){
@@ -388,6 +307,7 @@ int get_csq(char *buff)
 	int i=0;
 	char *ptr = NULL;
 	char *qtr = NULL;
+	printf("\n********%s********\n",__FUNCTION__);
 	ptr = strchr(buff,' ');
 	qtr = strchr(buff,',');
 	printf("csq=%s\n",buff);
@@ -411,6 +331,7 @@ int get_sysinfoex(char *buff)
 	int i=0;
 	char *ptr = NULL;
 	char *qtr = NULL;
+	printf("\n********%s********\n",__FUNCTION__);
 	ptr = strchr(buff,',');
 	netStatus = *(--ptr);
 	for(i;i<5;i++)
@@ -429,6 +350,7 @@ int get_ndisstat(char *buff)
 {
 	int i=0;
 	char *ptr = NULL;
+	printf("\n********%s********\n",__FUNCTION__);
 	ptr = strchr(buff,',');
 	ecmStatus = *(--ptr);
 
@@ -491,9 +413,11 @@ int direct_process(char *buff)
 		"CSQ",
 		"HCSQ",
 	};
-	printf("\n********%s********\n",__FUNCTION__);
+	printf("\n********%s********\n%s\n",__FUNCTION__,buff);
+	if((strlen(buff)<=3) || strstr(buff,"AT^"))
+		return -1;
 
-	if(strstr(buff,"ERROR"))
+	if(strstr(buff,"ERROR") || strstr(buff,"OK") )
 		return 0;
 	
 	if (strstr(buff,"+CGSN:")) {
@@ -505,11 +429,9 @@ int direct_process(char *buff)
 		return 0;
 	}
 	if ('^' == buff[0]) {
-		if(strstr(buff,"AT^"))
-			return;
 		syslog(LOG_DEBUG,"Get direct:%s\n",buff);
 		//ptr = strstr(buff,at_arr[0]);
-		if ((strstr(buff,at_arr[0])) || (strstr(buff,at_arr[2]))) {
+		if ((strstr(buff,at_arr[2]))) {
 			get_sysinfoex(buff);
 			return 0;
 		}
@@ -530,6 +452,7 @@ int at_read(int fd)
 	char rbuff[4096] = {'\0'};
 	char* ptr = rbuff;
 	int ret=0;
+	printf("\n********%s********\n",__FUNCTION__);
 	while (1) {
 		ret = read(fd, ptr, 0x01);
 		if (1 == ret) {
@@ -539,15 +462,17 @@ int at_read(int fd)
 			else {
 				//printf("%s",rbuff);
 				//syslog(LOG_DEBUG,"Get direct: %s\n",rbuff);
+				//printf("111111111ret = %d\n",ret);
 				ret = direct_process(rbuff);
 				if(0 == ret)
 					return 0;
+				//printf("ret = %d\n",ret);
 				memset(rbuff,0,strlen(rbuff));
 				ptr = rbuff;
 			}
 		}
 		else {
-			syslog(LOG_DEBUG,"at_read_err:\n");
+			printf("at_read_err:\n");
 			return -1;
 		}
 	}
@@ -557,6 +482,7 @@ int at_read(int fd)
 int at_send(int fd,char* at)
 {/*{{{*/
 	int ret;
+	printf("\n********%s********,%s\n",__FUNCTION__,at);
 	ret = write(fd, at, strlen(at));
 	if(ret < 0){
 		syslog(LOG_DEBUG,"at_send_error!\n");
