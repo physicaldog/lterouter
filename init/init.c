@@ -73,8 +73,8 @@ void status_read(int *fptr)
 				ptr++;
 			}
 			else {
-				log_msg("%s",rbuff);
-				//log_msg("Get direct: %s\n",rbuff);
+				//log_msg("%s",rbuff);
+				log_msg("Get direct: %s***\n",rbuff);
 				direct_process(rbuff);
 				memset(rbuff,0,strlen(rbuff));
 				ptr = rbuff;
@@ -131,6 +131,7 @@ void send_at(int *fptr)
 			log_msg("send_at %s\n", at_arr[8]);
 			return;
 		}
+		sleep(2);
 	}
 	return;
 

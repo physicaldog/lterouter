@@ -46,7 +46,8 @@ int checkUploadFile()
 	fgets(md5,sizeof(md5),fe);
 	if (strstr(md5,"OK")){
 		printf("Check OK!\n");
-		system("rm -rf /opt/*;mv /tmp/system/cpe.tar /opt/;rm -r /tmp/system");
+		//system("rm -rf /opt/*;mv /tmp/system/cpe.tar /opt/;rm -r /tmp/system");
+		system("mv /tmp/system/cpe.tar /opt/;rm -r /tmp/system");
 	}
 	else{
 		printf("Check failed!\n");

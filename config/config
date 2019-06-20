@@ -2,7 +2,7 @@
 config string 'apn'
 
 config string 'lan'
-	option ip '192.168.1.1'
+	option ip '91.56.0.1'
 	option netmask '255.255.255.0'
 
 config string 'addr'
@@ -22,5 +22,5 @@ config string 'system'
 	option reboot_interval '600'
 	option productName 'LTE-ROUTER'
 	option productModle 'P17/0156_CPE_V2.2'
-	option sVersion 'P17/0156_cpe_2.5.0_20190612'
+	option sVersion 'P17/0156_cpe_2.5.0_20190620'
 

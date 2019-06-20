@@ -23,7 +23,7 @@ void direct_process(char *buff)
 		"CGSN",	
 	};
 	log_msg("****%s****\n",__FUNCTION__);
-	log_msg("buff:%s\n",buff);
+	log_msg("buff:%s***\n",buff);
 	if ('^' == buff[0]) {
 		if(strstr(buff,"AT^"))
 			return ;
