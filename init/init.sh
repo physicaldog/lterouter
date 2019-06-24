@@ -19,6 +19,7 @@ logFile=/var/log/messages
 letrouter=/opt/init/lterouter
 webServer=/opt/web/webServer
 webPage=/opt/web/webPage
+config=/opt/config
 
 #udhcpd /etc/udhcpd.conf &
 netInit(){
@@ -255,8 +256,8 @@ runTr069(){
 			fi
 		fi
 	else
-		#echo "tr069 stop!!!" >> $logFile
-		echo "tr069 stop!!!"
+		echo "tr069 stop!!!" >> $logFile
+		#echo "tr069 stop!!!"
 		ret=`pidof tr069`
 		nohup kill -9 $ret > /dev/null 2>&1 &
 	fi
@@ -343,12 +344,19 @@ InitTime(){
 
 }
 
-echo 1 >> /opt/config/RebootCount
+#echo 1 >> /opt/config/RebootCount
+Reboot_Count(){
+	ret=`uci -c $config get config.system.reboot_count`
+	uci -c $config set config.system.reboot_count=`expr $ret + 1`
+	uci -c $config commit config
+}
 if [ -e /opt/tmp/profile ]
 then
 	wr mv /opt/tmp/profile /etc/
 fi
 . /etc/profile
+
+Reboot_Count;
 /opt/init/button &
 #InitTime;
 InitGpio;

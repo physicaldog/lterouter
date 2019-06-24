@@ -241,12 +241,12 @@ void getRebootCount(Webs *wp)
 	int ret = 0; 
 	FILE *fp = NULL;
 	char *ptr = NULL;
-	char count[32] = {0};
+	char count[64] = {0};
     printf("\n********%s********\n",__FUNCTION__);
 	websSetStatus(wp, 200);
 	websWriteHeaders(wp, -1, 0);//参数二需要未-1,否则前端收不到数据
 	websWriteEndHeaders(wp);
-
+/*
 	fp = popen("cat /opt/config/RebootCount | wc -l" ,"r");
 	if(fp){
 		fread(count,1,sizeof(count),fp);
@@ -254,6 +254,8 @@ void getRebootCount(Webs *wp)
 			*ptr = 0;
 		fclose(fp);
 	}
+	*/
+	get_config("config","system","reboot_count",count);
 	printf("count=%s\n",count);
 
     websWrite(wp,("设备启动次数：%s"),count);

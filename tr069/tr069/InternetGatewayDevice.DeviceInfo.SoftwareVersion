@@ -3,8 +3,9 @@
 . /opt/tr069/common.sh 
 
 if [ "$ACTION"x = "get"x ];then
-	str=`sed -n 3p /opt/config/Version`
-	softVersion=`expr "$str" : '.*softVersion:[[:space:]]*\([a-zA-Z0-9/_.]*\).*'`
+#	str=`sed -n 3p /opt/config/Version`
+#	softVersion=`expr "$str" : '.*softVersion:[[:space:]]*\([a-zA-Z0-9/_.]*\).*'`
+	softVersion=`uci -c /opt/config get config.system.sVersion`
 	echo $softVersion
 	
 fi

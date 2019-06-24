@@ -1,5 +1,5 @@
 config system 'cwmp'
-	option acs_enable 'true'
+	option acs_enable 'false'
 	option enable '1'
 	option user 'tr069'
 	option pass 'tr069'
