@@ -32,7 +32,7 @@ config sqns 'radio'
 	option dlMcs '-'
 
 config lte_param 'parameter'
-	option serial_number '-'
+	option serial_number '123456789'
 
 config sqns 'simcard'
 	option state 'Error' 

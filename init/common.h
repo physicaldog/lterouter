@@ -15,8 +15,6 @@
 #include <syslog.h>
 
 #define DATA_LEN	255 /* test data's len */
-/*定时重启时间10分钟*/
-#define REBOOT_TIME 600
 
 int fd;
 /*网络状态标志：1 有效；0 无效*/
@@ -28,3 +26,4 @@ int setTime_done;
 
 int getConfig(char *Config, char *buff, char *ConfigFile);
 int get_config(char *package,char *section,char *option,char *buff);
+void log_syslog(char *log,char *buff);

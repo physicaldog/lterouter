@@ -16,7 +16,7 @@ $(function(){
 
 
 function start_LongPing() {
-	alert("start")
+	//alert("start")
 	if(($("input:text[id='IpAddr']").val().length == 0)){
 		alert("参数不能为空");
 		$("input:radio[id='stop_LongPing']").prop('checked', 'true');
@@ -71,7 +71,7 @@ function check_LongPing() {
 			success: function(data) {
 				//alert(data);
 				if (data.length <= 4) {
-					//alert("monkey");
+					//alert(data);
 					$("input:radio[id='stop_LongPing']").prop('checked', 'true');
 					
 				} else{

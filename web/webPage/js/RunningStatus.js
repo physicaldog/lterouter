@@ -3,12 +3,12 @@ $(function(){
 //	alert(getCookie2('-goahead-session-').length);
 //	alert("::webs.session::031b14c74203c539b59ccfa10142bfda".length);
     if(getCookie2('-goahead-session-').length>10){
-    sysInfo();
-	doWork();
-	deviceInfo();
-	setInterval('doWork()',3000);
+    	sysInfo();
+		doWork();
+		deviceInfo();
+		setInterval('doWork()',3000);
     }else{
-    parent.location.reload();
+   		parent.location.reload();
     }
 	
 });
@@ -31,6 +31,8 @@ function sysInfo(){
 		success:function(data){
 			
 			$('#system_addr').text(data.system_addr);
+			$('#online_time').text(data.online_time);
+			$('#offline_time').text(data.offline_time);
 			totalTime = parseInt(data.uptime);
 			setInterval('jisuan()',1000);
 			
@@ -96,6 +98,7 @@ function WANStatus(){
 			//age:18
 		},
 		success:function(data){	
+			alert(data.rssi data.rsrp data.sinr data.rsrq)
 			$('#system_date').text(data.system_date);
 			$('#netmode').text(data.netmode);
 			$('#netStatus').text(data.netStatus);
@@ -111,7 +114,7 @@ function WANStatus(){
 			$('#wanip').text(data.wanip);
 			$('#wanmask').text(data.wanmask);
 			$('#wanmac').text(data.wanmac);
-			$('#gw_ip').text(data.gw_ip);
+			//$('#gw_ip').text(data.gw_ip);
 		}
 	});
 }

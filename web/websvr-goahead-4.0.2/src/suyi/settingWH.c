@@ -6,44 +6,24 @@ void queryAddr(Webs *wp)
 {
 
 	int ret = 0;
-	char *ptr = NULL;
-    char *city_name;
-    char *county_name;
-    char *location_name;
-	FILE *fp = NULL;
-	char buff[128] = {0};
-	cJSON *Addr = NULL;
+    char city_name[16];
+    char county_name[16];
+    char location_name[64];
 
     printf("\n********%s********\n",__FUNCTION__);
 	websSetStatus(wp, 200);
 	websWriteHeaders(wp, -1, 0);//参数二需要未-1,否则前端收不到数据
 	websWriteEndHeaders(wp);
 	
-	fp = fopen(ADDRESS,"r");
-	if(NULL == fp){
-		printf("文件打开失败\n");
-		websWrite(wp,("查询失败"));
-	}else{
-		fread(buff,1,sizeof(buff),fp);
-		fclose(fp);
-		Addr = cJSON_Parse(buff);
-		if(NULL == Addr){
-			cJSON_GetErrorPtr();
-			websWrite(wp,("查询失败"));
-		}else{
-			city_name = cJSON_GetObjectItem(Addr,"city_name")->valuestring;
-			county_name = cJSON_GetObjectItem(Addr,"county_name")->valuestring;
-			location_name = cJSON_GetObjectItem(Addr,"location_name")->valuestring;
+	get_config("config","addr","city",city_name);
+	get_config("config","addr","county",county_name);
+	get_config("config","addr","location",location_name);
 
-			websWrite(wp,("{"));
-			websWrite(wp,("\"city_name\":\"%s\","),city_name);
-			websWrite(wp,("\"county_name\":\"%s\","),county_name);
-			websWrite(wp,("\"location_name\":\"%s\""),location_name);
-			websWrite(wp,("}"));
-
-			cJSON_Delete(Addr);
-		}
-	}
+	websWrite(wp,("{"));
+	websWrite(wp,("\"city_name\":\"%s\","),city_name);
+	websWrite(wp,("\"county_name\":\"%s\","),county_name);
+	websWrite(wp,("\"location_name\":\"%s\""),location_name);
+	websWrite(wp,("}"));
 
     websDone(wp);
 	return;
@@ -66,32 +46,11 @@ void settingAddr(Webs *wp)
 	city_name = websGetVar(wp,("city_name"),(""));
 	county_name = websGetVar(wp,("county_name"),(""));
 	location_name = websGetVar(wp,("location_name"),(""));
+
+	set_config("config","addr","city",city_name,1);
+	set_config("config","addr","county",county_name,1);
+	set_config("config","addr","location",location_name,1);
 	
-	Addr = cJSON_CreateObject();
-	if(NULL == Addr){
-		printf("Addr json create failed!\n");
-		websWrite(wp,("设置失败"));
-	}else{
-		cJSON_AddItemToObject(Addr,"city_name",cJSON_CreateString(city_name));
-		cJSON_AddItemToObject(Addr,"county_name",cJSON_CreateString(county_name));
-		cJSON_AddItemToObject(Addr,"location_name",cJSON_CreateString(location_name));
-		ptr = cJSON_Print(Addr);
-		printf("%s\n",ptr);
-
-		fp = fopen(ADDRESS,"w+");
-		if(NULL == fp){
-			printf("ADDRESS file open failed!\n");
-			websWrite(wp,("设置失败"));
-		}else{
-			ret = fwrite(ptr,1,strlen(ptr),fp);
-			fclose(fp);
-			printf("ret=%d,len=%d\n",ret,strlen(ptr));
-			websWrite(wp,("设置成功"));
-		}
-
-		free(ptr);
-		cJSON_Delete(Addr);
-	}
 	websDone(wp);
 	return;
 }

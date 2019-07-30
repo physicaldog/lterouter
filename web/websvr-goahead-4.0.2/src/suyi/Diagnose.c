@@ -30,14 +30,10 @@ void start_LongPing(Webs *wp)
 	websWriteEndHeaders(wp);
 	
 	IpAddr = websGetVar(wp,("IpAddr"),(""));
-	fp = fopen(startLongPing,"w+");
-	if(NULL == fp){
-		websWrite(wp,("开启失败！"));
-	}else{
-		fwrite(IpAddr,1,strlen(IpAddr),fp);
-		fclose(fp);
-		websWrite(wp,("开启成功！"));
-	}
+	set_config("config","LongPing","PingAddr",IpAddr,1);
+	set_config("config","LongPing","LongPing_enable","true",1);
+
+	websWrite(wp,("已开启！"));
 	websDone(wp);
 	return;
 }
@@ -52,19 +48,9 @@ void stop_LongPing(Webs *wp)
 	websWriteHeaders(wp, -1, 0);//参数二需要未-1,否则前端收不到数据
 	websWriteEndHeaders(wp);
 	
-	system("rm /opt/tmp/startLongPing");
+	set_config("config","LongPing","LongPing_enable","false",1);
 	websWrite(wp,("已关闭！"));
-	/*
-	IpAddr = websGetVar(wp,("IpAddr"),(""));
-	fp = fopen(starLongPing,"w+");
-	if(NULL == fp){
-		websWrite(wp,("开启失败！"));
-	}else{
-		fwrite(IpAddr,1,strlen(IpAddr),fp);
-		fclose(fp);
-		websWrite(wp,("开启成功！"));
-	}
-	*/
+
 	websDone(wp);
 	return;
 }
@@ -72,7 +58,7 @@ void stop_LongPing(Webs *wp)
 void check_LongPing(Webs *wp)
 {
 	FILE *fp = NULL;
-	char buff[128] = {0};
+	char buff[32] = {0};
 	int ret = 0;
 
 	printf("\n********%s********\n",__FUNCTION__);
@@ -80,28 +66,14 @@ void check_LongPing(Webs *wp)
 	websWriteHeaders(wp, -1, 0);//参数二需要未-1,否则前端收不到数据
 	websWriteEndHeaders(wp);
 
-	fp = fopen(startLongPing,"r");
-	if(NULL == fp){
-		websWrite(wp,("no"));
+	get_config("config","LongPing","LongPing_enable",buff);
+	if(!strcmp(buff,"true")){
+		get_config("config","LongPing","PingAddr",buff);
+		websWrite(wp,("%s",buff));
 	}else{
-		ret = fread(buff,1,sizeof(buff),fp);
-		fclose(fp);
-		if(ret > 0)
-			websWrite(wp,(buff));
-		else
-			websWrite(wp,("no"));
+		websWrite(wp,("N"));
 	}
-/*	
-	IpAddr = websGetVar(wp,("IpAddr"),(""));
-	fp = fopen("starLongPing","w+");
-	if(NULL == fp){
-		websWrite(wp,("开启失败！"));
-	}else{
-		fwrite(IpAddr,1,strlen(IpAddr),fp);
-		fclose(fp);
-		websWrite(wp,("开启成功！"));
-	}
-*/
+
 	websDone(wp);
 	return;
 }

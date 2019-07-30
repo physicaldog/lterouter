@@ -1,21 +1,11 @@
 #include "common.h"
 #include "at.h"
+int reboottime=0;
 
 #define DATA_LEN	0xFF  /* test data's len */
 #define SerPort	"/dev/ttyem302"
 //#define SerPort	"/dev/ttyUSB2"
 
-char at_arr[16][64] = {/*{{{*/
-	"AT^SYSINFOEX\r\n", 
-	"AT^NDISSTATQRY?\r\n",
-	"AT^NDISDUP=1,1,\"cmnet\"\r\n",
-	"AT^NDISDUP=1,0,",
-	"AT+CPIN?\r\n",
-	"AT^MONSC\r\n",
-	"AT+CIMI\r\n",
-	"AT+CGSN\r\n",
-	"AT^HCSQ?\r\n",
-};/*}}}*/
 
 static int openDev(char *Dev)
 {/*{{{*/
@@ -60,78 +50,119 @@ static int openDev(char *Dev)
 //多线程
 void status_read(int *fptr)
 {/*{{{*/
-	char rbuff[4096] = {'\0'};
+	char rbuff[1024] = {'\0'};
 	char* ptr = rbuff;
 	int ret=0;
 	fd = *fptr;
 	log_msg("\n****%s****\n",__FUNCTION__);
 	while (1) {
-		//log_msg("%s\n",__FUNCTION__);
 		ret = read(*fptr, ptr, 0x01);
 		if (1 == ret) {
 			if ('\n' != *ptr) {
 				ptr++;
 			}
 			else {
-				//log_msg("%s",rbuff);
-				log_msg("Get direct: %s***\n",rbuff);
+				//log_msg("AT Read: %s\n",rbuff);
 				direct_process(rbuff);
 				memset(rbuff,0,strlen(rbuff));
 				ptr = rbuff;
 			}
 		}
 		else {
-			log_msg("read err:\n");
+			log_msg("AT Read err:\n");
 			return;
 		}
 	}
-	log_msg("read exit\n");
+	log_msg("AT Read Exit\n");
 }/*}}}*/
 
+char at_arr[16][64] = {/*{{{*/
+	"AT^SYSINFOEX\r\n", 
+	"AT^NDISSTATQRY?\r\n",
+	"AT^NDISDUP=1,1,\"cmnet\"\r\n",
+	"AT^NDISDUP=1,0,",
+	"AT+CPIN?\r\n",
+	"AT^MONSC\r\n",
+	"AT+CIMI\r\n",
+	"AT+CGSN\r\n",
+	"AT^HCSQ?\r\n",
+};/*}}}*/
+int serial_write(int fd,char *buff)
+{
+	int ret = 0;	
+	ret = write(fd, buff, strlen(buff));
+	if(ret < 0){
+		log_msg("AT Send %s Failed\n",buff);
+		return -1;
+	}
+	return 0;
+}
 void send_at(int *fptr)
 {/*{{{*/
 	int ret;
+	char attech_stat[8] = {0};
+	char ndis_stat[8] = {0};
+	char uci_buff[32] = {0};
+	char at_buff[64] = {0};
 	/*循环检测，防止主动上报信息接受失败*/
 	while(1){
-		log_msg("\n****%s****\n",__FUNCTION__);
-		ret = write(*fptr, at_arr[0], strlen(at_arr[0]));
-		if(ret < 0){
-			log_msg("send_at\n");
+		//log_msg("\n****%s****\n",__FUNCTION__);
+		ret = serial_write(*fptr,"AT^SYSINFOEX\r\n");
+		if(ret < 0)
 			return;
+		sleep(2);
+
+		get_config("status","module","attech_stat",attech_stat);
+		if(!strcmp(attech_stat,"true")){
+			ret = serial_write(*fptr,"AT^NDISSTATQRY?\r\n");
+			if(ret < 0)
+				return;
+			sleep(5);
 		}
-		/*时间间隔尽量大于拨号指令返回时长*/
-		//sleep(10);
-		sleep(2);
-		ret = write(*fptr, at_arr[4], strlen(at_arr[4]));
-		if(ret < 0){
-			log_msg("send_at %s\n", at_arr[4]);
-			return;
+
+		get_config("status","module","attech_stat",attech_stat);
+		get_config("status","module","ndis_stat",ndis_stat);
+		if((!strcmp(attech_stat,"true")) && (!strcmp(ndis_stat,"false"))){
+			get_config("config","apn","apn",uci_buff);
+			sprintf(at_buff,"AT^NDISDUP=1,1,\"%s\"\r\n",uci_buff);
+			ret = serial_write(*fptr,at_buff);
+			if(ret < 0)
+				return;
+			memset(at_buff,0,strlen(at_buff));
+			memset(uci_buff,0,strlen(uci_buff));
+			sleep(5);
 		}
-		sleep(2);
-		ret = write(*fptr, at_arr[5], strlen(at_arr[5]));
-		if(ret < 0){
-			log_msg("send_at %s\n", at_arr[5]);
-			return;
+
+		get_config("status","module","ndis_stat",ndis_stat);
+		if(!strcmp(ndis_stat,"true")){
+			ret = serial_write(*fptr,"AT^HCSQ?\r\n");
+			if(ret < 0)
+				return;
+			sleep(2);
+
+			ret = serial_write(*fptr,"AT^MONSC\r\n");
+			if(ret < 0)
+				return;
+			sleep(2);
+
+			get_config("status","module","imei",uci_buff);
+			if(0 == strlen(uci_buff)){
+				ret = serial_write(*fptr,"AT+CGSN\r\n");
+				if(ret < 0)
+					return;
+				sleep(2);
+			}
+			memset(uci_buff,0,strlen(uci_buff));
 		}
-		sleep(2);
-		ret = write(*fptr, at_arr[6], strlen(at_arr[6]));
-		if(ret < 0){
-			log_msg("send_at %s\n", at_arr[6]);
-			return;
+
+		get_config("status","module","imsi",uci_buff);
+		if(0 == strlen(uci_buff)){
+			ret = serial_write(*fptr,"AT+CIMI\r\n");
+			if(ret < 0)
+				return;
+			sleep(2);
 		}
-		sleep(2);
-		ret = write(*fptr, at_arr[7], strlen(at_arr[7]));
-		if(ret < 0){
-			log_msg("send_at %s\n", at_arr[7]);
-			return;
-		}	
-		sleep(2);
-		ret = write(*fptr, at_arr[8], strlen(at_arr[8]));
-		if(ret < 0){
-			log_msg("send_at %s\n", at_arr[8]);
-			return;
-		}
-		sleep(2);
+		memset(uci_buff,0,strlen(uci_buff));
 	}
 	return;
 
@@ -139,15 +170,13 @@ void send_at(int *fptr)
 
 void alarm_handler()
 {
-	log_msg("\n********Alarm Reboot Device!!!*********\n");
-	system("echo mv messages");
-	system("cp /var/log/messages /opt/log/");
-	system("reboot");
+	log_syslog("***************Offline TimeOut","Reboot Device!**********************\n");
+	log_msg("***************Offline TimeOut","Reboot Device!**********************\n");
+	system("/opt/init/Reboot.sh Offline Timeout;");
 }
 int main(void) 
 {
 	int i=0,ret=0,fd=0;
-	int reboottime = 0;
 	char buff[64] = {0};
 	pthread_t rThread, tThread;
 	
@@ -158,9 +187,10 @@ int main(void)
 
 	log_msg("This is lterouter log_msg!\n");
 	log_msg("*********************************************\n");
+	log_syslog("********************lterouter","start!!!********************\n");
 	
 	/*初始化lanip*/
-	lanInit();
+	//lanInit();
 
 	/*当设备附着不上网络时定时重启*/
 	//getConfig("RebootTime",buff,"/opt/config/RebootTime");
@@ -177,8 +207,6 @@ int main(void)
 		return -1;
 	}
 
-	//        signal(SIGALRM, send_at);
-	//        alarm(2);
 	ret = pthread_create(&rThread,NULL,(void *)status_read,(void *)&fd);
 	if(0 != ret){
 		log_msg("rThread create failed!\n");

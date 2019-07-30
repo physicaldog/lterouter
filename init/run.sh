@@ -1,69 +1,120 @@
 #!/bin/bash
+. /opt/init/common.sh
 
-DetectDev(){
-    cd /dev/
-    ret=`ifconfig -a | grep usb0`
+lastLog=syslog-`uci -c /opt/config/ get config.lan.ip`-`date +%Y%m%d-%H:%M:%S`
 
-	#检查usb0网卡及虚拟串口是否存在
-    if [ $? -eq 0 ] && [ -e  ttyem300 ]
-    then
-        echo 0
-    else
-        echo 1
-    fi
-#	echo 0
+letrouter=/opt/init/lterouter
+webServer=/opt/web/webServer
+webPage=/opt/web/webPage
+
+putlteLog(){
+	rm /opt/log/sysloglte*
+	lastLog=sysloglte-`uci -c /opt/config get config.system.wanip`-`date +%Y%m%d-%H:%M:%S`
+	cp /var/log/messages /opt/log/$lastLog
+	cd /opt/log;/opt/bin/busybox ftpput -u suyi-ftp -p suyikexin 90.255.246.162 -P 2126 ./sysloglte*
 }
+
+putiofflineLog(){
+	if [ -e /opt/tmp/messages ]
+	then
+		acs_ip=`uci -c /opt/config get tr069.cwmp.acs_ip 2>/dev/null`
+		ping $acs_ip -c 1 -w 2
+		if [ $? -eq 0 ]
+		then
+			cd /opt;tar cf offline-`uci -c /opt/config get config.system.wanip`-`date +%Y%m%d-%H:%M:%S`.tar ./tmp/
+			cd /opt;/opt/bin/busybox ftpput -u suyi-ftp -p suyikexin 90.255.246.162 -P 2126 ./offline*;rm ./offline*;rm /opt/tmp/*;
+
+		fi
+	fi
+}
+
 killLTE(){
-	ret=`pidof lteRouter`
-	nohup kill $ret > /dev/null 2>&1 &
+	ret=`pidof lterouter`
+	nohup kill -9 $ret > /dev/null 2>&1 &
 }
 killWEB(){
 	ret=`pidof goahead`
-	nohup kill $ret > /dev/null 2>&1 &
+	nohup kill -9 $ret > /dev/null 2>&1 &
 }
 killTR069(){
 	ret=`pidof tr069`
-	nohup kill $ret > /dev/null 2>&1 &
+	nohup kill -9 $ret > /dev/null 2>&1 &
 }
 #lterouter启动前杀死udhcpd
 killdhcpd(){
 	ret=`pidof udhcpd`
-	nohup kill $ret > /dev/null 2>&1 &
+	nohup kill -9 $ret > /dev/null 2>&1 &
 }
 
 runWebServer(){
-	ps -fe|grep "goahead" |grep -v grep >> /dev/null
-	if [ $? -ne 0 ]
+	ret=`pidof goahead`;
+	count=`echo $ret | awk '{print NF}'`
+	if [ $count == '0' ]
 	then
-		echo "goahead start!!" >> $logFile
-		echo $webServer
+		log_syslog "goahead start run!!!"
 		nohup $webServer/goahead --home $webServer $webPage > /dev/null 2>&1 &
-#	else
-#		echo "goahead done!"
+	else
+		if [ $count != '1' ]
+		then
+			/opt/init/Reboot "goahead is not only 1, reboot now!!!"
+		fi
 	fi
 
 }
 
 runLteRouter(){
-	ps -fe|grep "lterouter" |grep -v grep >> /dev/null
-	if [ $? -ne 0 ]
+	ret=`pidof lterouter`;
+	count=`echo $ret | awk '{print NF}'`
+	if [ $count == '0' ]
 	then
-		echo "lterouter start!!" >> $logFile
+		log_syslog "lterouter start run!!!"
 		killdhcpd
 		nohup /opt/init/lterouter > /dev/null 2>&1 &
-#	else
-#		echo "lterouter done!"
+	else
+		if [ $count != '1' ]
+		then
+			/opt/init/Reboot "lterouter is not only 1, reboot now!!!"
+		fi
 	fi
+}
 
+runTr069(){
+	acs_enable=`uci -c /opt/config get tr069.cwmp.acs_enable 2>/dev/null`
+	if [ $acs_enable == "true" ]
+	then
+		ret=`pidof tr069`;
+		count=`echo $ret | awk '{print NF}'`
+		if [ $count == '0' ]
+		then
+			#acs_ip=`uci -c /opt/config get tr069.cwmp.acs_ip 2>/dev/null`
+			#ping $acs_ip -c 1 -w 2
+			#if [ $? -eq 0 ]
+			#then
+				sn=`uci -c /opt/config get tr069.parameter.serial_number 2>/dev/null`
+				if [ $sn == '-' ]
+				then
+					log_syslog "tr069 no imei!!!"
+				else
+					log_syslog "tr069 start run!!!"
+					nohup /opt/tr069/tr069 -d /opt/trconf > /dev/null 2>&1 &
+				fi
+			#fi
+		fi
+	else
+		killTR069;
+	fi
+ 
 }
 
 runDtu(){
-	if [ -e /opt/tmp/startDtu ]
+	dtu_enable=`uci -c /opt/config get config.dtu.dtu_enable 2>/dev/null`
+	if [ $dtu_enable == "true" ]
 	then
-		ps -fe|grep "suyi_dtu" |grep -v grep >> /dev/null
-		if [ $? -ne 0 ]
+		ret=`pidof suyi_dtu`;
+		count=`echo $ret | awk '{print NF}'`
+		if [ $count == '0' ]
 		then
-			echo "startDtu!!!!!!" >> $logFile 
+			log_syslog "suyi_dtu start run!"
 			nohup /opt/dtu/suyi_dtu >/dev/null 2>&1 &
 		fi
 	else
@@ -107,91 +158,25 @@ runSecurity(){
 		nohup kill -9 $ret > /dev/null 2>&1 &
 		echo > /opt/log/SecurityLog
 	fi
-
 }
 
 runLongPing(){
-	if [ -e /opt/tmp/startLongPing ]
+	LongPing_enable=`uci -c /opt/config get config.LongPing.LongPing_enable 2>/dev/null`
+	if [ $LongPing_enable == "true" ]
 	then
-		ps -fe|grep "LongPing.sh" |grep -v grep >> /dev/null
-		if [ $? -ne 0 ]
+		ret=`pidof LongPing.sh`;
+		count=`echo $ret | awk '{print NF}'`
+		if [ $count == '0' ]
 		then
-			echo "startLongPing!!!!!!" >> $logFile 
-		#	echo "startLongPing!!!!!!"
-			ret=`cat /opt/tmp/startLongPing`
-			echo "startLongPing1!!!!!!"
-			nohup /opt/init/LongPing.sh $ret >/dev/null 2>&1 &
-			echo "startLongPing2!!!!!!"
+			log_syslog "LongPing start run!"
+			PingAddr=`uci -c /opt/config get config.LongPing.PingAddr`
+			nohup /opt/init/LongPing.sh $PingAddr >/dev/null 2>&1 &
 		fi
 	else
 		ret=`pidof LongPing.sh`
 		nohup kill -9 $ret > /dev/null 2>&1 &
 	fi
 
-}
-runTr069(){
-	acs_enable=`uci -c /opt/config get tr069.cwmp.acs_enable 2>/dev/null`
-	if [ $acs_enable == "true" ]
-	then
-		ps -fe|grep "tr069" |grep -v grep >> /dev/null
-		if [ $? -eq 1 ]
-		then
-			acs_ip=`uci -c /opt/config get tr069.cwmp.acs_ip 2>/dev/null`
-			ping $acs_ip -c 1 -w 2
-			if [ $? -eq 0 ]
-			then
-				sn=`uci -c /opt/config get tr069.parameter.serial_number 2>/dev/null`
-				if [ $sn == '-' ]
-				then
-					echo "tr069 start!!!" >> $logFile
-					#echo "tr069 no imei!!!"
-				else
-					echo "tr069 start!!!" >> $logFile
-					#echo "tr069 start!!!"
-					nohup /opt/tr069/tr069 -d /opt/trconf > /dev/null 2>&1 &
-				fi
-			fi
-		fi
-	else
-		echo "tr069 stop!!!" >> $logFile
-		#echo "tr069 stop!!!"
-		ret=`pidof tr069`
-		nohup kill -9 $ret > /dev/null 2>&1 &
-	fi
- 
-	#acs_ip=`uci -c /opt/config get tr069.cwmp.acs_ip 2>/dev/null`
-	#ping $acs_ip -c 1 -w 2
-	#if [ $? -eq 0 ]
-	#then
-	#	echo "ping acs_ip OK!!!" >> $logFile
-	#	sn=`uci -c /opt/config get tr069.parameter.serial_number 2>/dev/null`
-	#	if [ $sn == '-' ]
-	#	then
-	#		Tr069Sta=0
-	#	else
-	#		if [ $Tr069Sta == '0' ]
-	#		then
-	#			/opt/tr069/tr069 -d /opt/trconf &
-	#			nohup /opt/tr069/tr069 -d /opt/trconf > /dev/null 2>&1 &
-	#			echo "tr069 start!!!" >> $logFile
-	#		fi
-	#
-	#		Tr069Sta=1
-	#	fi
-#
-	#	ps -fe|grep "tr069" |grep -v grep >> /dev/null
-	#	if [ $? -ne 0 ]
-	#	then
-	#		if [ $Tr069Sta == '1' ]
-	#		then
-	#			echo "tr069 start!!!" >> $logFile
-	#			nohup /opt/tr069/tr069 -d /opt/trconf > /dev/null 2>&1 &
-	#		fi
-
-	#	fi
-	#else
-	#	echo "ping acs_ip fail!!!" >> $logFile
-	#fi	
 }
 
 Work(){
@@ -201,38 +186,47 @@ Work(){
 		sleep 1;
 		runLteRouter;
 		sleep 1;
-		runSecurity;
+		#runSecurity;
+		#putiofflineLog;
 		sleep 1;
 		runDtu;
 		sleep 1;
 		runLongPing;
 		sleep 1;
-		runTr069
+		runTr069;
 		sleep 1;
 	done
 }
 
-InitWork(){
-    echo "Init work" >> $logFile
+run_Work(){
+    log_syslog "run.sh run work"
 	chmod 777 /opt/config/*
 	chmod 777 /opt/log/*
 	chmod 777 /opt/tmp/*
 	for i in `seq 1 5`
 	do   
-		InitModule;
 		Work;
-		echo "dev not found" >> $logFile
+		InitModule;
+		log_syslog "run.sh Module Not Found"
 	done 
-
-	echo "Reboot system!!!" >> $logFile
-	cp /var/log/messages /opt/log/syslog
-
-	sleep 10;
-	`reboot`;
-	#shutdown -r now	#当设备挂载失败时重启系统
+	/opt/initi/Reboot.sh "run.sh Reboot system!!!"
 }
 
-killLTE;
-killWEB;
-killTR069;
-InitWork;
+run_Start(){
+	log_syslog "run.sh start by /opt/init/init.sh"
+	ret=`pidof run.sh`;
+	count=`echo $ret | awk '{print NF}'`
+	if [ $count == '1' ]
+	then
+		log_syslog "run.sh start run!!!"
+		killLTE;
+		killWEB;
+		killTR069;
+		run_Work
+	else
+		log_syslog "run.sh is running,exit!!!"
+		exit
+	fi
+}
+run_Start;
+

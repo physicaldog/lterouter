@@ -441,7 +441,7 @@ int direct_process(char *buff)
 			return 0;
 		}
 		if(strstr(buff,"NWTIME")){
-			get_nwtime(buff);
+			//get_nwtime(buff);
 			return 0;
 		}
 	}

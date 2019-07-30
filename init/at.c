@@ -1,7 +1,13 @@
 #include "common.h"
 #include "at.h"
+#include<time.h> 
+extern int reboottime;
 
 #define ApnConf "/opt/config/ApnConfig"
+#define SYSLOG "/opt/log/syslog"
+int old_attech_stat = 3;
+int old_ndis_stat = 2;
+int old_sim_stat = 2;
 
 char *at[8] = {
 	"AT^NDISDUP=1,1,",
@@ -21,9 +27,9 @@ void direct_process(char *buff)
 		"HCSQ",
 		"CPIN",
 		"CGSN",	
+		"SIMST"
 	};
-	log_msg("****%s****\n",__FUNCTION__);
-	log_msg("buff:%s***\n",buff);
+	log_msg("***%s Get Buff:%s***\n",__FUNCTION__,buff);
 	if ('^' == buff[0]) {
 		if(strstr(buff,"AT^"))
 			return ;
@@ -36,27 +42,30 @@ void direct_process(char *buff)
 			return;
 		}
 		else if(strstr(buff,"NWTIME")){
-			get_nwtime(buff);
+			//get_nwtime(buff);
 			return;
 		}
 		else if(strstr(buff,at_arr[4])) {
 			get_monsc(buff);
 			return;
 		}
-/*		else if(strstr(buff,at_arr[5])) {
+		else if(strstr(buff,at_arr[5])) {
 			get_cimi(buff);
 			return;
-		}
-*/		
+		}	
 		else if(strstr(buff,at_arr[6])) {
 			get_hcsq(buff);
+			return;
+		}
+		else if(strstr(buff,at_arr[9])) {
+			get_simst(buff);
 			return;
 		}
 
 	}
 	else if ('+' == buff[0]) {
 			if(strstr(buff,at_arr[7])) {
-				get_cpin(buff);
+				//get_cpin(buff);
 				return;
 			}
 			else if(strstr(buff,at_arr[8])) {
@@ -78,26 +87,25 @@ void get_cgsn(char *buff)
 	char *qtr = NULL;
 	char IMEI[16] = {'\0'};
 
-	char uci_cmd[128] = {'\0'};
+	//char uci_cmd[128] = {'\0'};
 
 	log_msg("\n****%s****\n",__FUNCTION__);
 
 	ptr = strchr(buff, '\"');
+	if(!ptr)
+		return;
 	ptr++;
 	qtr = strchr(ptr, '\"');
+	if(!qtr)
+		return;
 	memset(IMEI, 0x0, sizeof(IMEI));
 	strncpy(IMEI, ptr, qtr-ptr);
+	log_msg("IMEI:%s\n",IMEI);
+	set_config("status","module","imei",IMEI,1);
 
-	memset(uci_cmd, 0x0, sizeof(uci_cmd));
-	snprintf(uci_cmd, sizeof(uci_cmd)-1, "uci -c /opt/config set tr069.parameter.serial_number=%s", IMEI);
-	system(uci_cmd);
-	//log_msg("\n**%s**\n", uci_cmd);
-/*	
-	memset(uci_cmd, 0x0, sizeof(uci_cmd));
-	snprint(uci_cmd, sizeof(uci_cmd)-1, "uci -c /opt/config commit tr069");
-	system(uci_cmd);
-	log_msg("\n**%s**\n", uci_cmd);
-*/
+	//memset(uci_cmd, 0x0, sizeof(uci_cmd));
+	//snprintf(uci_cmd, sizeof(uci_cmd)-1, "uci -c /opt/config set tr069.parameter.serial_number=%s", IMEI);
+	//system(uci_cmd);
 
 }
 
@@ -113,8 +121,12 @@ void get_cpin(char *buff)
 	log_msg("\n****%s****\n",__FUNCTION__);
 
 	ptr = strchr(buff, ':');
+	if(!ptr)
+		return;
 	ptr = ptr+2;
 	qtr = strchr(ptr, '\r');
+	if(!qtr)
+		return;
 	memset(simcard_state, 0x0, sizeof(simcard_state));
 	strncpy(simcard_state, ptr, qtr-ptr);
 
@@ -130,16 +142,16 @@ void get_hcsq(char * buff)
 	char *ptr = NULL;
 	char *qtr = NULL;
 	
-	char lte_rssi[8] = {'\0'};
-	char lte_rsrp[8] = {'\0'};
-	char lte_sinr[8] = {'\0'};
-	char lte_rsrq[8] = {'\0'};
-	int sinr = 0;
+	char lte_stat[8] = {'\0'};
+	char rbuff[64] = {0};
+	int rssi = 0;
+	int rsrp = 0;
+	double sinr = 0.0;
+	double rsrq = 0.0;
 
-	char uci_cmd[128] = {'\0'};
+	//char uci_cmd[128] = {'\0'};
 	
 	log_msg("\n****%s****\n",__FUNCTION__);
-
 
 	ptr = strstr(buff, "LTE");
 	if(NULL == ptr) 
@@ -149,42 +161,69 @@ void get_hcsq(char * buff)
 	else
 	{
 		ptr = strchr(ptr, ',');
+		if(!ptr)
+			return;
 		ptr++;
 		qtr = strchr(ptr, ',');		
-		memset(lte_rssi, 0x0, sizeof(lte_rssi));
-		strncpy(lte_rssi, ptr, qtr-ptr);
+		if(!qtr)
+			return;
+		strncpy(lte_stat, ptr, qtr-ptr);
+		rssi = atoi(lte_stat) - 121;
 		
 		ptr = strchr(ptr, ',');
+		if(!ptr)
+			return;
 		ptr++;
 		qtr = strchr(ptr, ',');		
-		memset(lte_rsrp, 0x0, sizeof(lte_rsrp));
-		strncpy(lte_rsrp, ptr, qtr-ptr);
+		if(!qtr)
+			return;
+		memset(lte_stat,0,8);
+		strncpy(lte_stat, ptr, qtr-ptr);
+		rsrp = atoi(lte_stat) - 141;
 
 		ptr = strchr(ptr, ',');
+		if(!ptr)
+			return;
 		ptr++;
 		qtr = strchr(ptr, ',');
-		memset(lte_sinr, 0x0, sizeof(lte_sinr));
-		strncpy(lte_sinr, ptr, qtr-ptr);
-		sinr = atoi(lte_sinr);
+		if(!qtr)
+			return;
+		memset(lte_stat,0,8);
+		strncpy(lte_stat, ptr, qtr-ptr);
+		sinr = atoi(lte_stat)*0.2 - 20.2;
 
 		ptr = strchr(ptr, ',');
+		if(!ptr)
+			return;
 		ptr++;
 		qtr = strchr(ptr, '\r');
-		memset(lte_rsrq, 0x0, sizeof(lte_rsrq));
-		strncpy(lte_rsrq, ptr, qtr-ptr);
+		if(!qtr)
+			return;
+		memset(lte_stat,0,8);
+		strncpy(lte_stat, ptr, qtr-ptr);
+		rsrq = atoi(lte_stat)*0.5 - 20;
+		sprintf(rbuff,"rssi:%d rsrp:%d sinr:%.1f rsrq:%.1f \n",rssi,rsrp,sinr,rsrq);
+		log_msg("HCSQ:%s",rbuff);
 
-		memset(uci_cmd, 0x0, sizeof(uci_cmd));
-		snprintf(uci_cmd, sizeof(uci_cmd)-1, "uci -c /opt/config set tr069.radio.SINR=%.1f", (-20.2+0.2*sinr));
-		system(uci_cmd);
+		memset(lte_stat,0,8);
+		sprintf(lte_stat,"%d",rssi);
+		set_config("status","module","rssi",lte_stat,1);
+		memset(lte_stat,0,8);
+		sprintf(lte_stat,"%d",rsrp);
+		set_config("status","module","rsrp",lte_stat,1);
+		memset(lte_stat,0,8);
+		sprintf(lte_stat,"%.1f",sinr);
+		set_config("status","module","sinr",lte_stat,1);
+		memset(lte_stat,0,8);
+		sprintf(lte_stat,"%.1f",rsrq);
+		set_config("status","module","rsrq",lte_stat,1);
+
+		//memset(uci_cmd, 0x0, sizeof(uci_cmd));
+		//snprintf(uci_cmd, sizeof(uci_cmd)-1, "uci -c /opt/config set tr069.radio.SINR=%.1f", (-20.2+0.2*sinr));
+		//system(uci_cmd);
 		//log_msg("\n**%s**\n", uci_cmd);
 	}
-
 }
-
-
-
-
-
 
 void get_cimi(char *buff)
 {
@@ -193,18 +232,23 @@ void get_cimi(char *buff)
 	char *qtr = NULL;
 	char IMSI[16] = {'\0'};
 
-	char uci_cmd[128] = {'\0'};
+	//char uci_cmd[128] = {'\0'};
 
 	log_msg("\n****%s****\n",__FUNCTION__);
 
 	ptr = buff;
+	if(!ptr)
+		return;
 	qtr = strchr(ptr, '\r');
+	if(!qtr)
+		return;
 	memset(IMSI, 0x0, sizeof(IMSI));
 	strncpy(IMSI, ptr, qtr-ptr);
+	set_config("status","module","imsi",IMSI,1);
 
-	memset(uci_cmd, 0x0, sizeof(uci_cmd));
-	snprintf(uci_cmd, sizeof(uci_cmd)-1, "uci -c /opt/config set tr069.identity.imsi=%s", IMSI);
-	system(uci_cmd);
+	//memset(uci_cmd, 0x0, sizeof(uci_cmd));
+	//snprintf(uci_cmd, sizeof(uci_cmd)-1, "uci -c /opt/config set tr069.identity.imsi=%s", IMSI);
+	//system(uci_cmd);
 	//log_msg("\n**%s**\n", uci_cmd);	
 	
 }
@@ -215,17 +259,17 @@ void get_monsc(char *buff)
 	int i=0,ret=0;
 	char *ptr = NULL;
 	char *qtr = NULL;
-	char MCC[5] = {'\0'};
-	char MNC[5] = {'\0'};
+	char MCC[8] = {'\0'};
+	char MNC[8] = {'\0'};
 	char ARFCN[8] = {'\0'};
 	char CellID[10] = {'\0'};
-	char PCI[5] = {'\0'};
-	char TAC[6] = {'\0'};
-	char RSRP[5] = {'\0'};
-	char RSRQ[5] = {'\0'};
-	char RXLEV[5] = {'\0'};
+	char PCI[8] = {'\0'};
+	char TAC[8] = {'\0'};
+	char RSRP[8] = {'\0'};
+	char RSRQ[8] = {'\0'};
+	char RXLEV[8] = {'\0'};
 
-	char uci_cmd[128] = {'\0'};
+	//char uci_cmd[128] = {'\0'};
 	
 	log_msg("\n****%s****\n",__FUNCTION__);
 
@@ -237,41 +281,61 @@ void get_monsc(char *buff)
 	else
 	{
 		ptr = strchr(ptr, ',');
+		if(!ptr)
+			return;
 		ptr++;
 		qtr = strchr(ptr, ',');		
+		if(!qtr)
+			return;
 		memset(MCC, 0x0, sizeof(MCC));
 		strncpy(MCC, ptr, qtr-ptr);
+		set_config("status","module","mcc",MCC,1);
 		
 		ptr = strchr(ptr, ',');
+		if(!ptr)
+			return;
 		ptr++;
 		qtr = strchr(ptr, ',');		
+		if(!qtr)
+			return;
 		memset(MNC, 0x0, sizeof(MNC));
 		strncpy(MNC, ptr, qtr-ptr);
+		set_config("status","module","mnc",MNC,1);
 
 		ptr = strchr(ptr, ',');
+		if(!ptr)
+			return;
 		ptr++;
 		qtr = strchr(ptr, ',');
+		if(!qtr)
+			return;
 		memset(ARFCN, 0x0, sizeof(ARFCN));
 		strncpy(ARFCN, ptr, qtr-ptr);
 
 		ptr = strchr(ptr, ',');
+		if(!ptr)
+			return;
 		ptr++;
 		qtr = strchr(ptr, ',');
+		if(!qtr)
+			return;
 		memset(CellID, 0x0, sizeof(CellID));
 		strncpy(CellID, ptr, qtr-ptr);
+		set_config("status","module","cellid",CellID,1);
 
 		ptr = strchr(ptr, ',');
 		ptr++;
 		qtr = strchr(ptr, ',');
 		memset(PCI, 0x0, sizeof(PCI));
 		strncpy(PCI, ptr, qtr-ptr);
+		set_config("status","module","pci",PCI,1);
 
+/*
 		ptr = strchr(ptr, ',');
 		ptr++;
 		qtr = strchr(ptr, ',');
 		memset(TAC, 0x0, sizeof(TAC));
 		strncpy(TAC, ptr, qtr-ptr);
-
 		ptr = strchr(ptr, ',');
 		ptr++;
 		qtr = strchr(ptr, ',');
@@ -283,7 +347,7 @@ void get_monsc(char *buff)
 		qtr = strchr(ptr, ',');
 		memset(RSRQ, 0x0, sizeof(RSRQ));
 		strncpy(RSRQ, ptr, qtr-ptr);
-
+		printf("rsrp:%s,rsrq:%s\n",RSRP,RSRQ);
 		ptr = strchr(ptr, ',');
 		ptr++;
 		qtr = strchr(ptr, '\r');
@@ -310,11 +374,12 @@ void get_monsc(char *buff)
 		system(uci_cmd);
 	//	log_msg("\n**%s**\n", uci_cmd);
 
-		memset(uci_cmd, 0x0, sizeof(uci_cmd));
-		snprintf(uci_cmd, sizeof(uci_cmd)-1, "uci -c /opt/config set tr069.radio.RSRP0=%s", RSRP);
-		system(uci_cmd);
+	//	memset(uci_cmd, 0x0, sizeof(uci_cmd));
+	//	snprintf(uci_cmd, sizeof(uci_cmd)-1, "uci -c /opt/config set tr069.radio.RSRP0=%s", RSRP);
+	//	system(uci_cmd);
 	//	log_msg("\n**%s**\n", uci_cmd);
 
+*/
 	}
 
 }
@@ -357,7 +422,94 @@ void get_nwtime(char *buff)
 		system(time);
 		setTime_done = 1;
 	}
+}
 
+void lte_sim(int new_sim_stat, char *buff)
+{
+	int ret = 0;
+	if(new_sim_stat == old_sim_stat){
+		//状态相同
+	}
+	else{
+		if(new_sim_stat){
+			log_syslog("SIM卡有效",buff);
+			set_config("status","module","sim_stat","true",1);
+			old_sim_stat = 1;
+		}else{
+			log_syslog("SIM卡无效",buff);
+			set_config("status","module","sim_stat","false",1);
+			old_sim_stat = 0;
+		}
+	}
+	return;
+}
+
+void get_simst(char *buff)
+{
+	int i = 0,ret = 0;
+	char *ptr = NULL;
+
+	log_msg("\n****%s****\n",__FUNCTION__);
+	ptr = strstr(buff," ");
+	if(NULL == ptr)
+		return;
+	ptr++;
+	if('1' == *ptr){
+		lte_sim(1,buff);
+	}
+	else{
+		lte_sim(0,buff);
+	}
+
+}
+
+void log_syslog(char *log,char *buff)
+{
+	char logbuff[512] = {0};
+	char timebuff[32] = {0};
+	time_t t;//将t声明为时间变量
+	struct tm *p;//struct tm是一个结构体，声明一个结构体指针
+	FILE *fp = NULL;
+	pid_t pid = getpid();
+
+	time(&t);
+
+	if(!buff)
+		return;
+	p=localtime(&t);//获得当地的时间
+	sprintf(timebuff,"%d-%d-%d %d:%d:%d",1900+p->tm_year,1+p->tm_mon,p->tm_mday,p->tm_hour,p->tm_min,p->tm_sec);
+	sprintf(logbuff,"%-20s lterouter pid %-8d:%s,%s\n",timebuff,pid,log,buff);
+
+	fp = fopen(SYSLOG,"a+");
+	if(!fp){
+		log_msg("/opt/log/syslog open failed \n!!!");
+		return;
+	}
+
+	fwrite(logbuff,sizeof(char),strlen(logbuff),fp);
+	fclose(fp);
+	return;
+}
+
+void lte_attech(int new_attech_stat, char *buff)
+{
+	int ret = 0;
+	if(new_attech_stat == old_attech_stat){
+		//状态相同
+	}
+	else{
+		if(new_attech_stat){
+			log_syslog("已附着",buff);
+			set_config("status","module","attech_stat","true",1);
+			old_attech_stat = 1;
+		}else{
+			log_syslog("未附着",buff);
+			system("kill -9 `cat /opt/tmp/udhcpc.pid`");
+			set_config("status","module","attech_stat","false",1);
+			old_attech_stat = 0;
+		}
+	}
+	return;
 }
 
 void get_sysinfoex(char *buff)
@@ -368,55 +520,84 @@ void get_sysinfoex(char *buff)
 
 	log_msg("****%s****%\n",__FUNCTION__);
 
-
 	ptr = strstr(buff," ");
 	if(NULL == ptr)
 		return;
 	if(strstr(buff,"SRVST")){
 		if (('2' != ptr[1])){
-			log_msg("无效网络\n");
-			log_msg("\n");
-			net_sta = 0;
-			ecm_done = 0;
-			system("kill `cat /opt/udhcpc.pid`");
+			log_msg("网络无效\n");
+			lte_attech(0,buff);
 		}
 	}
 	else{
 		qtr = strchr(buff,',');
+		if(NULL == qtr)
+			return;
 		for(i=0;i<5;i++)
 		{
 			qtr = strchr(qtr,',');
+			if(NULL == qtr)
+				return;
 			qtr++;
 		}
-		if (('2' == ptr[1]) && ('6' == *qtr)){
+		//if (('2' == ptr[1]) && ('6' == *qtr)){
+		if (('2' == ptr[1])){
 			log_msg("网络有效\n");
-			alarm(REBOOT_TIME);
+			lte_attech(1,buff);
 
-			/*网络有效，检查网络链接状态*/
-			write(fd,at[1],strlen(at[1]));
-			net_sta = 1;
 		}
 		else{
 			log_msg("网络无效\n");
-	//		log_msg("无效网络\n");
-			log_msg("\n");
-			net_sta = 0;
-			system("kill `cat /opt/udhcpc.pid`");
-			ecm_done = 0;
+			lte_attech(0,buff);
 		}
+
+		if('6' == *qtr)
+			set_config("status","module","netmode","LTE",0);
+		else if('1' == *qtr)
+			set_config("status","module","netmode","GSM",0);
+		else if('3' == *qtr)
+			set_config("status","module","netmode","WCDMA",0);
+		else if('4' == *qtr)
+			set_config("status","module","netmode","D_SCDMA",0);
+
 
 	}
 }
 
+void lte_ndis(int new_ndis_stat, char *buff)
+{
+	int ret = 0;
+	char ip[64] = {'\0'};
+	if(new_ndis_stat == old_ndis_stat){
+		if(new_ndis_stat){
+			alarm(reboottime);
+			ret = get_local_ip("usb0",ip);
+			if(0 == strlen(ip)){
+				log_msg("未获取到ip,重新获取\n");
+				system("/opt/init/netconf.sh");
+			}
+		}
+	}
+	else{
+		if(new_ndis_stat){
+			log_syslog("已拨号",buff);
+			set_config("status","module","ndis_stat","true",1);
+			old_ndis_stat = 1;
+			system("/opt/init/netconf.sh");
+			system("uci -c /opt/config set status.system.online_time=`date +\%Y\%m\%d-\%H:\%M:\%S`;uci -c /opt/config commit status.system");
+		}else{
+			log_syslog("未拨号",buff);
+			set_config("status","module","ndis_stat","false",1);
+			old_ndis_stat = 0;
+			system("uci -c /opt/config set status.system.offline_time=`date +\%Y\%m\%d-\%H:\%M:\%S`;uci -c /opt/config commit status.system");
+		}
+	}
+	return;
+}
 void get_ndisstat(char *buff)
 {
 	char *ptr = NULL;
-	FILE *fe = NULL;
 	int ret = 0;
-	int file = 0;
-	char ip[64] = {'\0'};
-	char rbuff[64] = {'\0'};//读取文件缓存
-	char direct[64] = {'\0'};//
 
 
 	log_msg("\n****%s****\n",__FUNCTION__);
@@ -425,43 +606,12 @@ void get_ndisstat(char *buff)
 		return;
 	switch (ptr[1]){
 		case '0':
-			log_msg("连接断开\n");
-			ecm_done = 0;
-			if((1 == net_sta)){
-				log_msg("开始拨号\n");
-				strcat(direct,"AT^NDISDUP=1,1,\"");//
-				//从配置文件中获取apn;                   
-				//getConfig("apn",rbuff,ApnConf);
-				get_config(rbuff,"apn","apn","config");
-				strcat(direct,rbuff);
-				strcat(direct,"\"\r\n");
-				log_msg("dir= %s\n",direct);
-
-				write(fd,"\r\n",strlen("\r\n"));
-				write(fd,direct,strlen(direct));
-			}
+			log_msg("未连接\n");
+			lte_ndis(0,buff);
 			break;
 		case '1'://获取ip
-			//log_msg("有效连接\n");
-			//log_msg("\n");
-			if(0 == setTime_done)
-				write(fd,"at^nwtime?\r\n",strlen("at^nwtime?\r\n"));
-			if(0 == ecm_done){
-				log_msg("获取ip\n");
-				system("bash /opt/init/netconf.sh");
-				ret = get_local_ip("usb0",ip);
-				if(0 != strcmp(ip,"")){
-					ecm_done = 1;
-					log_msg("usb0 ip = %s\n",ip);
-					log_msg("\n");
-				}
-				else{
-					ecm_done = 0;
-					log_msg("未获取到ip\n");
-					log_msg("\n");
-				}//如何检测系统的网络链接
-			}
-			//ecm_done = 0;
+			log_msg("有效连接\n");
+			lte_ndis(1,buff);
 			break;
 		case '2':
 			break;

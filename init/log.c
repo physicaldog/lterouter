@@ -6,7 +6,7 @@
 #include <syslog.h>
 
 //#define MAXLINE 256
-#define MAXLINE 4096
+#define MAXLINE 1024
 
 static void log_doit(int, int, const char*, va_list ap);
 

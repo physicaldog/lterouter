@@ -6,3 +6,6 @@
 .project
 web/webPage/.gitattributes
 web/websvr-goahead-4.0.2/build/linux-arm-default/
+init/init.c-bak
+init/at.c-bak
+dtu/ubuntuSer

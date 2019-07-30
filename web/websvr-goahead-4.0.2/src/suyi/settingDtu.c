@@ -123,7 +123,9 @@ void startDtu(Webs *wp)
 	websSetStatus(wp, 200);
 	websWriteHeaders(wp, -1, 0);//参数二需要未-1,否则前端收不到数据
 	websWriteEndHeaders(wp);
-	system("touch /opt/tmp/startDtu");
+	//system("touch /opt/tmp/startDtu");
+	set_config("config","dtu","dtu_enable","true",1);
+
 
 	mode = websGetVar(wp,("mode"),("1"));
 	server_ip = websGetVar(wp,("server_ip"),("0.0.0.0"));
@@ -166,7 +168,8 @@ void cancelDtu(Webs *wp)
 	websWriteHeaders(wp, -1, 0);//参数二需要未-1,否则前端收不到数据
 	websWriteEndHeaders(wp);
 
-	system("rm /opt/tmp/startDtu");
+	//system("rm /opt/tmp/startDtu");
+	set_config("config","dtu","dtu_enable","false",1);
 
     websWrite(wp,("串口服务已关闭"));
 	websDone(wp);
@@ -177,26 +180,29 @@ void cancelDtu(Webs *wp)
 void checkDtuEnable(Webs *wp)
 {
 	int ret = 0;
-	char mode[32] = {0};
+	char enable[8] = {0};
+	char mode[8] = {0};
 	char server_ip[32] = {0};
 	char server_port[32] = {0};
 	char local_port[32] = {0};
-	char baudrate[32] = {0};
-	char data_bit[32] = {0};
-	char parity[32] = {0};
-	char stop_bit[32] = {0};
+	char baudrate[8] = {0};
+	char data_bit[8] = {0};
+	char parity[8] = {0};
+	char stop_bit[8] = {0};
 	printf("\n********%s********\n",__FUNCTION__);
 	websSetStatus(wp, 200);
 	websWriteHeaders(wp, -1, 0);//参数二需要未-1,否则前端收不到数据
 	websWriteEndHeaders(wp);
 
 	websWrite(wp,("{"));
-	ret = access("/opt/tmp/startDtu",0);
-	if(-1 == ret){
+	//ret = access("/opt/tmp/startDtu",0);
+	get_config("config","dtu","dtu_enable",enable);
+	if(strcmp(enable,"true")){
 		websWrite(wp,("\"start\":\"0\","));
 	}else{
 		websWrite(wp,("\"start\":\"1\","));
 	}
+	memset(mode,0,sizeof(mode));
 /*
     getConfig("mode",mode,DtuConf);
     getConfig("server_ip",server_ip,DtuConf);

@@ -1,16 +1,14 @@
-config string module
-	option simst '1'
-	option srvst '0'
-	option stat '0'
+config string 'module'
+	option sim_stat '255'
+	option attech_stat 'false'
+	option ndis_stat 'false'
+	option uptime '0'
 	option rsrp '8'
 	option rssi '8'
 	option rsrq '8'
-	option sine '8'
+	option sinr '8'
 
-config string system
-	option lan_ip '1'
-	option lan_netmask '1'
-	option lan_mac '1'
+config string 'system'
 	option wan_ip '1'
 	option wan_netmask '1'
 	option wan_mac '1'

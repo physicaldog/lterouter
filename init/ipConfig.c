@@ -29,8 +29,8 @@ int get_config(char *package,char *section,char *option,char *buff)
 		strcpy(buff,p.o->v.string);
 	} 
 	else{
-		printf("%s not found! ",path);
-		uci_perror(c, "\n"); 
+		log_msg("%s not found! ",path);
+		//uci_perror(c, "\n"); 
 		return -1; 
 	}
 
@@ -50,8 +50,8 @@ int set_config(char *package,char *section,char *option,char *value,int commit)
 	c = uci_alloc_context(); 
 	uci_set_confdir(c, "/opt/config");
 
-	printf("%s\n",path);
-	if((UCI_OK == uci_lookup_ptr(c, &p, path, true)) && (p.flags & UCI_LOOKUP_COMPLETE)) { 
+//	printf("%s\n",path);
+	if((UCI_OK == uci_lookup_ptr(c, &p, path, true)) ) { 
 		p.value = value;
 		ret = uci_set(c,&p);
 		uci_save(c,p.p);
@@ -60,8 +60,8 @@ int set_config(char *package,char *section,char *option,char *value,int commit)
 		}
 	} 
 	else{
-		printf("%s not found!\n",path);
-		uci_perror(c, "\n"); 
+		log_msg("%s not found!\n",path);
+		//uci_perror(c, "\n"); 
 		return -1; 
 	}
 

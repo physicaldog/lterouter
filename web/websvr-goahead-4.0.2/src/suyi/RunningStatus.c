@@ -20,25 +20,24 @@ void sysInfo(Webs *wp)
 	char timeStr[64] = {0};
 	//websWrite(wp,("%s"),buff);
 	struct timeval uptime;
-	char *ptr = NULL;
-    char *city_name;
-    char *county_name;
-    char *location_name;
-	FILE *fp = NULL;
+    char city_name[16] = {0};
+    char county_name[16] = {0};
 	char buff[128] = {0};
-	cJSON *Addr = NULL;
+    char *location_name = buff;
+	char *ptr = buff;
+	//FILE *fp = NULL;
+	//cJSON *Addr = NULL;
 
 	printf("\n********%s********\n",__FUNCTION__);
 	websSetStatus(wp, 200);
 	websWriteHeaders(wp, -1, 0);//参数二需要未-1,否则前端收不到数据
 	websWriteEndHeaders(wp);
-
-
 	uptime = get_uptime();
 	
 	//printf("uptime = %lu\n", uptime.tv_sec);
 	//get_timeStr(uptime.tv_sec,timeStr);
 	//printf("timeStr:%s\n",timeStr);
+	/*
 	fp = fopen(ADDRESS,"r");
 	if(NULL == fp){
 		printf("文件打开失败\n");
@@ -62,6 +61,24 @@ void sysInfo(Webs *wp)
 			cJSON_Delete(Addr);
 		}
 	}
+*/
+	get_config("config","addr","city",city_name);
+	get_config("config","addr","county",county_name);
+	get_config("config","addr","location",location_name);
+
+	websWrite(wp,("{"));
+	websWrite(wp,("\"system_addr\":\"%s.%s.%s\","),city_name,county_name,location_name);
+
+	memset(buff,0,128);
+	get_config("status","system","online_time",ptr);
+	websWrite(wp,("\"online_time\":\"%s\","),ptr);
+
+	memset(buff,0,128);
+	get_config("status","system","offline_time",ptr);
+	websWrite(wp,("\"offline_time\":\"%s\","),ptr);
+
+	websWrite(wp,("\"uptime\":\"%lu\""),uptime.tv_sec);
+	websWrite(wp,("}"));
 
 	websDone(wp);
 	return;
@@ -93,8 +110,112 @@ void deviceInfo(Webs *wp)
 	websDone(wp);
 	return;
 }
-
 void WANStatus(Webs *wp)
+{
+
+	FILE *fp;
+	int ret = 0;
+	char *ptr = NULL;
+	char uci_buff[64] = {'\0'};//读取文件缓存
+
+	char ip[32] = {'\0'};//读取文件缓存
+	char netmask[32] = {'\0'};//读取文件缓存
+	char macaddr[32] = {'\0'};//读取文件缓存
+
+	printf("\n********%s********\n",__FUNCTION__);
+	websSetStatus(wp, 200);
+	websWriteHeaders(wp, -1, 0);//参数二需要未-1,否则前端收不到数据
+	websWriteEndHeaders(wp);
+
+	fp = popen("date +\"%Y-%m-%d %Hh:%Mm\"","r");
+	fread(uci_buff,1,sizeof(uci_buff),fp);
+	fclose(fp);
+
+	if(NULL != (ptr = strchr(uci_buff,'\n')))
+		*ptr = 0;
+	//printf("system_date:%s\n",system_date);
+	ret = access("/dev/ttyem300",0);
+	if( 0 != ret){
+		websWrite(wp,("{"));
+		websWrite(wp,("\"system_date\":\"%s\","),uci_buff);
+		websWrite(wp,("\"netStatus\":\"设备异常！\""));
+		websWrite(wp,("}"));
+		websDone(wp);
+		return;
+	}
+
+	get_local_ip(WAN_NAME,ip,netmask,macaddr);
+	printf("wanip:%s,netmask:%s,macaddr:%s\n",ip,netmask,macaddr);
+
+	websWrite(wp,("{"));
+
+	websWrite(wp,("\"system_date\":\"%s\","),uci_buff);
+
+	memset(uci_buff,0,strlen(uci_buff));
+	get_config("status","module","netmode",uci_buff);
+	websWrite(wp,("\"netmode\":\"%s\","),uci_buff);
+
+	memset(uci_buff,0,strlen(uci_buff));
+	get_config("status","module","attech_stat",uci_buff);
+	if(!strcmp(uci_buff,"true"))
+		websWrite(wp,("\"netStatus\":\"成功附着\","));
+	else
+		websWrite(wp,("\"netStatus\":\"附着失败\","));
+
+	memset(uci_buff,0,strlen(uci_buff));
+	get_config("status","module","sim_stat",uci_buff);
+	if(!strcmp(uci_buff,"true"))
+		websWrite(wp,("\"simStatus\":\"sim有效\","));
+	else
+		websWrite(wp,("\"simStatus\":\"sim无效\","));
+
+	memset(uci_buff,0,strlen(uci_buff));
+	get_config("status","module","ndis_stat",uci_buff);
+	if(!strcmp(uci_buff,"true"))
+		websWrite(wp,("\"ecmStatus\":\"已连接\","));
+	else
+		websWrite(wp,("\"ecmStatus\":\"未连接\","));
+
+
+	memset(uci_buff,0,strlen(uci_buff));
+	get_config("status","module","rssi",uci_buff);
+	printf("%s\n",uci_buff);
+	websWrite(wp,("\"rssi\":\"%s dBm\","),uci_buff);
+
+	memset(uci_buff,0,strlen(uci_buff));
+	get_config("status","module","rsrp",uci_buff);
+	printf("%s\n",uci_buff);
+	websWrite(wp,("\"rsrp\":\"%s dBm\","),uci_buff);
+
+	memset(uci_buff,0,strlen(uci_buff));
+	get_config("status","module","sinr",uci_buff);
+	printf("%s\n",uci_buff);
+	websWrite(wp,("\"sinr\":\"%s dB\","),uci_buff);
+
+	memset(uci_buff,0,strlen(uci_buff));
+	get_config("status","module","rsrq",uci_buff);
+	printf("%s\n",uci_buff);
+	websWrite(wp,("\"rsrq\":\"%s dBm\","),uci_buff);
+
+	memset(uci_buff,0,strlen(uci_buff));
+	get_config("status","module","apn",uci_buff);
+	websWrite(wp,("\"apn\":\"%s\","),uci_buff);
+
+	memset(uci_buff,0,strlen(uci_buff));
+	get_config("status","module","imei",uci_buff);
+	websWrite(wp,("\"imei\":\"%s\","),uci_buff);
+
+	websWrite(wp,("\"wanip\":\"%s\","),ip);
+	websWrite(wp,("\"wanmask\":\"%s\","),netmask);
+	websWrite(wp,("\"wanmac\":\"%s\""),macaddr);
+
+	websWrite(wp,("}"));
+
+	websDone(wp);
+	return;
+}
+
+void WANStatus_bak(Webs *wp)
 {
 
 	int fd = 0;

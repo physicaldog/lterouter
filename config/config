@@ -1,16 +1,21 @@
 
+config string 'addr'
+	option city '南京'
+	option county '鼓楼'
+	option location '汇杰广场'
+
 config string 'apn'
 
 config string 'lan'
 	option ip '192.168.1.1'
 	option netmask '255.255.255.0'
 
-config string 'addr'
-	option city '南京'
-	option county '鼓楼'
-	option location '汇杰广场'
+config string 'LongPing'
+	option LongPing_enable 'false'
+	option PingAddr '192.168.1.1'
 
 config string 'dtu'
+	option dtu_enable 'false'
 	option mode '1'
 	option local_port '1010'
 	option baudrate '9600'
@@ -19,9 +24,9 @@ config string 'dtu'
 	option stop_bit '1'
 
 config string 'system'
-	option reboot_interval '600'
+	option reboot_interval '180'
 	option productName 'LTE-ROUTER'
 	option productModle 'P17/0156_CPE_V2.2'
-	option sVersion 'P17/0156_cpe_2.5.0_20190624'
 	option reboot_count '0'
+	option sVersion 'P17/0156_cpe_2.5.0_20190730'
 
