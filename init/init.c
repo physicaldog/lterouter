@@ -18,6 +18,7 @@ static int openDev(char *Dev)
 	iFd = open(Dev, O_RDWR | O_NOCTTY);                        
 	if(iFd < 0) {
 		log_msg("open %s failed!\n",Dev);
+		log_syslog("open ttyem302 failed!","\n");
 		return -1;
 	}
 
@@ -70,10 +71,12 @@ void status_read(int *fptr)
 		}
 		else {
 			log_msg("AT Read err:\n");
+			log_syslog("AT Read err","\n");
 			return;
 		}
 	}
 	log_msg("AT Read Exit\n");
+	log_syslog("AT Read Exit","\n");
 }/*}}}*/
 
 char at_arr[16][64] = {/*{{{*/
@@ -93,6 +96,7 @@ int serial_write(int fd,char *buff)
 	ret = write(fd, buff, strlen(buff));
 	if(ret < 0){
 		log_msg("AT Send %s Failed\n",buff);
+		log_syslog("AT Send Failed","\n");
 		return -1;
 	}
 	return 0;
@@ -204,17 +208,20 @@ int main(void)
 	fd = openDev(SerPort);
 	if(0 >= fd){
 		log_msg("OPEN /dev/ttyem300 FAILED!\n");
+		log_syslog("OPEN /dev/ttyem300 FAILED!","\n");
 		return -1;
 	}
 
 	ret = pthread_create(&rThread,NULL,(void *)status_read,(void *)&fd);
 	if(0 != ret){
 		log_msg("rThread create failed!\n");
+		log_syslog("rThread create failed!","\n");
 		return -1;
 	}
 	ret = pthread_create(&tThread,NULL,(void *)send_at,(void *)&fd);
 	if(0 != ret){
 		log_msg("tThread create failed!\n");
+		log_syslog("tThread create failed!","\n");
 		return -1;
 	}
 

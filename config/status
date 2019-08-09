@@ -1,5 +1,5 @@
 config string 'module'
-	option sim_stat '255'
+	option sim_stat 'false'
 	option attech_stat 'false'
 	option ndis_stat 'false'
 	option uptime '0'

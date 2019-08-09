@@ -29,8 +29,8 @@ function sysInfo(){
 		async:true,
 		dataType:'json',
 		success:function(data){
-			
-			$('#system_addr').text(data.system_addr);
+			$('#install_time').text(data.install_time);
+			$('#install_addr').text(data.install_addr);
 			$('#online_time').text(data.online_time);
 			$('#offline_time').text(data.offline_time);
 			totalTime = parseInt(data.uptime);
@@ -98,7 +98,6 @@ function WANStatus(){
 			//age:18
 		},
 		success:function(data){	
-			alert(data.rssi data.rsrp data.sinr data.rsrq)
 			$('#system_date').text(data.system_date);
 			$('#netmode').text(data.netmode);
 			$('#netStatus').text(data.netStatus);

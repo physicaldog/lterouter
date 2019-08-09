@@ -35,7 +35,7 @@ void settingAddr(Webs *wp)
     char *city_name;
     char *county_name;
     char *location_name;
-	char command[128] = {0};
+	char buff[64] = {0};
 	FILE *fp = NULL;
 	int ret = 0;
 	cJSON *Addr = NULL;
@@ -47,9 +47,18 @@ void settingAddr(Webs *wp)
 	county_name = websGetVar(wp,("county_name"),(""));
 	location_name = websGetVar(wp,("location_name"),(""));
 
+	fp = popen("date +\"%Y-%m-%d %H:%M:%S\"","r");
+	if(fp){
+		ret = fread(buff,1,sizeof(buff),fp);
+		if(NULL != (ptr = strchr(buff,'\n')))
+			*ptr = 0;
+		fclose(fp);
+	}
+
 	set_config("config","addr","city",city_name,1);
 	set_config("config","addr","county",county_name,1);
 	set_config("config","addr","location",location_name,1);
+	set_config("config","addr","install_time",buff,1);
 	
 	websDone(wp);
 	return;
@@ -234,7 +243,8 @@ void resetDev(Webs *wp)
 	websDone(wp);
 	/*系统重启*/
 	sync();
-	reboot(RB_AUTOBOOT);
+	//reboot(RB_AUTOBOOT);
+	system("/opt/init/Reboot.sh \"**************webPage reboot!*************\"");
 	return;
 }
 

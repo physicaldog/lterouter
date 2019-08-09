@@ -3,7 +3,7 @@
 . /opt/tr069/common.sh
 
 if [ "$ACTION"x = "get"x ];then
-    sn=`uci -c /opt/config get tr069.parameter.serial_number 2>/dev/null`
+    sn=`uci -c /opt/config get status.module.imei 2>/dev/null`
     echo $sn
 fi
 exit 0

@@ -3,7 +3,7 @@
 . /opt/tr069/common.sh
 
 if [ "$ACTION"x = "get"x ];then
-    sinr=`uci -c /opt/config get tr069.radio.SINR 2>/dev/null`;
+    sinr=`uci -c /opt/config get status.module.sinr 2>/dev/null`;
     echo $sinr
 fi
 

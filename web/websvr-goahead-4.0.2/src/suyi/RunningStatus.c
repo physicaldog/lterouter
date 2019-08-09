@@ -65,9 +65,13 @@ void sysInfo(Webs *wp)
 	get_config("config","addr","city",city_name);
 	get_config("config","addr","county",county_name);
 	get_config("config","addr","location",location_name);
+	get_config("config","addr","install_time",buff);
+	printf("install_time:%s\n",buff);
 
 	websWrite(wp,("{"));
-	websWrite(wp,("\"system_addr\":\"%s.%s.%s\","),city_name,county_name,location_name);
+	websWrite(wp,("\"install_time\":\"%s\","),buff);
+	//websWrite(wp,("\"install_time\":\"%s,"),buff);
+	websWrite(wp,("\"install_addr\":\"%s.%s.%s\","),city_name,county_name,location_name);
 
 	memset(buff,0,128);
 	get_config("status","system","online_time",ptr);
@@ -198,7 +202,7 @@ void WANStatus(Webs *wp)
 	websWrite(wp,("\"rsrq\":\"%s dBm\","),uci_buff);
 
 	memset(uci_buff,0,strlen(uci_buff));
-	get_config("status","module","apn",uci_buff);
+	get_config("config","apn","apn",uci_buff);
 	websWrite(wp,("\"apn\":\"%s\","),uci_buff);
 
 	memset(uci_buff,0,strlen(uci_buff));

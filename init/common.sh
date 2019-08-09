@@ -1,4 +1,3 @@
-#!/bin/bash
 
 #脚本实现功能：
 #1.初始化gpio
@@ -23,10 +22,10 @@ log_syslog(){
 	pid=`pidof $name`
 	if [ $debug -eq 1 ]
 	then
-		echo `date +%Y%m%d-%H:%M:%S` $0 " pid:"$pid $*
-		echo `date +%Y%m%d-%H:%M:%S` $0 " pid:"$pid $* >> $logFile 
+		echo `date +%Y-%m-%d-%H:%M:%S` $0 " pid:"$pid $*
+		echo `date +%Y-%m-%d-%H:%M:%S` $0 " pid:"$pid $* >> $logFile 
 	else
-		echo `date +%Y%m%d-%H:%M:%S` $0 " pid:"$pid $* >> $logFile 
+		echo `date +%Y-%m-%d-%H:%M:%S` $0 " pid:"$pid $* >> $logFile 
 	fi
 }
 

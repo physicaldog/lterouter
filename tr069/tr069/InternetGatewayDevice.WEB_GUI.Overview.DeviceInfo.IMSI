@@ -3,7 +3,7 @@
 . /opt/tr069/common.sh
 
 if [ "$ACTION"x = "get"x ];then
-    _ret=`uci -c /opt/config get tr069.identity.imsi 2>/dev/null`
+    _ret=`uci -c /opt/config get status.module.imsi 2>/dev/null`
     echo $_ret   
 fi
 

@@ -1,5 +1,5 @@
 #!/bin/bash
-. /opt/init/common.sh
+source /opt/init/common.sh
 
 lastLog=syslog-`uci -c /opt/config/ get config.lan.ip`-`date +%Y%m%d-%H:%M:%S`
 
@@ -49,14 +49,14 @@ killdhcpd(){
 runWebServer(){
 	ret=`pidof goahead`;
 	count=`echo $ret | awk '{print NF}'`
-	if [ $count == '0' ]
+	if [ $count -eq 0 ]
 	then
 		log_syslog "goahead start run!!!"
 		nohup $webServer/goahead --home $webServer $webPage > /dev/null 2>&1 &
 	else
-		if [ $count != '1' ]
+		if [ $count -gt 1 ]
 		then
-			/opt/init/Reboot "goahead is not only 1, reboot now!!!"
+			/opt/init/Reboot.sh "goahead is not only 1, reboot now!!!"
 		fi
 	fi
 
@@ -65,15 +65,14 @@ runWebServer(){
 runLteRouter(){
 	ret=`pidof lterouter`;
 	count=`echo $ret | awk '{print NF}'`
-	if [ $count == '0' ]
+	if [ $count -eq 0 ]
 	then
 		log_syslog "lterouter start run!!!"
-		killdhcpd
 		nohup /opt/init/lterouter > /dev/null 2>&1 &
 	else
-		if [ $count != '1' ]
+		if [ $count -gt 1 ]
 		then
-			/opt/init/Reboot "lterouter is not only 1, reboot now!!!"
+			/opt/init/Reboot.sh "lterouter is not only 1, reboot now!!!"
 		fi
 	fi
 }
@@ -84,24 +83,29 @@ runTr069(){
 	then
 		ret=`pidof tr069`;
 		count=`echo $ret | awk '{print NF}'`
-		if [ $count == '0' ]
+		if [ $count -eq 0 ]
 		then
-			#acs_ip=`uci -c /opt/config get tr069.cwmp.acs_ip 2>/dev/null`
-			#ping $acs_ip -c 1 -w 2
-			#if [ $? -eq 0 ]
-			#then
-				sn=`uci -c /opt/config get tr069.parameter.serial_number 2>/dev/null`
-				if [ $sn == '-' ]
-				then
-					log_syslog "tr069 no imei!!!"
-				else
-					log_syslog "tr069 start run!!!"
-					nohup /opt/tr069/tr069 -d /opt/trconf > /dev/null 2>&1 &
-				fi
-			#fi
+			sn=`uci -c /opt/config get tr069.parameter.serial_number 2>/dev/null`
+			if [ $sn == '-' ]
+			then
+				log_syslog "tr069 no imei!!!"
+			else
+				log_syslog "tr069 start run!!!"
+			nohup /opt/tr069/tr069 -d /opt/trconf > /dev/null 2>&1 &
+			fi
+		else
+			if [ $count -gt 1 ]
+			then
+				/opt/init/Reboot.sh "tr069 is not only 1, reboot now!!!"
+			fi
 		fi
 	else
-		killTR069;
+		ret=`pidof tr069`;
+		count=`echo $ret | awk '{print NF}'`
+		if [ $count -gt 0 ]
+		then
+			killTR069;
+		fi
 	fi
  
 }
@@ -112,14 +116,24 @@ runDtu(){
 	then
 		ret=`pidof suyi_dtu`;
 		count=`echo $ret | awk '{print NF}'`
-		if [ $count == '0' ]
+		if [ $count -eq 0 ]
 		then
 			log_syslog "suyi_dtu start run!"
 			nohup /opt/dtu/suyi_dtu >/dev/null 2>&1 &
+		else
+			if [ $count -gt 1 ]
+			then
+				/opt/init/Reboot.sh "suyi_dtu is not only 1, reboot now!!!"
+			fi
 		fi
 	else
-		ret=`pidof suyi_dtu`
-		nohup kill -9 $ret > /dev/null 2>&1 &
+		ret=`pidof suyi_dtu`;
+		count=`echo $ret | awk '{print NF}'`
+		if [ $count -gt 0 ]
+		then
+			ret=`pidof suyi_dtu`
+			nohup kill -9 $ret > /dev/null 2>&1 &
+		fi
 	fi
 
 }
@@ -166,15 +180,20 @@ runLongPing(){
 	then
 		ret=`pidof LongPing.sh`;
 		count=`echo $ret | awk '{print NF}'`
-		if [ $count == '0' ]
+		if [ $count -eq 0 ]
 		then
 			log_syslog "LongPing start run!"
 			PingAddr=`uci -c /opt/config get config.LongPing.PingAddr`
 			nohup /opt/init/LongPing.sh $PingAddr >/dev/null 2>&1 &
 		fi
 	else
-		ret=`pidof LongPing.sh`
-		nohup kill -9 $ret > /dev/null 2>&1 &
+		ret=`pidof LongPing.sh`;
+		count=`echo $ret | awk '{print NF}'`
+		if [ $count -gt 0 ]
+		then
+			ret=`pidof LongPing.sh`
+			nohup kill -9 $ret > /dev/null 2>&1 &
+		fi
 	fi
 
 }
@@ -185,7 +204,7 @@ Work(){
 		runWebServer;
 		sleep 1;
 		runLteRouter;
-		sleep 1;
+		#sleep 1;
 		#runSecurity;
 		#putiofflineLog;
 		sleep 1;
@@ -206,17 +225,17 @@ run_Work(){
 	for i in `seq 1 5`
 	do   
 		Work;
-		InitModule;
 		log_syslog "run.sh Module Not Found"
+		InitModule;
 	done 
-	/opt/initi/Reboot.sh "run.sh Reboot system!!!"
+	/opt/init/Reboot.sh "run.sh Reboot system!!!"
 }
 
 run_Start(){
 	log_syslog "run.sh start by /opt/init/init.sh"
 	ret=`pidof run.sh`;
 	count=`echo $ret | awk '{print NF}'`
-	if [ $count == '1' ]
+	if [ $count -eq 1 ]
 	then
 		log_syslog "run.sh start run!!!"
 		killLTE;

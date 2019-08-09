@@ -34,7 +34,7 @@ void setcontent(FILE *fd,char *Config, char *content)
 	fwrite("\n",sizeof(char),1,fd);
 	
 }
-int setDhcpConf(char *ip)
+int setDhcpConf(char *ip,char *netmask)
 {
 	FILE *fd = NULL;
 	char *p = NULL;
@@ -54,7 +54,7 @@ int setDhcpConf(char *ip)
 	p = strrchr(ip_str,'.');
 	strcpy(++p,"254\n");
 	setcontent(fd,"end",ip_str);
-	setcontent(fd,"option subnet","255.255.255.0");
+	setcontent(fd,"option subnet",netmask);
 	setcontent(fd,"opt router",ip);
 	setcontent(fd,"interface","eth0");
 	setcontent(fd,"max_leases","24");
@@ -79,7 +79,7 @@ void settingLAN(Webs *wp)
 	//setConfig("netmask",netmask,LanConf);
     set_config("config","lan","ip",lanip,TRUE);
     set_config("config","lan","netmask",netmask,TRUE);
-	setDhcpConf(lanip);
+	setDhcpConf(lanip,netmask);
 
     websWrite(wp,("重启后生效"));
 	websDone(wp);

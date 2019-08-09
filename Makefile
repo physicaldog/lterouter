@@ -28,7 +28,7 @@ webBin = $(webServer)/build/linux-arm-default/bin
 webPage = $(web)/webPage
 webserver = $(web)/websvr-goahead-2.18/LINUX
 #webpage = ~/ubuntushare/staticPage
-opt = $(rootfs_dir)/../opt
+opt = /home/xueqian/cpe_FileSystem/opt
 package=/home/xueqian/ubuntushare/package
 
 initEXE = lterouter
@@ -106,7 +106,7 @@ opt:
 	uci -c ./config set config.system.sVersion=$(softVersion)`date +%Y%m%d`
 	uci -c ./config commit config.system
 	cp $(config)/* $(opt)/config/
-	cp $(log)/* $(opt)/log/
+	-cp $(log)/* $(opt)/log/
 	-cp $(tmp)/* $(opt)/tmp/
 	cp $(init)/*.sh $(init)/button $(init)/$(initEXE) $(opt)/init/
 	cp $(dtu)/$(dtuEXE) $(opt)/dtu/
@@ -124,8 +124,8 @@ opt:
 
 #网页升级包，升级后删除
 package:
-	-rm $(package)/system/*
-	-rm $(package)/system/system.tar;
+	-rm -rf $(package)/system/*
+	-rm -rf $(package)/system.tar;
 	tar -cf $(package)/system/cpe.tar -C $(opt) .;
 	cd $(package)/system/;md5sum cpe.tar > cpe.md5;
 	cd $(package);tar -cf - system|openssl des3 -salt -k monkey | dd of=system.tar

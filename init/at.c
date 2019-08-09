@@ -502,11 +502,13 @@ void lte_attech(int new_attech_stat, char *buff)
 			log_syslog("已附着",buff);
 			set_config("status","module","attech_stat","true",1);
 			old_attech_stat = 1;
+			system("uci -c /opt/config set status.system.online_time=`date +\%Y\%m\%d-\%H:\%M:\%S`;uci -c /opt/config commit status.system");
 		}else{
 			log_syslog("未附着",buff);
 			system("kill -9 `cat /opt/tmp/udhcpc.pid`");
 			set_config("status","module","attech_stat","false",1);
 			old_attech_stat = 0;
+			system("uci -c /opt/config set status.system.offline_time=`date +\%Y\%m\%d-\%H:\%M:\%S`;uci -c /opt/config commit status.system");
 		}
 	}
 	return;
@@ -539,6 +541,14 @@ void get_sysinfoex(char *buff)
 			if(NULL == qtr)
 				return;
 			qtr++;
+			if(i == 2){
+				if('1' == *qtr){
+					lte_sim(1,buff);
+				}
+				else{
+					lte_sim(0,buff);
+				}
+			}		
 		}
 		//if (('2' == ptr[1]) && ('6' == *qtr)){
 		if (('2' == ptr[1])){
@@ -574,7 +584,7 @@ void lte_ndis(int new_ndis_stat, char *buff)
 			ret = get_local_ip("usb0",ip);
 			if(0 == strlen(ip)){
 				log_msg("未获取到ip,重新获取\n");
-				system("/opt/init/netconf.sh");
+				system("/opt/init/netconf.sh 1");
 			}
 		}
 	}
@@ -583,13 +593,12 @@ void lte_ndis(int new_ndis_stat, char *buff)
 			log_syslog("已拨号",buff);
 			set_config("status","module","ndis_stat","true",1);
 			old_ndis_stat = 1;
-			system("/opt/init/netconf.sh");
-			system("uci -c /opt/config set status.system.online_time=`date +\%Y\%m\%d-\%H:\%M:\%S`;uci -c /opt/config commit status.system");
+			system("/opt/init/netconf.sh 1");
 		}else{
 			log_syslog("未拨号",buff);
 			set_config("status","module","ndis_stat","false",1);
+			system("/opt/init/netconf.sh 0");
 			old_ndis_stat = 0;
-			system("uci -c /opt/config set status.system.offline_time=`date +\%Y\%m\%d-\%H:\%M:\%S`;uci -c /opt/config commit status.system");
 		}
 	}
 	return;

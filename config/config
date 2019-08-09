@@ -28,5 +28,5 @@ config string 'system'
 	option productName 'LTE-ROUTER'
 	option productModle 'P17/0156_CPE_V2.2'
 	option reboot_count '0'
-	option sVersion 'P17/0156_cpe_2.5.0_20190730'
+	option sVersion 'P17/0156_cpe_2.5.0_20190809'
 

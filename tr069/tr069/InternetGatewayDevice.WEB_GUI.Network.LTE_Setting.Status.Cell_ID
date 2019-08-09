@@ -3,7 +3,7 @@
 . /opt/tr069/common.sh
 
 if [ "$ACTION"x = "get"x ];then
-	cell_id=`uci -c /opt/config get tr069.radio.CellID 2>/dev/null`
+	cell_id=`uci -c /opt/config get status.module.cellid 2>/dev/null`
     echo $cell_id
 fi
 

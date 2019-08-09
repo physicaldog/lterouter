@@ -1,5 +1,5 @@
 #!/bin/bash
-. /opt/init/common.sh
+source /opt/init/common.sh
 
 filename=/opt/log/syslog
 #1M
@@ -18,7 +18,7 @@ CheckLogSize(){
 lan_Init(){
 	lanip=`uci -c /opt/config/ get config.lan.ip`
 	netmask=`uci -c /opt/config/ get config.lan.netmask`
-	ifconfig eth0 $lanip $netmask
+	ifconfig eth0 $lanip netmask  $netmask
 	udhcpd /opt/config/udhcpd.conf
 }
 Reboot_Count(){
@@ -42,17 +42,17 @@ runDetect(){
 	do
 		ret=`pidof run.sh`;
 		count=`echo $ret | awk '{print NF}'`
-		if [ $count == '0' ]
+		if [ $count -eq 0 ]
 		then
 			log_syslog "run.sh start run!!!"
 			/opt/init/run.sh &
 		else
-			if [ $count != '1' ]
+			if [ $count -gt 1 ]
 			then
-				/opt/init/Reboot "run.sh is not only 1, reboot now!!!"
+				log_syslog "run.sh not only,pid:" $ret
+				#/opt/init/Reboot.sh "run.sh is not only 1, reboot now!!!"
 			fi
 		fi
-
 		CheckLogSize;
 		sleep 60
 	done
@@ -78,7 +78,7 @@ init_Start(){
 	log_syslog "init.sh start by /etc/init.d/S90*.sh"
 	ret=`pidof init.sh`;
 	count=`echo $ret | awk '{print NF}'`
-	if [ $count == '1' ]
+	if [ $count -eq 1 ]
 	then
 		log_syslog "init.sh start run!!!"
 		init_work
@@ -87,6 +87,10 @@ init_Start(){
 		exit
 	fi
 }
-log_syslog "Monkey"
+echo "*" >> $logFile
+echo "*" >> $logFile
+echo "*" >> $logFile
+echo "*" >> $logFile
+echo "*" >> $logFile
 init_Start;
 
