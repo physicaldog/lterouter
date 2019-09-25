@@ -1,9 +1,9 @@
 #!/bin/bash
 source /opt/init/common.sh
 
-filename=/opt/log/syslog
-#1M
-size=1048576
+filename=/opt/web/webPage/log/syslog
+#5M
+size=5242880
 CheckLogSize(){
 	count=`wc -c $filename | awk '{print $1}'`
 	ret=`expr $count - $size`
@@ -21,6 +21,17 @@ lan_Init(){
 	ifconfig eth0 $lanip netmask  $netmask
 	udhcpd /opt/config/udhcpd.conf
 }
+
+Check_lan(){
+	config_ip=`uci -c /opt/config/ get config.lan.ip`
+	lan_ip=`ifconfig eth0|grep inet|grep -v inet6|awk '{print $2}'|tr -d "addr:"`
+	if [ $config_ip != $lan_ip ]
+	then
+		#echo "lan_ip failed!"
+		/opt/init/Reboot.sh "check_lan failed! config_ip:" $config_ip "lan_ip:" $lan_ip
+	fi
+}
+
 Reboot_Count(){
 	ret=`uci -c $config get config.system.reboot_count`
 	uci -c $config set config.system.reboot_count=`expr $ret + 1`
@@ -54,7 +65,8 @@ runDetect(){
 			fi
 		fi
 		CheckLogSize;
-		sleep 60
+		Check_lan;
+		sleep 300
 	done
 }
 

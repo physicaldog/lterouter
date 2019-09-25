@@ -14,7 +14,8 @@ SleepSta=3
 
 config=/opt/config
 poweron=0
-logFile=/opt/log/syslog
+#logFile=/opt/log/syslog
+logFile=/opt/web/webPage/log/syslog
 
 debug=0
 log_syslog(){

@@ -4,7 +4,8 @@
 extern int reboottime;
 
 #define ApnConf "/opt/config/ApnConfig"
-#define SYSLOG "/opt/log/syslog"
+//#define SYSLOG "/opt/log/syslog"
+#define SYSLOG "/opt/web/webPage/log/syslog"
 int old_attech_stat = 3;
 int old_ndis_stat = 2;
 int old_sim_stat = 2;
@@ -203,6 +204,8 @@ void get_hcsq(char * buff)
 		strncpy(lte_stat, ptr, qtr-ptr);
 		rsrq = atoi(lte_stat)*0.5 - 20;
 		sprintf(rbuff,"rssi:%d rsrp:%d sinr:%.1f rsrq:%.1f \n",rssi,rsrp,sinr,rsrq);
+	//	if((rsrp < -115) || (sinr < 0))
+	//		log_syslog("信号弱:",rbuff);
 		log_msg("HCSQ:%s",rbuff);
 
 		memset(lte_stat,0,8);
@@ -482,7 +485,7 @@ void log_syslog(char *log,char *buff)
 
 	fp = fopen(SYSLOG,"a+");
 	if(!fp){
-		log_msg("/opt/log/syslog open failed \n!!!");
+		log_msg("/opt/webPage/log/syslog open failed \n!!!");
 		return;
 	}
 
