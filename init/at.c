@@ -532,6 +532,9 @@ void get_sysinfoex(char *buff)
 		if (('2' != ptr[1])){
 			log_msg("网络无效\n");
 			lte_attech(0,buff);
+		}else{
+			log_msg("网络有效\n");
+			lte_attech(1,buff);
 		}
 	}
 	else{

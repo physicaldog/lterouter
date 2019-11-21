@@ -127,8 +127,19 @@ void send_at(int *fptr)
 		get_config("status","module","attech_stat",attech_stat);
 		get_config("status","module","ndis_stat",ndis_stat);
 		if((!strcmp(attech_stat,"true")) && (!strcmp(ndis_stat,"false"))){
+			log_syslog("*****","激活网络链接*****\n");
 			get_config("config","apn","apn",uci_buff);
 			sprintf(at_buff,"AT^NDISDUP=1,1,\"%s\"\r\n",uci_buff);
+			ret = serial_write(*fptr,at_buff);
+			if(ret < 0)
+				return;
+			memset(at_buff,0,strlen(at_buff));
+			memset(uci_buff,0,strlen(uci_buff));
+			sleep(5);
+		}else if((!strcmp(attech_stat,"false")) && (!strcmp(ndis_stat,"true"))){
+			log_syslog("*****","去激活网络链接*****\n");
+			get_config("config","apn","apn",uci_buff);
+			sprintf(at_buff,"AT^NDISDUP=1,0,\"%s\"\r\n",uci_buff);
 			ret = serial_write(*fptr,at_buff);
 			if(ret < 0)
 				return;

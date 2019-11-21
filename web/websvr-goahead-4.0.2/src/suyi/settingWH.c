@@ -58,7 +58,7 @@ void settingAddr(Webs *wp)
 	set_config("config","addr","city",city_name,1);
 	set_config("config","addr","county",county_name,1);
 	set_config("config","addr","location",location_name,1);
-	set_config("config","addr","install_time",buff,1);
+	//set_config("config","addr","install_time",buff,1);
 	
 	websDone(wp);
 	return;

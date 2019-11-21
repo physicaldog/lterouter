@@ -14,7 +14,7 @@ long up_time = 0;
 void handle_key(void)
 {
 	int ret = 0;
-	//system("/usr/local/key-handle.sh");
+	system("/usr/local/key-handle.sh");
 	ret = up_time - down_time;
 	if(ret > 5) {
 		log_msg("\nsystem reset ret = %d\n",ret);

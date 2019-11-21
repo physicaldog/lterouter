@@ -133,6 +133,7 @@ package:
 #make flash_file
 image:
 	rm -rf $(cpe_flash_dir)/*;
+	cd $(opt)/;tar -zcf $(cpe_flash_dir)/opt.tar.gz ./*;
 	cd $(rootfs_dir)/;tar -zcf $(cpe_flash_dir)/rootfs.tar.gz ./*;
 	cd $(rootfs_dir)/../; sudo mkfs.ubifs -r rootfs -m 2KiB -e 124KiB -c 540 -o rootfs.ubifs.img;cp rootfs.ubifs.img $(cpe_flash_dir);
 	cp $(kernel_dir)/arch/arm/boot/zImage $(cpe_flash_dir);
