@@ -107,6 +107,8 @@ void send_at(int *fptr)
 	char attech_stat[8] = {0};
 	char ndis_stat[8] = {0};
 	char uci_buff[32] = {0};
+	char user_name_buff[32] = {0};
+	char psword_buff[32] = {0};
 	char at_buff[64] = {0};
 	/*循环检测，防止主动上报信息接受失败*/
 	while(1){
@@ -129,12 +131,16 @@ void send_at(int *fptr)
 		if((!strcmp(attech_stat,"true")) && (!strcmp(ndis_stat,"false"))){
 			log_syslog("*****","激活网络链接*****\n");
 			get_config("config","apn","apn",uci_buff);
-			sprintf(at_buff,"AT^NDISDUP=1,1,\"%s\"\r\n",uci_buff);
+			get_config("config","apn","lte_user_name",user_name_buff);
+			get_config("config","apn","lte_psword",psword_buff);
+			sprintf(at_buff,"AT^NDISDUP=1,1,\"%s\",\"%s\",\"%s\"\r\n",uci_buff,user_name_buff,psword_buff);
 			ret = serial_write(*fptr,at_buff);
 			if(ret < 0)
 				return;
 			memset(at_buff,0,strlen(at_buff));
 			memset(uci_buff,0,strlen(uci_buff));
+			memset(user_name_buff,0,strlen(user_name_buff));
+			memset(psword_buff,0,strlen(psword_buff));
 			sleep(5);
 		}else if((!strcmp(attech_stat,"false")) && (!strcmp(ndis_stat,"true"))){
 			log_syslog("*****","去激活网络链接*****\n");

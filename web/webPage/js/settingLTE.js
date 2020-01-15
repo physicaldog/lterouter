@@ -29,6 +29,8 @@ function SettingAPN(){
 		async:true,
 		data:{
 			apn:$('#apn').val(),
+			lte_user_name:$('#lte_user_name').val(),
+			lte_psword:$('#lte_psword').val(),
 		},
 		success:function(data){
 			//console.log("fanhuizhi"+data)
@@ -43,9 +45,13 @@ function QueryAPN(){
 		type:"get",
 		url:"/goform/queryAPN",
 		async:true,
+		dataType:'json',
 		success:function(data){
 			//console.log("fanhuizhi"+data)
-			apn:$('#apn').val(data)
+			//alert(data.apn,data.lte_user_name,data.lte_psword);
+			$('#apn').val(data.apn);
+			$('#lte_user_name').val(data.lte_user_name);
+			$('#lte_psword').val(data.lte_psword);
 			
 		}
 	});

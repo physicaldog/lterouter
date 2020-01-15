@@ -64,16 +64,22 @@ void queryIMSI(Webs *wp)
 void settingAPN(Webs *wp)
 {
 	char *apn;
+	char *lte_user_name;
+	char *lte_psword;
 	printf("\n********%s********\n",__FUNCTION__);
 	websSetStatus(wp, 200);
 	websWriteHeaders(wp, -1, 0);//参数二需要未-1,否则前端收不到数据
 	websWriteEndHeaders(wp);
 
-	apn = websGetVar(wp,("apn"),("jk"));
-	printf("settingAPN apn=%s\n",apn);
+	apn = websGetVar(wp,("apn"),(""));
+	lte_user_name = websGetVar(wp,("lte_user_name"),(""));
+	lte_psword = websGetVar(wp,("lte_psword"),(""));
+	printf("settingAPN apn=%s,lte_user_name=%s,lte_psword=%s\n",apn,lte_user_name,lte_psword);
 
 	//setConfig("apn",apn,ApnConf);
 	set_config("config","apn","apn",apn,TRUE);
+	set_config("config","apn","lte_user_name",lte_user_name,TRUE);
+	set_config("config","apn","lte_psword",lte_psword,TRUE);
 
     websWrite(wp,("重启后生效"));
 	websDone(wp);
@@ -82,17 +88,25 @@ void settingAPN(Webs *wp)
 
 void queryAPN(Webs *wp)
 {
-        char buff[64] = {'\0'};//读取文件缓存
+        char apn_buff[32] = {'\0'};//读取文件缓存
+        char user_name_buff[32] = {'\0'};//读取文件缓存
+        char psword_buff[32] = {'\0'};//读取文件缓存
 
 	printf("\n********%s********\n",__FUNCTION__);
 	websSetStatus(wp, 200);
 	websWriteHeaders(wp, -1, 0);//参数二需要未-1,否则前端收不到数据
 	websWriteEndHeaders(wp);
         //getConfig("apn",buff,ApnConf);
-        get_config("config","apn","apn",buff);
-        printf("apn = %s\n", buff);
+        get_config("config","apn","apn",apn_buff);
+        get_config("config","apn","lte_user_name",user_name_buff);
+        get_config("config","apn","lte_psword",psword_buff);
+		printf("gettingAPN apn=%s,lte_user_name=%s,lte_psword=%s\n",apn_buff,user_name_buff,psword_buff);
 
-        websWrite(wp,("%s"),buff);
+        websWrite(wp,("{"));
+        websWrite(wp,("\"apn\":\"%s\","),apn_buff);
+        websWrite(wp,("\"lte_user_name\":\"%s\","),user_name_buff);
+        websWrite(wp,("\"lte_psword\":\"%s\""),psword_buff);
+        websWrite(wp,("}"));
 
         websDone(wp);
         return;
