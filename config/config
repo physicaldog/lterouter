@@ -23,10 +23,25 @@ config string 'dtu'
 	option data_bit '8'
 	option stop_bit '1'
 
+config string 'vpn1'
+	option vpn1_enable 'false'
+	option gw_ip '0.0.0.0'
+	option gw_port '10000'
+	option mac_list '000000'
+
+config string 'vpn2'
+	option vpn2_enable 'false'
+	option gw_ip '0.0.0.0'
+	option gw_port '10000'
+	option mac_list '000000'
+
+config string 'data_forward'
+	option data_forward_enable 'false'
+
 config string 'system'
 	option reboot_interval '180'
 	option productName 'LTE-ROUTER'
 	option productModle 'P17/0156_CPE_V2.2'
 	option reboot_count '0'
-	option sVersion 'P17/0156_cpe_2.5.0_20200114'
+	option sVersion 'P17/0156_cpe_2.5.0_20200327'
 

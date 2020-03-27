@@ -21,8 +21,8 @@
 			<div class="main_content">
 				<div class="content_right_title"> <span>安全网关配置</span></div>
 				<div class="content_right_center security_content">
-					<!--模块信息-->
-					<div class="content_item_title">网关设置</div>
+				
+					<!--<div class="content_item_title">网关设置</div>
 					<div class="content_item" id="uptime_contentitem">
 						<div class="content_item_left">网关地址</div>
 						<div class="content_item_right" id="uptime">
@@ -35,18 +35,94 @@
 							<input type="text" id="gw_port" />
 						</div>
 					</div>
+					<div class="content_item" id="uptime_contentitem">
+						<div class="content_item_left">MAC地址注册</div>
+						<div class="content_item_right" id="uptime">
+							<input type="text" id="mac_list" />
+						</div>
+					</div>-->
 
 					<div class="content_item" id="uptime_contentitem">
-						<div class="content_item_title">启用加密</div>
+						<div class="content_item_title">安全网关配置</div>
 						<div class="content_item_left" id="uptime">
-							即刻开启：
-							<input type="radio" id="enable" name="switch" value="enable" />
-							<br /> 即刻关闭：
-							<input type="radio" id="disable" name="switch" value="disable" />
+							开启VPN1.0加密：
+							<input type="radio" id="enable_1" name="switch" value="disable" />
+							<br /> 关闭VPN1.0加密：
+							<input type="radio" id="disable_1" name="switch" value="disable" />
+							<br /> 开启VPN2.0加密：
+							<input type="radio" id="enable_2" name="switch" value="disable" />
+							<br /> 关闭VPN2.0加密：
+							<input type="radio" id="disable_2" name="switch" value="enable" />
+						</div>
+						<div class="content_item" id="uptime_contentitem">
+						<div class="content_item_left">网关地址</div>
+						<div class="content_item_right" id="uptime">
+							<input type="text" id="gw_ip" />
 						</div>
 					</div>
 					<div class="content_item" id="uptime_contentitem">
-						<div class="content_item_title">加密日志</div>
+						<div class="content_item_left">网关端口</div>
+						<div class="content_item_right" id="uptime">
+							<input type="text" id="gw_port" />
+						</div>
+					</div>
+					<div class="content_item" id="uptime_contentitem">
+						<div class="content_item_left">MAC地址注册</div>
+						<div class="content_item_right" id="uptime">
+							<input type="text" id="mac_list" />
+						</div>
+					</div>
+					</div>
+					
+					<div class="content_item" id="uptime_contentitem">
+						<div class="content_item_title">数据转发配置</div>
+						<div class="content_item_left" id="uptime">
+							开启数据转发：
+							<input type="radio" id="enable_data_forward" name="switch_1" value="disable" />
+							<br /> 关闭数据转发：
+							<input type="radio" id="disable_data_forward" name="switch_1" value="disable" />
+						</div>
+						
+						<!--<div class="content_item" id="uptime_contentitem">
+						<div class="content_item_left">本地端口</div>
+						<div class="content_item_right" id="uptime">
+							<input type="text" id="data_forward_local_port" />
+						</div>
+						</div>-->
+						
+						<div class="content_item" id="uptime_contentitem">
+						<div class="content_item_left">本地端口</div>
+						<div class="content_item_right" id="uptime">
+							<input type="text" id="data_forward_local_port" />
+						</div>
+						</div>
+						
+						<div class="content_item" id="uptime_contentitem">
+						<div class="content_item_left">通信协议</div>
+						<div class="content_item_right" id="uptime">
+							<input type="text" id="data_forward_protocol" />
+						</div>
+						</div>
+						
+						<div class="content_item" id="uptime_contentitem">
+						<div class="content_item_left">远端地址</div>
+						<div class="content_item_right" id="uptime">
+							<input type="text" id="data_forward_remote_ip" />
+						</div>
+						</div>
+						<div class="content_item" id="uptime_contentitem">
+						<div class="content_item_left">远端端口</div>
+						<div class="content_item_right" id="uptime">
+							<input type="text" id="data_forward_remote_port" />
+						</div>
+						</div>
+					
+						<button style="width: 100px;height: 26px;" id="set_data_forward" onclick="set_data_forward()"> 添加 </button>
+						<button style="width: 100px;height: 25px;" id="query_data_forward" onclick="query_data_forward()"> 查询 </button>
+						<button style="width: 100px;height: 25px;" id="clear_data_forward" onclick="clear_data_forward()"> 清空 </button>
+					
+					<div class="content_item" id="uptime_contentitem">
+						<div class="content_item_title">日志显示</div>
 					</div>
 
 					<div class="reset security_reset">

@@ -397,6 +397,11 @@ PUBLIC int websOpen(cchar *documents, cchar *routeFile)
 	websDefineAction("settingSecurity", settingSecurity);
 	websDefineAction("querySecurity", querySecurity);
 	websDefineAction("getSecurityLog", getSecurityLog);
+	websDefineAction("checkdataforwardEnable", checkdataforwardEnable);
+	websDefineAction("data_forward",data_forward );
+	websDefineAction("set_data_forward",set_data_forward);
+	websDefineAction("query_data_forward",query_data_forward);
+	websDefineAction("clear_data_forward",clear_data_forward);
 
 /*setingLTE*/
 	websDefineAction("queryIMSI", queryIMSI);

@@ -70,7 +70,7 @@ dtu:
 	#cd $(init) && $(MAKE)
 
 security:
-	cp $(security)/* $(opt)/security/
+	cp -r $(security)/* $(opt)/security/
 	scp -r $(security)/* $(readdr)/security/
 	#cd $(init) && $(MAKE)
 	
@@ -110,7 +110,7 @@ opt:
 	-cp $(tmp)/* $(opt)/tmp/
 	cp $(init)/*.sh $(init)/button $(init)/$(initEXE) $(opt)/init/
 	cp $(dtu)/$(dtuEXE) $(opt)/dtu/
-	#cp $(security)/* $(opt)/security/
+	cp -r $(security)/* $(opt)/security/
 	cp $(webServer)/src/auth.txt $(webServer)/src/route.txt $(webBin);
 	cp -r $(webBin)/* $(opt)/web/webServer/
 	cp -r $(webPage)/* $(opt)/web/webPage/

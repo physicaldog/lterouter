@@ -146,32 +146,155 @@ checkSecurityLib(){
 		echo "do nothing" >> $logFile
 	else
 		echo "do nariinit.sh" >> $logFile
-		cd /opt/security;
+		cd /opt/security/vpn1.0;
 		./nariinit.sh
 	fi
-	
 }
 
-runSecurity(){
-	if [ -e /opt/tmp/startSecurity ]
+vpn1_mac_filter(){
+	mac_addr=`uci -c /opt/config get config.vpn1.mac_list 2>/dev/null`
+	iptables -F INPUT;
+	iptables -A INPUT -i eth0 -p tcp --dport 22 -j ACCEPT;
+	iptables -A INPUT -i eth0 -p tcp --dport 80 -j ACCEPT;
+	iptables -A INPUT -i eth0 -p tcp --dport 443 -j ACCEPT;
+
+	iptables -A INPUT -i eth0 -p tcp -m mac  --mac-source $mac_addr -j ACCEPT;
+	iptables -A INPUT -i eth0 -p tcp -j DROP;
+}
+
+
+runVPN1(){
+	ret=`pidof naripcaccess`;
+	count=`echo $ret | awk '{print NF}'`
+	if [ $count -eq 0 ]
 	then
-		ps -fe|grep "naripcaccess" |grep -v grep >> /dev/null
-		if [ $? -ne 0 ]
+		vpn1_mac_filter;
+		echo " " > /opt/log/SecurityLog
+		if [ -e /media/mmcblk0p1/cacert.pem	]
 		then
-			echo "startSecurity!!!!!!!!" >> $logFile 
-			if [ -e /media/mmcblk0p1/cacert.pem	]
+			log_syslog "vpn1.0 start run!"
+			nohup /opt/security/vpn1.0/naripcaccess /opt/security/vpn1.0/naripcaccess.conf >/dev/null 2>&1 &
+		else
+			log_syslog "Please check TF-card and cacert.pem!"
+		fi
+	else
+		if [ $count -gt 1 ]
+		then
+			/opt/init/Reboot.sh "vpn1.0 is not only 1, reboot now!!!"
+		fi
+	fi
+}
+
+killVPN1(){
+	ret=`pidof naripcaccess`;
+	count=`echo $ret | awk '{print NF}'`
+	if [ $count -gt 0 ]
+	then
+		ret=`pidof naripcaccess`
+		nohup kill -9 $ret > /dev/null 2>&1 &
+		iptables -F INPUT;
+		echo " " > /opt/log/SecurityLog
+	fi
+}
+
+vpn2_mac_filter(){
+	mac_addr=`uci -c /opt/config get config.vpn2.mac_list 2>/dev/null`
+	iptables -F FORWARD;
+	iptables -A FORWARD -i eth0 -m mac  --mac-source $mac_addr -j ACCEPT;
+	iptables -A FORWARD -i eth0 -j DROP;
+
+	iptables -F INPUT;
+	iptables -A INPUT -i eth0 -p tcp --dport 22 -j ACCEPT;
+	iptables -A INPUT -i eth0 -p tcp --dport 80 -j ACCEPT;
+	iptables -A INPUT -i eth0 -p tcp --dport 443 -j ACCEPT;
+
+	iptables -A INPUT -i eth0 -p tcp -m mac  --mac-source $mac_addr -j ACCEPT;
+	iptables -A INPUT -i eth0 -p tcp -j DROP;
+	
+	iptables -t nat -F POSTROUTING;
+	iptables -t nat -A POSTROUTING -o tun0 -j MASQUERADE;
+	iptables -t nat -A POSTROUTING -o usb0 -j MASQUERADE
+}
+
+runVPN2(){
+	ret=`pidof tvpn_client`;
+	count=`echo $ret | awk '{print NF}'`
+	if [ $count -eq 0 ]
+	then
+		log_syslog "vpn2.0 start run!"
+		if [ -d /media/mmcblk0p1 ]
+		then
+			nohup /opt/security/vpn2.0/tvpn_client /opt/security/vpn2.0/client.conf >/dev/null 2>&1 &
+			vpn2_mac_filter;
+		else
+			log_syslog "Please check TF-card and cacert.pem!"
+		fi
+	else
+		if [ $count -gt 1 ]
+		then
+			/opt/init/Reboot.sh "vpn2.0 is not only 1, reboot now!!!"
+		fi
+	fi
+}
+
+killVPN2(){
+	ret=`pidof tvpn_client`;
+	count=`echo $ret | awk '{print NF}'`
+	if [ $count -gt 0 ]
+	then
+		ret=`pidof tvpn_client`
+		iptables -F FORWARD;
+		iptables -F INPUT;
+		iptables -t nat -F POSTROUTING;
+		nohup kill -9 $ret > /dev/null 2>&1 &
+	fi
+}
+runSecurity(){
+	vpn1_enable=`uci -c /opt/config get config.vpn1.vpn1_enable 2>/dev/null`
+	if [ $vpn1_enable == "true" ]
+	then
+		runVPN1;
+	else
+		killVPN1;
+	fi
+
+	vpn2_enable=`uci -c /opt/config get config.vpn2.vpn2_enable 2>/dev/null`
+	if [ $vpn2_enable == "true" ]
+	then
+		runVPN2;
+	else
+		killVPN2;
+	fi
+
+}
+
+
+rundataforward(){
+	data_forward_enable=`uci -c /opt/config get config.data_forward.data_forward_enable 2>/dev/null`
+	if [ $data_forward_enable == "true" ]
+	then
+		ret=`pidof tcpproxy`;
+		count=`echo $ret | awk '{print NF}'`
+		if [ $count -eq 0 ]
+		then
+			log_syslog "data_forward start run!"
+			nohup /opt/security/rinetd/tcpproxy -c /opt/security/rinetd/tcpproxy.conf >/dev/null 2>&1 &
+		else
+			if [ $count -gt 1 ]
 			then
-				nohup /opt/security/naripcaccess /opt/security/naripcaccess.conf >/dev/null 2>&1 &
-			else
-				echo " " > /opt/log/SecurityLog
-				echo "Please check TF-card and cacert.pem!" > /opt/log/SecurityLog
+				/opt/init/Reboot.sh "tcpproxy is not only 1, reboot now!!!"
 			fi
 		fi
 	else
-		ret=`pidof naripcaccess`
-		nohup kill -9 $ret > /dev/null 2>&1 &
-		echo > /opt/log/SecurityLog
+		ret=`pidof tcpproxy`;
+		count=`echo $ret | awk '{print NF}'`
+		if [ $count -gt 0 ]
+		then
+			ret=`pidof tcpproxy`
+			nohup kill -9 $ret > /dev/null 2>&1 &
+		fi
 	fi
+
 }
 
 runLongPing(){
@@ -204,8 +327,10 @@ Work(){
 		runWebServer;
 		sleep 1;
 		runLteRouter;
-		#sleep 1;
-		#runSecurity;
+		sleep 1;
+		runSecurity;
+		sleep 1;
+		rundataforward;
 		#putiofflineLog;
 		sleep 1;
 		runDtu;
@@ -241,6 +366,7 @@ run_Start(){
 		killLTE;
 		killWEB;
 		killTR069;
+		checkSecurityLib;
 		run_Work
 	else
 		log_syslog "run.sh is running,exit!!!"

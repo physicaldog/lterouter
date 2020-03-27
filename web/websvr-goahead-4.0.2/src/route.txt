@@ -77,6 +77,11 @@ route uri=/action/cancelSecurity
 route uri=/action/settingSecurity
 route uri=/action/querySecurity
 route uri=/action/getSecurityLog
+route uri=/action/checkdataforwardEnable
+route uri=/action/data_forward
+route uri=/action/set_data_forward
+route uri=/action/query_data_forward
+route uri=/action/clear_data_forward
 
 route uri=/action/queryIMSI
 route uri=/action/settingAPN

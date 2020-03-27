@@ -1,3 +1,0 @@
-setkey -f setkey.conf -v
-racoon -F -f racoon.conf -ddd -v
-

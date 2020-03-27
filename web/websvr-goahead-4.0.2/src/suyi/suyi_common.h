@@ -93,6 +93,11 @@ void checkSecurityEnable(Webs *wp);
 void startSecurity(Webs *wp);
 void cancelSecurity(Webs *wp);
 void getSecurityLog(Webs *wp);
+void checkdataforwardEnable(Webs *wp);
+void data_forward(Webs *wp);
+void set_data_forward(Webs *wp);
+void query_data_forward(Webs *wp);
+void clear_data_forward(Webs *wp);
 void querySecurity(Webs *wp);
 void settingSecurity(Webs *wp);
 /*settingWH*/
