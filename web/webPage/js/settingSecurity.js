@@ -3,6 +3,7 @@ $(function() {
 	if(getCookie2('-goahead-session-').length<10){
     parent.location.reload()
     }else{
+		$('#vpn_ip').attr("disabled", "disabled");
     	checkSecurityEnable();
     	checkdataforwardEnable();
 		checkRadio();
@@ -21,6 +22,7 @@ function checkSecurityEnable() {
 			$('#gw_ip').val(data.gw_ip);
 			$('#gw_port').val(data.gw_port);
 			$('#mac_list').val(data.mac_list);
+			$('#vpn_ip').val(data.vpn_ip);
 			if(data.start == "1") {
 				$("input:radio[id='enable_1']").prop('checked', 'true');
 				$('#enable_2').attr("disabled", "disabled");
@@ -71,6 +73,7 @@ function addAttr() {
 	$('#gw_ip').attr("disabled", "disabled");
 	$('#gw_port').attr("disabled", "disabled");
 	$('#mac_list').attr("disabled", "disabled");
+	
 }
 
 function removeAttr() {

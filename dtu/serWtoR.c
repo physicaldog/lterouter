@@ -203,7 +203,7 @@ int main()
 {
 	int ret = 0;
 	int fd = 0;
-	char buffer[1024] = {"monkey"};
+	char buffer[1024] = {0x03,0x01,0x00,0x00,0x00,0x04,0x3C,0x2B};
 	struct termios termptr;
 
 	printf("********%s********\n",__FUNCTION__);
@@ -216,7 +216,7 @@ int main()
 
 	while(1){
 		sleep(10);
-		serWrite(fd,"monkey",6);
+		serWrite(fd,buffer,8);
 		serRead(fd,buffer,255);
 		printf("recv:%s,%d\n",buffer,strlen(buffer));
 		//serWrite(fd,"\n",1);

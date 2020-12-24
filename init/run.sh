@@ -40,6 +40,10 @@ killTR069(){
 	ret=`pidof tr069`
 	nohup kill -9 $ret > /dev/null 2>&1 &
 }
+killCwmpd(){
+	ret=`pidof cwmpd`
+	nohup kill -9 $ret > /dev/null 2>&1 &
+}
 #lterouter启动前杀死udhcpd
 killdhcpd(){
 	ret=`pidof udhcpd`
@@ -77,8 +81,40 @@ runLteRouter(){
 	fi
 }
 
+runCwmpd(){
+	cwmpd_enable=`uci -c /opt/config get config.Cwmpd.cwmpd_enable 2>/dev/null`
+	if [ $cwmpd_enable == "true" ]
+	then
+		ret=`pidof cwmpd`;
+		count=`echo $ret | awk '{print NF}'`
+		if [ $count -eq 0 ]
+		then
+			log_syslog "cwmpd start run!!!"
+			cp /opt/cwmp_suyi/cwmpd/cwmpd_bak /opt/bin/cwmpd
+			nohup /opt/cwmp_suyi/cwmpd/get_acs_ip  > /dev/null 2>&1 &
+			sleep 2
+			nohup cwmpd  > /dev/null 2>&1 &
+		else
+			if [ $count -gt 1 ]
+			then
+				/opt/init/Reboot.sh "cwmpd is not only 1, reboot now!!!"
+			fi
+		fi
+	else
+		ret=`pidof cwmpd`;
+		count=`echo $ret | awk '{print NF}'`
+		if [ $count -gt 0 ]
+		then
+			log_syslog "cwmpd stop run!!!"
+			killCwmpd;
+		fi
+	fi
+ 
+}
+
 runTr069(){
-	acs_enable=`uci -c /opt/config get tr069.cwmp.acs_enable 2>/dev/null`
+	#acs_enable=`uci -c /opt/config get tr069.cwmp.acs_enable 2>/dev/null`
+	acs_enable="false"
 	if [ $acs_enable == "true" ]
 	then
 		ret=`pidof tr069`;
@@ -91,7 +127,7 @@ runTr069(){
 				log_syslog "tr069 no imei!!!"
 			else
 				log_syslog "tr069 start run!!!"
-			nohup /opt/tr069/tr069 -d /opt/trconf > /dev/null 2>&1 &
+			#nohup /opt/tr069/tr069 -d /opt/trconf > /dev/null 2>&1 &
 			fi
 		else
 			if [ $count -gt 1 ]
@@ -224,8 +260,11 @@ runVPN2(){
 		log_syslog "vpn2.0 start run!"
 		if [ -d /media/mmcblk0p1 ]
 		then
+			#insmod /opt/security/vpn2.0/sechook.ko
+			uci -c /opt/config set config.vpn2.vpn_nat="false"
+			uci -c /opt/config set config.vpn2.vpn_ip="0.0.0.0"
 			nohup /opt/security/vpn2.0/tvpn_client /opt/security/vpn2.0/client.conf >/dev/null 2>&1 &
-			vpn2_mac_filter;
+			#vpn2_mac_filter;
 		else
 			log_syslog "Please check TF-card and cacert.pem!"
 		fi
@@ -233,6 +272,32 @@ runVPN2(){
 		if [ $count -gt 1 ]
 		then
 			/opt/init/Reboot.sh "vpn2.0 is not only 1, reboot now!!!"
+		fi
+
+		sleep 8
+
+		vpn_nat=`uci -c /opt/config get config.vpn2.vpn_nat 2>/dev/null`
+		ret=`ifconfig tun0 | grep "inet addr"`
+		if [ $? -eq 0 ] && [ $vpn_nat == "false" ]
+		then
+				uci -c /opt/config set config.vpn2.vpn_nat="true"
+
+				ret=`ifconfig tun0|grep inet|grep -v inet6|awk '{print $2}'|tr -d "addr:"`
+				log_syslog "成功获取tun0 IP:" $ret
+				uci -c /opt/config set config.vpn2.vpn_ip=$ret
+			
+				vpn_ip=`uci -c /opt/config get config.vpn2.vpn_ip 2>/dev/null`
+				device_ip=`uci -c /opt/config get config.vpn2.mac_list 2>/dev/null`
+				log_syslog "地址转换:src_nat:" $device_ip "to" $vpn_ip  "dts_nat:" $vpn_ip "to" $device_ip
+
+				iptables -t nat -A POSTROUTING -o tun0 -s $device_ip -j SNAT --to $vpn_ip
+				iptables -t nat -A PREROUTING -i tun0 -d $vpn_ip -j DNAT --to $device_ip
+					
+		else
+			if [ $vpn_nat == "false"  ]
+			then
+				log_syslog "获取tun IP失败！"
+			fi
 		fi
 	fi
 }
@@ -243,10 +308,14 @@ killVPN2(){
 	if [ $count -gt 0 ]
 	then
 		ret=`pidof tvpn_client`
-		iptables -F FORWARD;
-		iptables -F INPUT;
-		iptables -t nat -F POSTROUTING;
 		nohup kill -9 $ret > /dev/null 2>&1 &
+		#iptables -F FORWARD;
+		#iptables -F INPUT;
+		iptables -t nat -F POSTROUTING;
+		iptables -t nat -F PREROUTING;
+		uci -c /opt/config set config.vpn2.vpn_nat="false"
+		uci -c /opt/config set config.vpn2.vpn_ip="0.0.0.0"
+		uci -c $config commit config
 	fi
 }
 runSecurity(){
@@ -321,6 +390,30 @@ runLongPing(){
 
 }
 
+runYdcj(){
+	Ydcj_enable=`uci -c /opt/config get config.Ydcj.Ydcj_enable 2>/dev/null`
+	if [ $Ydcj_enable == "true" ]
+	then
+		ret=`pidof ydcj.sh`;
+		count=`echo $ret | awk '{print NF}'`
+		if [ $count -eq 0 ]
+		then
+			log_syslog "YDCJ start run!"
+			YdcjAddr=`uci -c /opt/config get config.Ydcj.YdcjAddr`
+			nohup /opt/init/ydcj.sh $YdcjAddr 60 >/dev/null 2>&1 &
+		fi
+	else
+		ret=`pidof ydcj.sh`;
+		count=`echo $ret | awk '{print NF}'`
+		if [ $count -gt 0 ]
+		then
+			ret=`pidof ydcj.sh`
+			nohup kill -9 $ret > /dev/null 2>&1 &
+		fi
+	fi
+
+}
+
 Work(){
 	while [ `DetectDev` -eq 0 ]
 	do
@@ -328,6 +421,8 @@ Work(){
 		sleep 1;
 		runLteRouter;
 		sleep 1;
+
+
 		runSecurity;
 		sleep 1;
 		rundataforward;
@@ -337,8 +432,12 @@ Work(){
 		sleep 1;
 		runLongPing;
 		sleep 1;
+		runCwmpd;
+		sleep 1;
 		runTr069;
 		sleep 1;
+		#runYdcj;
+		#sleep 1;
 	done
 }
 
@@ -367,6 +466,7 @@ run_Start(){
 		killWEB;
 		killTR069;
 		checkSecurityLib;
+		runWebServer;
 		run_Work
 	else
 		log_syslog "run.sh is running,exit!!!"

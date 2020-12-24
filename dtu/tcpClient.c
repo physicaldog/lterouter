@@ -69,12 +69,14 @@ int TcpClient_Mode()
 	int keepCount = 3; // 探测尝试的次数.如果第1次探测包就收到响应了,则后2次的不再发.
 	log_msg("\n********%s*********\n",__FUNCTION__);
 
-	getConfig("server_ip",server_ip,DtuConf);
+	//getConfig("server_ip",server_ip,DtuConf);
+	get_config("config","dtu","server_ip",server_ip);
 	if(0 == strlen(server_ip)){
 		log_msg("server_ip not config!\n");
 		return -1;
 	}
-	getConfig("server_port",server_port,DtuConf);
+	//getConfig("server_port",server_port,DtuConf);
+	get_config("config","dtu","server_port",server_port);
 	if(atoi(server_port))
 		host_addr.sin_port = htons(atoi(server_port));
 	else{

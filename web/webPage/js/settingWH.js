@@ -24,6 +24,9 @@ function settingAddr() {
 				city_name: $('#city_name').val(),
 				county_name: $('#county_name').val(),
 				location_name: $('#location_name').val(),
+				longitude: $('#longitude').val(),
+				latitude: $('#latitude').val(),
+				businesstype: $('#businesstype').val(),
 			},
 			success: function(data) {
 				alert(data);
@@ -42,6 +45,9 @@ function queryAddr() {
 			$('#city_name').val(data.city_name);
 			$('#county_name').val(data.county_name);
 			$('#location_name').val(data.location_name);
+			$('#longitude').val(data.longitude);
+			$('#latitude').val(data.latitude);
+			$('#businesstype').val(data.businesstype);
 		}
 	});
 }

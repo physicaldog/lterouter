@@ -166,24 +166,21 @@ void send_at(int *fptr)
 				return;
 			sleep(2);
 
+			memset(uci_buff,0,strlen(uci_buff));
 			get_config("status","module","imei",uci_buff);
-			if(0 == strlen(uci_buff)){
+			if(15 > strlen(uci_buff)){
 				ret = serial_write(*fptr,"AT+CGSN\r\n");
 				if(ret < 0)
 					return;
 				sleep(2);
 			}
-			memset(uci_buff,0,strlen(uci_buff));
 		}
 
-		get_config("status","module","imsi",uci_buff);
-		if(0 == strlen(uci_buff)){
-			ret = serial_write(*fptr,"AT+CIMI\r\n");
-			if(ret < 0)
-				return;
-			sleep(2);
-		}
 		memset(uci_buff,0,strlen(uci_buff));
+		ret = serial_write(*fptr,"AT+CIMI\r\n");
+		if(ret < 0)
+			return;
+		sleep(2);
 	}
 	return;
 
@@ -221,7 +218,48 @@ int main(void)
 	signal(SIGALRM,alarm_handler);
 	alarm(reboottime);
 
-	/*打开模组串口*/
+	while(1){
+
+		ret = access(SerPort,0);
+		if(ret != 0){
+			log_msg("NO %s!!!!!\n",SerPort);
+			log_syslog("NO /dev/ttyem302!!!!","\n");
+			sleep(5);
+			continue;
+		}
+		/*打开模组串口*/
+		fd = openDev(SerPort);
+		if(0 >= fd){
+			log_msg("OPEN /dev/ttyem302 FAILED!\n");
+			log_syslog("OPEN /dev/ttyem302 FAILED!","\n");
+			continue;
+		}
+		log_msg("OPEN /dev/ttyem302 OK fd = %d!!!!!!\n",fd);
+		set_config("status","module","offline_timeout","false",1);
+
+		ret = pthread_create(&rThread,NULL,(void *)status_read,(void *)&fd);
+		if(0 != ret){
+		close(fd);
+			log_msg("rThread create failed!\n");
+			log_syslog("rThread create failed!","\n");
+			continue;
+		}
+		ret = pthread_create(&tThread,NULL,(void *)send_at,(void *)&fd);
+		if(0 != ret){
+			close(fd);
+			log_msg("tThread create failed!\n");
+			log_syslog("tThread create failed!","\n");
+			continue;
+		}
+		log_msg("Thread create!!!!!!!!!!!!!!\n");
+		ret = pthread_join(rThread,NULL);
+		log_msg("rThread create ret = %d!\n",ret);
+		ret = pthread_join(tThread,NULL);
+		log_msg("tThread create ret = %d!\n",ret);
+		close(fd);
+	}
+	
+	/*打开模组串口
 	fd = openDev(SerPort);
 	if(0 >= fd){
 		log_msg("OPEN /dev/ttyem300 FAILED!\n");
@@ -246,6 +284,6 @@ int main(void)
 	ret = pthread_join(tThread,NULL);
 
 	close(fd);
-
+*/
 	return 0;
 }

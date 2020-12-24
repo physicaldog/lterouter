@@ -110,7 +110,8 @@ int TcpServer_Mode()
 
 	log_msg("********%s********\n",__FUNCTION__);
 
-	getConfig("local_port",local_port,DtuConf);
+	//getConfig("local_port",local_port,DtuConf);
+	get_config("config","dtu","local_port",local_port);
 	get_SerialConf(baudrate,parity,data_bit,stop_bit);
 
 	/*初始化tcpServer*/

@@ -5,7 +5,7 @@ else
 CFLAGS = -c
 endif
 
-LDFLAGS  = -lpthread
+LDFLAGS  = -lpthread -lubox -luci
 
 EXE = lteDtu
 OBJ = suyi_dtu.o tcpServer.o tcpClient.o udpServer.o udpClient.o serial.o log.o

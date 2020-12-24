@@ -94,6 +94,7 @@ void checkSecurityEnable(Webs *wp)
 	char gw_ip[32] = {0};
 	char gw_port[32] = {0};
 	char mac_list[32] = {0};
+	char vpn_ip[32] = {0};
 	char *ptr = NULL;
 	printf("\n********%s********\n",__FUNCTION__);
 	websSetStatus(wp, 200);
@@ -117,11 +118,13 @@ void checkSecurityEnable(Webs *wp)
 			get_config("config","vpn2","gw_ip",gw_ip);
 			get_config("config","vpn2","gw_port",gw_port);
 			get_config("config","vpn2","mac_list",mac_list);
+			get_config("config","vpn2","vpn_ip",vpn_ip);
 		}else{
 			websWrite(wp,("\"start\":\"0\","));
 			get_config("config","vpn2","gw_ip",gw_ip);
 			get_config("config","vpn2","gw_port",gw_port);
 			get_config("config","vpn2","mac_list",mac_list);
+			get_config("config","vpn2","vpn_ip",vpn_ip);
 		}
 	}
 
@@ -130,7 +133,8 @@ void checkSecurityEnable(Webs *wp)
 
 	websWrite(wp,("\"gw_ip\":\"%s\","),gw_ip);
 	websWrite(wp,("\"gw_port\":\"%s\","),gw_port);
-	websWrite(wp,("\"mac_list\":\"%s\""),mac_list);
+	websWrite(wp,("\"mac_list\":\"%s\","),mac_list);
+	websWrite(wp,("\"vpn_ip\":\"%s\""),vpn_ip);
 
 	websWrite(wp,("}"));
 	websDone(wp);

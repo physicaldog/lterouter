@@ -9,6 +9,9 @@ void queryAddr(Webs *wp)
     char city_name[16];
     char county_name[16];
     char location_name[64];
+    char longitude[64];
+    char latitude[64];
+    char businesstype[64];
 
     printf("\n********%s********\n",__FUNCTION__);
 	websSetStatus(wp, 200);
@@ -19,10 +22,17 @@ void queryAddr(Webs *wp)
 	get_config("config","addr","county",county_name);
 	get_config("config","addr","location",location_name);
 
+	get_config("status","system","longitude",longitude);
+	get_config("status","system","latitude",latitude);
+	get_config("status","system","businesstype",businesstype);
+
 	websWrite(wp,("{"));
 	websWrite(wp,("\"city_name\":\"%s\","),city_name);
 	websWrite(wp,("\"county_name\":\"%s\","),county_name);
-	websWrite(wp,("\"location_name\":\"%s\""),location_name);
+	websWrite(wp,("\"location_name\":\"%s\","),location_name);
+	websWrite(wp,("\"longitude\":\"%s\","),longitude);
+	websWrite(wp,("\"latitude\":\"%s\","),latitude);
+	websWrite(wp,("\"businesstype\":\"%s\""),businesstype);
 	websWrite(wp,("}"));
 
     websDone(wp);
@@ -35,6 +45,9 @@ void settingAddr(Webs *wp)
     char *city_name;
     char *county_name;
     char *location_name;
+    char *longitude;
+    char *latitude;
+    char *businesstype;
 	char buff[64] = {0};
 	FILE *fp = NULL;
 	int ret = 0;
@@ -46,6 +59,9 @@ void settingAddr(Webs *wp)
 	city_name = websGetVar(wp,("city_name"),(""));
 	county_name = websGetVar(wp,("county_name"),(""));
 	location_name = websGetVar(wp,("location_name"),(""));
+	longitude = websGetVar(wp,("longitude"),(""));
+	latitude = websGetVar(wp,("latitude"),(""));
+	businesstype = websGetVar(wp,("businesstype"),(""));
 
 	fp = popen("date +\"%Y-%m-%d %H:%M:%S\"","r");
 	if(fp){
@@ -59,6 +75,9 @@ void settingAddr(Webs *wp)
 	set_config("config","addr","county",county_name,1);
 	set_config("config","addr","location",location_name,1);
 	//set_config("config","addr","install_time",buff,1);
+	set_config("status","system","longitude",longitude,1);
+	set_config("status","system","latitude",latitude,1);
+	set_config("status","system","businesstype",businesstype,1);
 	
 	websDone(wp);
 	return;

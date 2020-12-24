@@ -29,5 +29,5 @@ fi
 
 
 #iptables -t nat -A POSTROUTING -o usb0 -j MASQUERADE
-#ptables -t nat -A POSTROUTING -s 192.168.10.0/24 -j SNAT --to 90.4.128.188
+#iptables -t nat -A POSTROUTING -s 192.168.10.0/24 -j SNAT --to 90.4.128.188
 #iptables -t nat -A PREROUTING -d 90.4.128.188 -j DNAT --to 192.168.10.15

@@ -103,6 +103,7 @@ void get_cgsn(char *buff)
 	strncpy(IMEI, ptr, qtr-ptr);
 	log_msg("IMEI:%s\n",IMEI);
 	set_config("status","module","imei",IMEI,1);
+	set_config("config","system","manufactureroui",IMEI,1);
 
 	//memset(uci_cmd, 0x0, sizeof(uci_cmd));
 	//snprintf(uci_cmd, sizeof(uci_cmd)-1, "uci -c /opt/config set tr069.parameter.serial_number=%s", IMEI);

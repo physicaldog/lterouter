@@ -114,11 +114,12 @@ opt:
 	cp $(webServer)/src/auth.txt $(webServer)/src/route.txt $(webBin);
 	cp -r $(webBin)/* $(opt)/web/webServer/
 	cp -r $(webPage)/* $(opt)/web/webPage/
-	cp $(tr069_dir)/tr069.sh $(opt)/
-	cp -r $(tr069_dir)/tr069/* $(opt)/tr069/
-	cp -r $(tr069_dir)/trconf/* $(opt)/trconf/
+	#cp $(tr069_dir)/tr069.sh $(opt)/
+	#cp -r $(tr069_dir)/tr069/* $(opt)/tr069/
+	#cp -r $(tr069_dir)/trconf/* $(opt)/trconf/
 	cp -r $(bin)/* $(opt)/bin/
 	cp -r $(lib)/* $(opt)/lib/
+	cp -r ./cwmp_suyi $(opt)/
 #system.tar 恢复出厂设置使用 解压时必须进入对应的目录
 	cd $(opt);tar -cf upgrade/config.tar ./config
 

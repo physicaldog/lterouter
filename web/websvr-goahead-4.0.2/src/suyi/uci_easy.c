@@ -59,10 +59,10 @@ int set_config(char*buff,char *option,char *section,char *package)
 int main()
 {
 	char buff[64] = {0};
-	get_config(buff,"apn","apn","config");
+	get_config(buff,"ip","lan","config");
 	printf("buff=%s\n",buff);
 	set_config("255.255.255.0","netmask","lan","config");
-	get_config(buff,"apn","apn","config");
+	get_config(buff,"netmask","lan","config");
 	printf("buff=%s\n",buff);
 
 }

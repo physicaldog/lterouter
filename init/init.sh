@@ -77,6 +77,12 @@ init_work(){
 	fi
 	. /etc/profile
 
+	if [ -e /opt/tmp/S90start_userapp.sh ]
+	then
+		wr mv /opt/tmp/S90start_userapp.sh /etc/init.d/
+	fi
+
+
 	hwclock -s;
 	Reboot_Count;
 	lan_Init;

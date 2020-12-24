@@ -143,7 +143,7 @@ void settingAcs_url(Webs *wp)
 	set_config("tr069","cwmp","acs_port",acs_port,TRUE);
 	set_config("tr069","cwmp","acs",acs_url,TRUE);
 
-    websWrite(wp,("重启后生效"));
+   websWrite(wp,("重启后生效"));
 	websDone(wp);
 	return;
 }
@@ -159,10 +159,12 @@ void queryAcs_url(Webs *wp)
 	websWriteHeaders(wp, -1, 0);//参数二需要未-1,否则前端收不到数据
 	websWriteEndHeaders(wp);
         //getConfig("apn",buff,ApnConf);
-	get_config("tr069","cwmp","acs_ip",acs_ip);
-	get_config("tr069","cwmp","acs_port",acs_port);
-	sprintf(buff,"%s:%s",acs_ip,acs_port);
+	//get_config("tr069","cwmp","acs_ip",acs_ip);
+	//get_config("tr069","cwmp","acs_port",acs_port);
+	//sprintf(buff,"%s:%s",acs_ip,acs_port);
+	sprintf(buff,"192.168.1.1:80");
 
+	//websWrite(wp,("%s"),buff);
 	websWrite(wp,("%s"),buff);
 
 	websDone(wp);
@@ -178,7 +180,8 @@ void checkAcsEnable(Webs *wp)
 	websWriteHeaders(wp, -1, 0);//参数二需要未-1,否则前端收不到数据
 	websWriteEndHeaders(wp);
         //getConfig("apn",buff,ApnConf);
-	get_config("tr069","cwmp","acs_enable",buff);
+	//get_config("tr069","cwmp","acs_enable",buff);
+	get_config("config","Cwmpd","cwmpd_enable",buff);
 
 	websWrite(wp,("%s"),buff);
 	websDone(wp);
@@ -191,7 +194,8 @@ void acs_enable(Webs *wp)
 	websWriteHeaders(wp, -1, 0);//参数二需要未-1,否则前端收不到数据
 	websWriteEndHeaders(wp);
 
-	set_config("tr069","cwmp","acs_enable","true",TRUE);
+	//set_config("tr069","cwmp","acs_enable","true",TRUE);
+	set_config("config","Cwmpd","cwmpd_enable","true",TRUE);
 
 	websWrite(wp,("已开启"));
 	websDone(wp);
@@ -205,7 +209,8 @@ void acs_disable(Webs *wp)
 	websWriteHeaders(wp, -1, 0);//参数二需要未-1,否则前端收不到数据
 	websWriteEndHeaders(wp);
 
-	set_config("tr069","cwmp","acs_enable","false",TRUE);
+	//set_config("tr069","cwmp","acs_enable","false",TRUE);
+	set_config("config","Cwmpd","cwmpd_enable","false",TRUE);
 
 	websWrite(wp,("已关闭"));
 	websDone(wp);

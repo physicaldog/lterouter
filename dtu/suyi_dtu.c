@@ -1,4 +1,30 @@
 #include "suyi_dtu.h"
+#include "./uci.h" 
+
+int get_config(char *package,char *section,char *option,char *buff) 
+{ 
+	struct uci_context *c; 
+	struct uci_ptr p; 
+	char path[64] = {0};
+
+	sprintf(path,"%s.%s.%s",package,section,option); 
+
+	c = uci_alloc_context(); 
+	uci_set_confdir(c, "/opt/config");
+
+	if((UCI_OK == uci_lookup_ptr(c, &p, path, true)) && (p.flags & UCI_LOOKUP_COMPLETE)) { 
+
+		strcpy(buff,p.o->v.string);
+	} 
+	else{
+		printf("%s not found! ",path);
+		uci_perror(c, "\n"); 
+		return -1; 
+	}
+
+	uci_free_context(c); 
+	return(0); 
+}
 
 int getConfig(char *Config, char *buff, char *ConfigFile)
 {
@@ -49,10 +75,14 @@ int get_SerialConf(char *baudrate, char *parity, char *data_bit, char *stop_bit)
 
 	log_msg("This is dtu log_msg!\n");
 	log_msg("*********************************************\n");
-	getConfig("baudrate",baudrate,DtuConf);
-	getConfig("parity",parity,DtuConf);
-	getConfig("data_bit",data_bit,DtuConf);
-	getConfig("stop_bit",stop_bit,DtuConf);
+	//getConfig("baudrate",baudrate,DtuConf);
+	get_config("config","dtu","baudrate",baudrate);
+	//getConfig("parity",parity,DtuConf);
+	get_config("config","dtu","parity",parity);
+	//getConfig("data_bit",data_bit,DtuConf);
+	get_config("config","dtu","data_bit",data_bit);
+	//getConfig("stop_bit",stop_bit,DtuConf);
+	get_config("config","dtu","stop_bit",stop_bit);
 
 	return 0;
 }
@@ -63,7 +93,8 @@ int main()
 
 	log_msg("\n********%s********\n",__FUNCTION__);
 	
-	getConfig("mode",mode,DtuConf);
+	get_config("config","dtu","mode",mode);
+	//getConfig("mode",mode,DtuConf);
 
 	switch (mode[0]){
 		case '1':

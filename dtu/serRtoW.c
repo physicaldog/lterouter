@@ -5,7 +5,7 @@
 #include <termios.h>
 
 #define SerPort "/dev/ttymxc2"
-#define BAUDRATE 9600
+#define BAUDRATE 115200
 #define DATA_BIT 8
 #define PARITY 'N'
 #define STOP_BIT 1

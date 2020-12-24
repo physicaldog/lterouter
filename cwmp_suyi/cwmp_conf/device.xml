@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cwmp>
+	<model>
+		<object name="InternetGatewayDevice">
+			<object name="DeviceInfo">
+				<param name="HardwareVersion" get_func="cpe_get_igd_di_hardwareversion"/>
+				<param name="SoftwareVersion" rw="1" get_func="cpe_get_igd_di_softwareversion"/>
+				<param name="ProvisioningCode" rw="1" get_func="cpe_get_igd_di_provisioningcode"/>
+				<param name="Manufacturer" get_func="cpe_get_igd_di_manufacturer"/>
+				<param name="ManufacturerOUI" get_func="cpe_get_igd_di_manufactureroui"/>
+				<param name="ProductClass" get_func="cpe_get_igd_di_productclass"/>
+				<param name="SerialNumber" get_func="cpe_get_igd_di_serialnumber"/>
+				<param name="UpTime" get_func="cpe_get_igd_di_UpTime"/>
+				<param name="X_NARI_COM_CPUUsage" get_func="cpe_get_igd_di_CPUUsage"/>
+				<param name="X_NARI_COM_TotalMemory" get_func="cpe_get_igd_di_TotalMemory"/>
+				<param name="X_NARI_COM_FreeMemory" get_func="cpe_get_igd_di_FreeMemory"/>
+				<param name="ModelName" get_func="cpe_get_igd_di_ModelName"/>		
+			</object>
+			<object name="ManagementServer">
+				<param name="ConnectionRequestURL" get_func="cpe_get_igd_ms_connectionrequesturl"/>
+				<param name="ConnectionRequestUsername" rw="1" noti_rw="1" get_func="cpe_get_igd_ms_connectionrequestusername" set_func="cpe_set_igd_ms_connectionrequestusername"/>
+				<param name="ConnectionRequestPassword" rw="1" noti_rw="1" get_func="cpe_get_igd_ms_connectionrequestpassword" set_func="cpe_set_igd_ms_connectionrequestpassword"/>
+				<param name="Username" rw="1" noti_rw="1" get_func="cpe_get_igd_ms_username" set_func="cpe_set_igd_ms_username"/>
+				<param name="Password" rw="1" noti_rw="1" get_func="cpe_get_igd_ms_password" set_func="cpe_set_igd_ms_password"/>
+				<param name="URL" noti_rw="1" rw="1" get_func="cpe_get_igd_ms_url" set_func="cpe_get_igd_ms_url"/>
+				<param name="PeriodicInformEnable" rw="1" noti_rw="1" type="s" get_func="cpe_get_igd_ms_periodicinformenable" set_func="cpe_set_igd_ms_periodicinformenable"></param>
+				<param name="PeriodicInformInterval" rw="1" noti_rw="1" get_func="cpe_get_igd_ms_periodicinforminterval" set_func="cpe_set_igd_ms_periodicinforminterval"></param>
+				<param name="PeriodicInformTime" rw="1" type="s" get_func="cpe_get_igd_ms_periodicinformtime" set_func="cpe_set_igd_ms_periodicinformtime"></param>
+			</object>
+			<object name="X_NARI_COM">
+				<param name="PeriodicHeartBeatInterval" rw="1" type="s" get_func="cpe_get_igd_nari_LTE_PeriodicHeartBeatInterval" set_func="cpe_set_igd_nari_LTE_PeriodicHeartBeatInterval"/>
+				<object name="LTE">
+					<param name="IMSI" get_func="cpe_get_igd_nari_LTE_IMSI"/>
+					<param name="RSRP" get_func="cpe_get_igd_nari_LTE_RSRP"/>
+					<param name="RSRQ" get_func="cpe_get_igd_nari_LTE_RSRQ"/>
+					<param name="RSSI" get_func="cpe_get_igd_nari_LTE_RSSI"/>
+					<param name="SINR" get_func="cpe_get_igd_nari_LTE_SINR"/>
+					<param name="PCI" get_func="cpe_get_igd_nari_LTE_PCI"/>
+					<param name="ECI" get_func="cpe_get_igd_nari_LTE_ECI"/>
+					<param name="Plmn" get_func="cpe_get_igd_nari_LTE_Plmn"/>
+					<param name="IMEI" get_func="cpe_get_igd_nari_LTE_IMEI"/>
+					<param name="ModuleHardwareVersion" get_func="cpe_get_igd_nari_LTE_ModuleHardwareVersion"/>
+					<param name="ModuleSoftwareVersion" get_func="cpe_get_igd_nari_LTE_ModuleSoftwareVersion"/>
+					<param name="Address"  rw="1" noti_rw="1" get_func="cpe_get_igd_nari_LTE_Address" set_func="cpe_set_igd_nari_LTE_Address"/>
+					<param name="BusinessType"  rw="1" noti_rw="1" get_func="cpe_get_igd_nari_LTE_BusinessType" set_func="cpe_set_igd_nari_LTE_BusinessType"/>
+					<param name="BsStation"  rw="1" noti_rw="1" get_func="cpe_get_igd_nari_LTE_BsStation" set_func="cpe_set_igd_nari_LTE_BsStation"/>
+					<param name="Longitude"  rw="1" noti_rw="1" get_func="cpe_get_igd_nari_LTE_Longitude" set_func="cpe_set_igd_nari_LTE_Longitude"/>
+					<param name="Latitude"  rw="1" noti_rw="1" get_func="cpe_get_igd_nari_LTE_Latitude" set_func="cpe_set_igd_nari_LTE_Latitude"/>
+					<param name="CheckDest1" rw="1" noti_rw="1" get_func="cpe_get_igd_nari_LTE_CheckDest1" set_func="cpe_set_igd_nari_LTE_CheckDest1"/>
+					<param name="MacBind"  rw="1" noti_rw="1" get_func="cpe_get_igd_nari_LTE_MacBind" set_func="cpe_set_igd_nari_LTE_MacBind"/>
+                                       <param name="BusiDevIp"  rw="1" noti_rw="1" get_func="cpe_get_igd_nari_LTE_BusiDevIp" set_func="cpe_set_igd_nari_LTE_BusiDevIp"/>
+                                       <param name="BusinessNum" rw="1" noti_rw="1" get_func="cpe_get_igd_nari_LTE_BusinessNum" set_func="cpe_set_igd_nari_LTE_BusinessNum"/>
+				</object>
+				<object name="WANBasic">
+					<param name="IPAddress" get_func="cpe_get_igd_nari_WANBasic_IPAddress"/>
+					<param name="TotalFlow" get_func="cpe_get_igd_nari_WANBasic_TotalFlow"/>
+					<param name="RxFlow" get_func="cpe_get_igd_nari_WANBasic_RxFlow"/>
+					<param name="TxFlow" get_func="cpe_get_igd_nari_WANBasic_TxFlow"/>				
+				</object>
+				<object name="LAN">
+					<object name="{0}">						
+						<param name="Enable"  rw="1" noti_rw="1" get_func="cpe_get_igd_nari_LAN0_Enable" set_func="cpe_set_igd_nari_LAN0_Enable"/>
+						<param name="IPAddress"  rw="1" noti_rw="1" get_func="cpe_get_igd_nari_LAN0_IPAddress" set_func="cpe_set_igd_nari_LAN0_IPAddress"/>
+						<param name="MAC" get_func="cpe_get_igd_nari_LAN0_MAC"/>
+						<param name="NetMask"  rw="1" noti_rw="1" get_func="cpe_get_igd_nari_LAN0_NetMask" set_func="cpe_set_igd_nari_LAN0_NetMask"/>
+						<param name="RxFlow" get_func="cpe_get_igd_nari_LAN0_RxFlow"/>
+						<param name="TxFlow" get_func="cpe_get_igd_nari_LAN0_TxFlow"/>
+					</object>
+						<object name="{1}">						
+						<param name="Enable"  rw="1" noti_rw="1" get_func="cpe_get_igd_nari_LAN1_Enable" set_func="cpe_set_igd_nari_LAN1_Enable"/>
+						<param name="IPAddress"  rw="1" noti_rw="1" get_func="cpe_get_igd_nari_LAN1_IPAddress" set_func="cpe_set_igd_nari_LAN1_IPAddress"/>
+						<param name="MAC" get_func="cpe_get_igd_nari_LAN1_MAC"/>
+						<param name="NetMask"  rw="1" noti_rw="1" get_func="cpe_get_igd_nari_LAN1_NetMask" set_func="cpe_set_igd_nari_LAN1_NetMask"/>
+						<param name="RxFlow" get_func="cpe_get_igd_nari_LAN1_RxFlow"/>
+						<param name="TxFlow" get_func="cpe_get_igd_nari_LAN1_TxFlow"/>
+					</object>
+				</object>
+				<object name="IPSEC">
+					<param name="Enable" rw="1" noti_rw="1" get_func="cpe_get_igd_nari_IPSEC_Enable" set_func="cpe_set_igd_nari_IPSEC_Enable"/>
+					<param name="SBIp" rw="1" noti_rw="1" get_func="cpe_get_igd_nari_IPSEC_SBIp" set_func="cpe_set_igd_nari_IPSEC_SBIp"/>
+					<param name="SDIp" rw="1" noti_rw="1" get_func="cpe_get_igd_nari_IPSEC_SDIp" set_func="cpe_set_igd_nari_IPSEC_SDIp"/>
+					<param name="YBIp" rw="1" noti_rw="1" get_func="cpe_get_igd_nari_IPSEC_YBIp" set_func="cpe_set_igd_nari_IPSEC_YBIp"/>
+					<param name="YDIp" rw="1" noti_rw="1" get_func="cpe_get_igd_nari_IPSEC_YDIp" set_func="cpe_set_igd_nari_IPSEC_YDIp"/>
+					<param name="YBMaskLen" rw="1" noti_rw="1" get_func="cpe_get_igd_nari_IPSEC_YBMaskLen" set_func="cpe_set_igd_nari_IPSEC_YBMaskLen"/>
+					<param name="YDMaskLen" rw="1" noti_rw="1" get_func="cpe_get_igd_nari_IPSEC_YDMaskLen" set_func="cpe_set_igd_nari_IPSEC_YDMaskLen"/>
+				</object>
+				<object name="COM">
+					<param name="Ttyname" rw="1" noti_rw="1" get_func="cpe_get_igd_nari_COM_Ttyname" set_func="cpe_set_igd_nari_COM_Ttyname"/>
+					<param name="BandRate" rw="1" noti_rw="1" get_func="cpe_get_igd_nari_COM_BandRate" set_func="cpe_set_igd_nari_COM_BandRate"/>
+				</object>
+				<object name="USB">
+					<param name="Enable" rw="1" noti_rw="1" get_func="cpe_get_igd_nari_USB_Enable" set_func="cpe_set_igd_nari_USB_Enable"/>
+				</object>
+				<object name="APN">
+					<param name="Username" rw="1" noti_rw="1" get_func="cpe_get_igd_nari_APN_Username" set_func="cpe_set_igd_nari_APN_Username"/>
+					<param name="Password" rw="1" noti_rw="1" get_func="cpe_get_igd_nari_APN_Password" set_func="cpe_set_igd_nari_APN_Password"/>
+				</object>
+				<object name="DHCP">
+					<param name="Enable" rw="1" noti_rw="1" get_func="cpe_get_igd_nari_DHCP_Enable" set_func="cpe_set_igd_nari_DHCP_Enable"/>
+				</object>	
+			</object>
+		</object>
+	</model>
+	<inform>
+		<paramlist>
+			<param name=""/>
+		</paramlist>
+	</inform>
+	<rpc>
+
+  
+  </rpc>
+</cwmp>
