@@ -1,9 +1,0 @@
-#!/bin/bash
-
-. /opt/tr069/common.sh
-
-if [ "$ACTION"x = "get"x ];then
-    network_mode=NAT
-    echo $network_mode
-fi
-exit 0

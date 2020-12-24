@@ -1,9 +1,0 @@
-#!/bin/bash 
-
-. /opt/tr069/common.sh
-
-if [ "$ACTION"x = "get"x ];then
-    mask='255.255.255.0'
-    echo $mask
-fi
-exit 0
